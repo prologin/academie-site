@@ -1,6 +1,6 @@
 from django.conf  import settings
 import os
-import json
+import yaml
 
 class Problem:
 
@@ -12,8 +12,8 @@ class Problem:
     
     def _fetch_properties(self):
         props = {}
-        with open(os.path.join(self.path, 'problem.json')) as f:
-            props = json.loads(f.read())
+        with open(os.path.join(self.path, 'problem.yaml')) as f:
+            props = yaml.load(f.read(), Loader=yaml.Loader)
         return props
     
     def _fetch_tests(self):
@@ -56,7 +56,7 @@ class Problem:
     def is_valid(self):
         return (
             self._check_dir('') and
-            self._check_file('problem.json') and
+            self._check_file('problem.yaml') and
             self._check_file('subject.md') and
             self._check_file('template.py') and
             self._check_dir('tests')
@@ -95,7 +95,7 @@ class Track:
         return tracks
 
     def _check_files(self):
-        assert os.path.isfile(self._get_path('track.json'))
+        assert os.path.isfile(self._get_path('track.yaml'))
 
     def _track_exists(self):
         return os.path.isdir(self._get_path())
@@ -117,8 +117,8 @@ class Track:
     @property
     def properties(self):
         props = {}
-        with open(self._get_path('track.json')) as f:
-            props = json.loads(f.read())
+        with open(self._get_path('track.yaml')) as f:
+            props = yaml.load(f.read(), Loader=yaml.Loader)
         return props
     
     @property
