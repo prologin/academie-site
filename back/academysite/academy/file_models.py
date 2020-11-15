@@ -21,7 +21,7 @@ class Problem:
         tests = []
         for t_in in filter(lambda x: x.endswith('.in'), os.listdir(tests_path)):
             t_out = os.path.join(tests_path, os.path.splitext(t_in)[0] + '.out')
-            assert os.path.isfile(t_out)
+            assert os.path.isfile(t_out), f"File {t_out} not found"
             t_in = os.path.join(tests_path, t_in)
             stdin, stdout = None, None
             with open(t_in) as f:
@@ -62,8 +62,10 @@ class Problem:
             self._check_dir('tests')
         )
     
-    def __init__(self, path):
-        self.path = path
+    def __init__(self, track_id, id):
+        self.track_id = track_id
+        self.id = id
+        self.path = os.path.join(settings.ACADEMY_RESOURCES_PATH, track_id, id)
 
         if self.is_valid():
             self.tests = self._fetch_tests()
@@ -77,7 +79,7 @@ class Problem:
 
     @property
     def name(self):
-        return self.properties.get('name', os.path.split(self.path)[-1])
+        return self.properties.get('name', self.id)
             
 
 class Track:
@@ -95,7 +97,7 @@ class Track:
         return tracks
 
     def _check_files(self):
-        assert os.path.isfile(self._get_path('track.yaml'))
+        assert os.path.isfile(self._get_path('track.yaml')), f"File {self._get_path('track.yaml')} not found"
 
     def _track_exists(self):
         return os.path.isdir(self._get_path())
@@ -108,7 +110,7 @@ class Track:
     def __init__(self, id):
         self.id = id
 
-        assert self._track_exists()
+        assert self._track_exists(), 'The track does not exist'
         self._check_files()
     
     def __repr__(self):
@@ -128,11 +130,13 @@ class Track:
     @property
     def problems(self):
         problems = []
-        for p in os.listdir(self._get_path()):
+        dirs = os.listdir(self._get_path())
+        dirs.sort()
+        for p in dirs:
             path = self._get_path(p)
             if not os.path.isdir(path):
                 continue
-            problem = Problem(path)
+            problem = Problem(self.id, p)
             if problem.is_valid():
                 problems.append(problem)
         return problems
