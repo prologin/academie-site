@@ -39,7 +39,7 @@ class Submission(models.Model):
     submission_date = models.DateTimeField(auto_now=True, editable=True)
     correction_date = models.DateTimeField(null=True, blank=True)
     submission_count = models.IntegerField(default=1, editable=True)
-    passed = models.BooleanField(default=False, editable=False)
+    passed = models.BooleanField(default=False, editable=True)
     correction_data = models.JSONField(blank=True, null=True)
 
     def clean(self, *args, **kwargs):
