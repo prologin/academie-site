@@ -9,6 +9,8 @@ verify_ssl = true
 django = "*"
 django-rest-framework = "*"
 pyyaml = "*"
+psycopg2-binary = "*"
+drf-nested-routers = "*"
 
 [requires]
 python_version = "3.8"
