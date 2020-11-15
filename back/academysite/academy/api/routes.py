@@ -4,6 +4,7 @@ from . import viewsets
 
 router = routers.DefaultRouter()
 router.register('track', viewsets.TrackInstanceViewSet, basename='track')
+router.register('submission', viewsets.SubmissionViewSet, basename='submission')
 
 track_subrouter = nested_routers.NestedSimpleRouter(router, 'track', lookup='track')
 track_subrouter.register('problem', viewsets.ProblemViewSet, basename='track-problems')

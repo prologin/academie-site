@@ -4,9 +4,33 @@ from django.shortcuts import Http404
 from django.urls import reverse
 from rest_framework.permissions import DjangoModelPermissions, IsAuthenticated
 from rest_framework.response import Response
-from academy.models import TrackInstance, Submission
+from academy.models import TrackInstance, Submission, Validators
 from academy.file_models import Problem
 from . import serializers
+from rest_framework.serializers import ValidationError
+
+class SubmissionViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    serializer_class = serializers.SubmissionSerializer
+
+    def perform_update(self, serializer):
+        serializer.instance.submission_count += 1
+        self.perform_create(serializer)
+
+    def perform_create(self, serializer):
+        try:
+            Validators.validate_problem(
+                serializer.validated_data['track'].track_id, 
+                serializer.validated_data['problem_id']
+            )
+        except:
+            raise ValidationError(f'No problem with given id in selected track.')
+        serializer.save(author=self.request.user)
+
+    def get_queryset(self):
+        if self.request.user.is_staff:
+            return Submission.objects.all()
+        return Submission.objects.filter(author=self.request.user, track__public=True)
     
 
 class TrackInstanceViewSet(viewsets.ModelViewSet):
