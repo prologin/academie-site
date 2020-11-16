@@ -8,10 +8,23 @@ from academy.models import TrackInstance, Submission, Validators
 from academy.file_models import Problem
 from . import serializers
 from rest_framework.serializers import ValidationError
+from rest_framework.decorators import action
+from academy import tasks
 
 class SubmissionViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     serializer_class = serializers.SubmissionSerializer
+
+    @action(detail=True, methods=['post'])
+    def run(self, request, pk):
+        try:
+            if (self.request.user.is_staff or Submission.objects.get(pk=pk).author == self.request.user):
+                tasks.run_code_submission.apply_async(args=[pk])
+                return Response({'status_message': 'Submission sent to correction'})
+        except ObjectDoesNotExist:
+            raise Http404
+        raise Http404
+
 
     def perform_update(self, serializer):
         serializer.instance.submission_count += 1
