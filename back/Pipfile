@@ -11,6 +11,7 @@ django-rest-framework = "*"
 pyyaml = "*"
 psycopg2-binary = "*"
 drf-nested-routers = "*"
+jinja2 = "*"
 
 [requires]
 python_version = "3.8"

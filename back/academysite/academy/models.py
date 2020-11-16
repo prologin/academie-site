@@ -2,6 +2,7 @@ from django.db import models
 from .file_models import Track, Problem
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
+from jinja2 import Template
 
 class Validators:
 
@@ -53,3 +54,6 @@ class Submission(models.Model):
     @property
     def problem(self):
         return Problem(self.track.track_id, self.problem_id)
+    
+    def get_templated_code(self):
+        return Template(self.problem.template).render(student_code=self.code)
