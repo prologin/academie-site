@@ -3,6 +3,7 @@ from . import models
 import logging
 from django.utils import timezone
 import sys
+from celery import shared_task
 
 logger = logging.getLogger(__name__)
 
@@ -13,6 +14,7 @@ def test_passes(got, expected) -> bool:
             return False
     return True
 
+@shared_task
 def run_code_submission(submission_id) -> bool:
     submission = None
     try:
