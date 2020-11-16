@@ -13,6 +13,7 @@ psycopg2-binary = "*"
 drf-nested-routers = "*"
 jinja2 = "*"
 requests = "*"
+celery = {extras = ["redis"],version = "*"}
 
 [requires]
 python_version = "3.8"
