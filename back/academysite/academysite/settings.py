@@ -124,6 +124,9 @@ STATIC_URL = '/static/'
 # Required : ACADEMY_RESOURCES_PATH
 ACADEMY_RESOURCES_PATH = '/home/leo/prologin/academy-tracks'
 
+# required
+CAMISOLE_URL = 'http://vm.prologin.org'
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.BasicAuthentication',
