@@ -18,9 +18,10 @@ class Problem:
     
     def _fetch_tests(self):
         tests_path = os.path.join(self.path, 'tests')
-        tests = []
+        tests = {}
         for t_in in filter(lambda x: x.endswith('.in'), os.listdir(tests_path)):
-            t_out = os.path.join(tests_path, os.path.splitext(t_in)[0] + '.out')
+            t_name = os.path.splitext(t_in)[0]
+            t_out = os.path.join(tests_path, t_name + '.out')
             assert os.path.isfile(t_out), f"File {t_out} not found"
             t_in = os.path.join(tests_path, t_in)
             stdin, stdout = None, None
@@ -28,7 +29,7 @@ class Problem:
                 stdin = f.read()
             with open(t_out) as f:
                 stdout = f.read()
-            tests.append((stdin, stdout))
+            tests[t_name] = {'stdin': stdin, 'stdout': stdout}
         return tests
     
     def _fetch_scaffold(self):
