@@ -12,6 +12,7 @@ pyyaml = "*"
 psycopg2-binary = "*"
 drf-nested-routers = "*"
 jinja2 = "*"
+requests = "*"
 
 [requires]
 python_version = "3.8"
