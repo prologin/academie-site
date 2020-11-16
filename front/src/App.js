@@ -1,22 +1,18 @@
-import logo from './logo.svg';
 import './App.css';
+import SocialNetworks from './components/SocialNetworks';
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
+        <img src="/images/logo_cube.png" className="App-logo" alt="logo" />
+        <h1>Coming soon !</h1>
         <p>
-          Edit <code>src/App.js</code> and save to reload.
+          Le lancement de ce site sera annoncé sur nos réseaux, alors si vous
+          <br />
+          souhaitez apprendre la programmation, suivez nous sur nos réseaux !
         </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <SocialNetworks />
       </header>
     </div>
   );
