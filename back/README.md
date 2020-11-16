@@ -23,7 +23,7 @@ Create a superuser to access the API
 python ./manage.py createsuperuser
 ```
 
-You need an accessible running server in order to effectively run submissions.
+You need an accessible and running redis server in order to effectively run submissions.
 Once you configured this server, please enter its URI in settings.py : `CELERY_BROKER_URL`
 
 Then open 2 terminals and run these commands in the first terminal :
