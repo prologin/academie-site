@@ -15,10 +15,17 @@ class SubmissionViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     serializer_class = serializers.SubmissionSerializer
 
+    def _can_run_submission(self, request, pk):
+        submission = Submission.objects.get(pk=pk)
+        return (
+            (submission.track.public and submission.author == self.request.user)
+            or self.request.user.is_staff
+        )
+
     @action(detail=True, methods=['post'])
     def run(self, request, pk):
         try:
-            if (self.request.user.is_staff or Submission.objects.get(pk=pk).author == self.request.user):
+            if self._can_run_submission(request, pk):
                 tasks.run_code_submission.apply_async(args=[pk])
                 return Response({'status_message': 'Submission sent to correction'})
         except ObjectDoesNotExist:
@@ -102,4 +109,3 @@ class ProblemViewSet(viewsets.ViewSet):
             res['tests'] = problem.tests
         
         return Response(res)
-        
