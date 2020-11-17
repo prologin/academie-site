@@ -37,7 +37,7 @@ class Submission(models.Model):
     author = models.ForeignKey(to=get_user_model(), on_delete=models.CASCADE)
     code = models.TextField(max_length=3000)
     problem_id = models.CharField(max_length=100)
-    submission_date = models.DateTimeField(auto_now=True, editable=True)
+    submission_date = models.DateTimeField(null=True, blank=True)
     correction_date = models.DateTimeField(null=True, blank=True)
     submission_count = models.IntegerField(default=1, editable=True)
     passed = models.BooleanField(default=False, editable=True)

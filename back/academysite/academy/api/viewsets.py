@@ -10,6 +10,7 @@ from . import serializers
 from rest_framework.serializers import ValidationError
 from rest_framework.decorators import action
 from academy import tasks
+from django.utils import timezone
 
 class SubmissionViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
@@ -35,6 +36,7 @@ class SubmissionViewSet(viewsets.ModelViewSet):
 
     def perform_update(self, serializer):
         serializer.instance.submission_count += 1
+        serializer.instance.submission_date = timezone.now()
         self.perform_create(serializer)
 
     def perform_create(self, serializer):
@@ -45,7 +47,7 @@ class SubmissionViewSet(viewsets.ModelViewSet):
             )
         except:
             raise ValidationError(f'No problem with given id in selected track.')
-        serializer.save(author=self.request.user)
+        serializer.save(author=self.request.user, submission_date=timezone.now())
 
     def get_queryset(self):
         if self.request.user.is_staff:
