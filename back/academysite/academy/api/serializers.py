@@ -3,6 +3,11 @@ from django.urls import reverse
 from academy import models
 
 class TrackInstanceStaffSerializer(serializers.ModelSerializer):
+    properties = serializers.SerializerMethodField('get_properties')
+
+    def get_properties(self, obj):
+        return obj.track.properties
+
     class Meta:
         model = models.TrackInstance
         fields = '__all__'
@@ -10,7 +15,7 @@ class TrackInstanceStaffSerializer(serializers.ModelSerializer):
 class TrackInstanceSerializer(TrackInstanceStaffSerializer):
     class Meta:
         model = models.TrackInstance
-        fields = ('name', 'id', 'public',)
+        fields = ('name', 'id', 'public', 'properties')
 
 class SubmissionSerializer(serializers.ModelSerializer):
     class TrackSelectField(serializers.PrimaryKeyRelatedField):
