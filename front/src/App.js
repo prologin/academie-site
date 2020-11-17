@@ -1,7 +1,13 @@
+import React from 'react';
 import './App.css';
-import SocialNetworks from './components/SocialNetworks';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
-function App() {
+import { createMuiTheme, ThemeProvider } from '@material-ui/core';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import SocialNetworks from './components/SocialNetworks';
+import Navigation from './components/Navigation';
+
+function ComingSoon() {
   return (
     <div className="App">
       <header className="App-header">
@@ -15,6 +21,36 @@ function App() {
         <SocialNetworks />
       </header>
     </div>
+  );
+}
+
+function App() {
+  // Get user's device theme mode (light/dark)
+  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+
+  const theme = React.useMemo(
+    () =>
+      createMuiTheme({
+        palette: {
+          type: prefersDarkMode ? 'dark' : 'light',
+        },
+      }),
+    [prefersDarkMode],
+  );
+
+  return (
+    <ThemeProvider theme={theme}>
+      <Router>
+        <Switch>
+          <Route path="/navigation">
+            <Navigation />
+          </Route>
+          <Route path="*">
+            <ComingSoon />
+          </Route>
+        </Switch>
+      </Router>
+    </ThemeProvider>
   );
 }
 
