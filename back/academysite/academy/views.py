@@ -12,6 +12,7 @@ from rest_framework.decorators import action
 from academy import tasks
 from django.utils import timezone
 
+
 class SubmissionViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     serializer_class = serializers.SubmissionSerializer
@@ -33,7 +34,6 @@ class SubmissionViewSet(viewsets.ModelViewSet):
             raise Http404
         raise Http404
 
-
     def perform_update(self, serializer):
         serializer.instance.submission_count += 1
         serializer.instance.submission_date = timezone.now()
@@ -42,18 +42,20 @@ class SubmissionViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         try:
             Validators.validate_problem(
-                serializer.validated_data['track'].track_id, 
+                serializer.validated_data['track'].track_id,
                 serializer.validated_data['problem_id']
             )
         except:
-            raise ValidationError(f'No problem with given id in selected track.')
-        serializer.save(author=self.request.user, submission_date=timezone.now())
+            raise ValidationError(
+                f'No problem with given id in selected track.')
+        serializer.save(author=self.request.user,
+                        submission_date=timezone.now())
 
     def get_queryset(self):
         if self.request.user.is_staff:
             return Submission.objects.all()
         return Submission.objects.filter(author=self.request.user, track__public=True)
-    
+
 
 class TrackInstanceViewSet(viewsets.ModelViewSet):
     permission_classes = [DjangoModelPermissions]
@@ -68,15 +70,16 @@ class TrackInstanceViewSet(viewsets.ModelViewSet):
             return TrackInstance.objects.all()
         return TrackInstance.objects.filter(public=True)
 
+
 class ProblemViewSet(viewsets.ViewSet):
 
     permission_classes = [IsAuthenticated]
 
-    def _is_problem_solved(self, user, track, problem):
+    def _get_related_user_submission(self, user, track, problem):
         try:
-            return Submission.objects.get(track=track, author=user, problem_id=problem.id).passed
+            return Submission.objects.get(track=track, author=user, problem_id=problem.id).id
         except ObjectDoesNotExist:
-            return False
+            return None
 
     def _get_track_instance(self, request, track_pk):
         try:
@@ -86,7 +89,7 @@ class ProblemViewSet(viewsets.ViewSet):
             return track_instance
         except ObjectDoesNotExist:
             raise Http404
-    
+
     def _get_problem(self, track_id, problem_id):
         problem = Problem(track_id, problem_id)
         if not problem.is_valid():
@@ -99,23 +102,26 @@ class ProblemViewSet(viewsets.ViewSet):
         for p in track_instance.track.problems:
             res = {'problem_id': p.id}
             res['properties'] = p.properties
-            res['solved'] = self._is_problem_solved(request.user, track_instance, p)
+            res['solved'] = self._get_related_user_submission(
+                request.user, track_instance, p)
             problems.append(res)
         return Response(problems)
-    
+
     def retrieve(self, request, pk, track_pk):
         track_instance = self._get_track_instance(request, track_pk)
         problem = self._get_problem(track_instance.track_id, pk)
+        user_submission_id = self._get_related_user_submission(
+            request.user, track_instance, problem)
         res = {
             'problem_id': problem.id,
             'properties': problem.properties,
             'subject': problem.subject,
             'scaffold': problem.scaffold,
-            'solved': self._is_problem_solved(request.user, track_instance, problem),
+            'submission': user_submission_id,
         }
 
         if request.user.is_staff:
             res['template'] = problem.template
             res['tests'] = problem.tests
-        
+
         return Response(res)
