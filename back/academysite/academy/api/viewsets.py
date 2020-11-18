@@ -72,6 +72,12 @@ class ProblemViewSet(viewsets.ViewSet):
 
     permission_classes = [IsAuthenticated]
 
+    def _is_problem_solved(self, user, track, problem):
+        try:
+            return Submission.objects.get(track=track, author=user, problem_id=problem.id).passed
+        except ObjectDoesNotExist:
+            return False
+
     def _get_track_instance(self, request, track_pk):
         try:
             track_instance = TrackInstance.objects.get(pk=track_pk)
@@ -93,6 +99,7 @@ class ProblemViewSet(viewsets.ViewSet):
         for p in track_instance.track.problems:
             res = {'problem_id': p.id}
             res['properties'] = p.properties
+            res['solved'] = self._is_problem_solved(request.user, track_instance, p)
             problems.append(res)
         return Response(problems)
     
@@ -103,7 +110,8 @@ class ProblemViewSet(viewsets.ViewSet):
             'problem_id': problem.id,
             'properties': problem.properties,
             'subject': problem.subject,
-            'scaffold': problem.scaffold
+            'scaffold': problem.scaffold,
+            'solved': self._is_problem_solved(request.user, track_instance, problem),
         }
 
         if request.user.is_staff:
