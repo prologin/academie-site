@@ -4,23 +4,28 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from jinja2 import Template
 
-class Validators:
 
+class Validators:
     @classmethod
     def validate_track_id(cls, track_id):
         try:
             _ = Track(track_id)
         except AssertionError:
-            raise ValidationError('No track corresponding to track_id')
-    
+            raise ValidationError("No track corresponding to track_id")
+
     @classmethod
     def validate_problem(cls, track_id, problem_id):
         problem = Problem(track_id, problem_id)
         if not problem.is_valid():
-            raise ValidationError(f'No problem {problem_id} in track {track_id}')
+            raise ValidationError(
+                f"No problem {problem_id} in track {track_id}"
+            )
+
 
 class TrackInstance(models.Model):
-    track_id = models.CharField(max_length=200, validators=[Validators.validate_track_id])
+    track_id = models.CharField(
+        max_length=200, validators=[Validators.validate_track_id]
+    )
     name = models.CharField(max_length=200, unique=True)
     public = models.BooleanField(default=True, editable=True)
     archived = models.BooleanField(default=False, editable=True)
@@ -31,6 +36,7 @@ class TrackInstance(models.Model):
     @property
     def track(self):
         return Track(self.track_id)
+
 
 class Submission(models.Model):
     track = models.ForeignKey(to=TrackInstance, on_delete=models.CASCADE)
@@ -48,12 +54,12 @@ class Submission(models.Model):
 
     class Meta:
         unique_together = [
-            ('track', 'author', 'problem_id'),
+            ("track", "author", "problem_id"),
         ]
 
     @property
     def problem(self):
         return Problem(self.track.track_id, self.problem_id)
-    
+
     def get_templated_code(self):
         return Template(self.problem.template).render(student_code=self.code)
