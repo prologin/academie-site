@@ -127,7 +127,7 @@ STATIC_URL = '/static/'
 CORS_ALLOW_ALL_ORIGINS = DEBUG
 
 # Required : ACADEMY_RESOURCES_PATH
-ACADEMY_RESOURCES_PATH = '/home/leo/prologin/academy-tracks'
+ACADEMY_RESOURCES_PATH = '../../../academy-tracks'
 
 # required
 CAMISOLE_URL = 'http://vm.prologin.org'
