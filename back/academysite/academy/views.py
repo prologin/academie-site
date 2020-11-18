@@ -1,7 +1,6 @@
 from rest_framework import viewsets
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import Http404
-from django.urls import reverse
 from rest_framework.permissions import DjangoModelPermissions, IsAuthenticated
 from rest_framework.response import Response
 from academy.models import TrackInstance, Submission, Validators
