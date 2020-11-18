@@ -20,3 +20,7 @@ pythonenv*
 
 # temporary during dev
 *migrations*
+
+# config files
+academysite/academysite/settings/prod.py
+academysite/academysite/settings/dev.py
