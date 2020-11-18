@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
       marginRight: 10,
     },
   },
-  link: {},
+  toolbar: theme.mixins.toolbar,
 }));
 
 function Navigation({ children }) {
@@ -41,8 +41,9 @@ function Navigation({ children }) {
             </Typography>
           </Link>
         </Toolbar>
-        {children}
       </AppBar>
+      <div className={classes.toolbar} />
+      {children}
     </div>
   );
 }

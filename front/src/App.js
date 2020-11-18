@@ -6,6 +6,7 @@ import { createMuiTheme, ThemeProvider } from '@material-ui/core';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import SocialNetworks from './components/SocialNetworks';
 import Navigation from './components/Navigation';
+import Tracks from './components/Tracks';
 
 function ComingSoon() {
   return (
@@ -42,8 +43,10 @@ function App() {
     <ThemeProvider theme={theme}>
       <Router>
         <Switch>
-          <Route path="/navigation">
-            <Navigation />
+          <Route path="/tracks">
+            <Navigation>
+              <Tracks />
+            </Navigation>
           </Route>
           <Route path="*">
             <ComingSoon />
