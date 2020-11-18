@@ -118,7 +118,8 @@ class ProblemViewSet(viewsets.ViewSet):
         track_instance = self._get_track_instance(request, track_pk)
         problem = self._get_problem(track_instance.track_id, pk)
         user_submission_id = self._get_related_user_submission(
-            request.user, track_instance, problem)
+            request.user, track_instance, problem
+        )
         res = {
             "problem_id": problem.id,
             "properties": problem.properties,
