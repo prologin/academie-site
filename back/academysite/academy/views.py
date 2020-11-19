@@ -19,17 +19,16 @@ class SubmissionViewSet(viewsets.ModelViewSet):
     def _can_run_submission(self, request, pk):
         submission = Submission.objects.get(pk=pk)
         return (
-            submission.track.public and submission.author == self.request.user
-        ) or self.request.user.is_staff
+            (submission.track.public and submission.author == self.request.user)
+            or self.request.user.is_staff
+        )
 
-    @action(detail=True, methods=["post"])
+    @action(detail=True, methods=['post'])
     def run(self, request, pk):
         try:
             if self._can_run_submission(request, pk):
                 tasks.run_code_submission.apply_async(args=[pk])
-                return Response(
-                    {"status_message": "Submission sent to correction"}
-                )
+                return Response({'status_message': 'Submission sent to correction'})
         except ObjectDoesNotExist:
             raise Http404
         raise Http404
@@ -42,23 +41,19 @@ class SubmissionViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         try:
             Validators.validate_problem(
-                serializer.validated_data["track"].track_id,
-                serializer.validated_data["problem_id"],
+                serializer.validated_data['track'].track_id,
+                serializer.validated_data['problem_id']
             )
         except:
             raise ValidationError(
-                f"No problem with given id in selected track."
-            )
-        serializer.save(
-            author=self.request.user, submission_date=timezone.now()
-        )
+                f'No problem with given id in selected track.')
+        serializer.save(author=self.request.user,
+                        submission_date=timezone.now())
 
     def get_queryset(self):
         if self.request.user.is_staff:
             return Submission.objects.all()
-        return Submission.objects.filter(
-            author=self.request.user, track__public=True
-        )
+        return Submission.objects.filter(author=self.request.user, track__public=True)
 
 
 class TrackInstanceViewSet(viewsets.ModelViewSet):
@@ -81,9 +76,7 @@ class ProblemViewSet(viewsets.ViewSet):
 
     def _get_related_user_submission(self, user, track, problem):
         try:
-            return Submission.objects.get(
-                track=track, author=user, problem_id=problem.id
-            ).passed
+            return Submission.objects.get(track=track, author=user, problem_id=problem.id).id
         except ObjectDoesNotExist:
             return None
 
@@ -106,11 +99,10 @@ class ProblemViewSet(viewsets.ViewSet):
         track_instance = self._get_track_instance(request, track_pk)
         problems = []
         for p in track_instance.track.problems:
-            res = {"problem_id": p.id}
-            res["properties"] = p.properties
-            res["solved"] = self._is_problem_solved(
-                request.user, track_instance, p
-            )
+            res = {'problem_id': p.id}
+            res['properties'] = p.properties
+            res['solved'] = self._get_related_user_submission(
+                request.user, track_instance, p)
             problems.append(res)
         return Response(problems)
 
@@ -118,20 +110,17 @@ class ProblemViewSet(viewsets.ViewSet):
         track_instance = self._get_track_instance(request, track_pk)
         problem = self._get_problem(track_instance.track_id, pk)
         user_submission_id = self._get_related_user_submission(
-            request.user, track_instance, problem
-        )
+            request.user, track_instance, problem)
         res = {
-            "problem_id": problem.id,
-            "properties": problem.properties,
-            "subject": problem.subject,
-            "scaffold": problem.scaffold,
-            "solved": self._is_problem_solved(
-                request.user, track_instance, problem
-            ),
+            'problem_id': problem.id,
+            'properties': problem.properties,
+            'subject': problem.subject,
+            'scaffold': problem.scaffold,
+            'submission': user_submission_id,
         }
 
         if request.user.is_staff:
-            res["template"] = problem.template
-            res["tests"] = problem.tests
+            res['template'] = problem.template
+            res['tests'] = problem.tests
 
         return Response(res)
