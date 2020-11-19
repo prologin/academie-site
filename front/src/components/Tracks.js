@@ -9,18 +9,16 @@ import CardActions from '@material-ui/core/CardActions';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 
-import TrackApi from '../api/tracksApi';
+import TrackApi from '../api/trackApi';
+import { Container } from '@material-ui/core';
 
 const useStyles = makeStyles({
   root: {
-    maxWidth: 992,
-    marginLeft: 'auto',
-    marginRight: 'auto',
-    padding: 10,
+    padding: 16,
   },
 });
 
-const Track = ({ id, properties }) => {
+const TrackNode = ({ id, properties }) => {
   const { description, full_name: title } = properties;
   return (
     <Card variant="outlined">
@@ -57,7 +55,7 @@ const Home = () => {
     tracks && tracks.length ? (
       tracks.map((track, index) => (
         <Grid item xs={12} key={`track-${index}`}>
-          <Track {...track} />
+          <TrackNode {...track} />
         </Grid>
       ))
     ) : (
@@ -65,11 +63,11 @@ const Home = () => {
     );
 
   return (
-    <div className={classes.root}>
+    <Container maxWidth="md" className={classes.root}>
       <Grid container justify="center" spacing={2}>
         <Tracks />
       </Grid>
-    </div>
+    </Container>
   );
 };
 

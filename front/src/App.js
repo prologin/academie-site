@@ -2,7 +2,7 @@ import React from 'react';
 import './App.css';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
-import { createMuiTheme, ThemeProvider } from '@material-ui/core';
+import { createMuiTheme, CssBaseline, ThemeProvider } from '@material-ui/core';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import SocialNetworks from './components/SocialNetworks';
 import Navigation from './components/Navigation';
@@ -41,6 +41,7 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
+      <CssBaseline/>
       <Router>
         <Switch>
           <Route path="/tracks">
