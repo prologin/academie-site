@@ -34,6 +34,7 @@ urlpatterns = [
 router = routers.DefaultRouter()
 router.register("track", views.TrackInstanceViewSet, basename="track")
 router.register("submission", views.SubmissionViewSet, basename="submission")
+router.register("user", views.UserViewSet, basename="user")
 
 track_subrouter = nested_routers.NestedSimpleRouter(
     router, "track", lookup="track"

@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from django.contrib.auth import get_user_model
 from academy import models
 
 
@@ -50,4 +51,17 @@ class SubmissionSerializer(serializers.ModelSerializer):
             "submission_count",
             "passed",
             "correction_data",
+        )
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = get_user_model()
+        fields = (
+            "id",
+            "username",
+            "first_name",
+            "last_name",
+            "email",
+            "groups",
         )
