@@ -1,21 +1,41 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
-import { Button, Container, makeStyles } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core';
+import { useTheme } from '@material-ui/core/styles';
 
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
+import Container from '@material-ui/core/Container';
 import Markdown from 'markdown-to-jsx';
 import AceEditor from 'react-ace';
 import { markdownOptions } from '../config/markdown';
-
-import 'ace-builds/src-noconflict/mode-python';
-import 'ace-builds/src-noconflict/snippets/python';
-import 'ace-builds/src-noconflict/theme-dracula';
 
 import TrackApi from '../api/trackApi';
 import SubmissionButton from './SubmissionButton';
 import SubmissionApi from '../api/submissionApi';
 import SubmissionStatus from './SubmissionStatus';
+
+import 'ace-builds/src-noconflict/mode-python';
+import 'ace-builds/src-noconflict/snippets/python';
+import Dropdown from './Dropdown';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPaintBrush } from '@fortawesome/free-solid-svg-icons';
+
+const themes = [
+  'dracula',
+  'monokai',
+  'github',
+  'tomorrow',
+  'kuroir',
+  'twilight',
+  'xcode',
+  'textmate',
+  'solarized_dark',
+  'solarized_light',
+  'terminal',
+];
+
+themes.forEach((theme) => require(`ace-builds/src-noconflict/theme-${theme}`));
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -24,7 +44,9 @@ const useStyles = makeStyles((theme) => ({
   editorHeader: {
     padding: 5,
   },
-  submission: {},
+  brushIcon: {
+    marginRight: theme.spacing(1),
+  },
 }));
 
 const newSubmission = (trackId, problemId) => ({
@@ -35,8 +57,13 @@ const newSubmission = (trackId, problemId) => ({
 
 const Problem = (props) => {
   const mounted = useRef(false);
+  const theme = useTheme();
   const classes = useStyles();
   const { trackId, problemId } = useParams();
+
+  const [editorTheme, setEditorTheme] = useState(
+    theme.palette.type === 'dark' ? 'dracula' : 'xcode',
+  );
   const [problem, setProblem] = useState(null);
   const [submission, setSubmission] = useState(
     newSubmission(trackId, problemId),
@@ -127,15 +154,25 @@ const Problem = (props) => {
                 className={classes.editorHeader}
               >
                 <Grid item>
-                  <Button>test</Button>
+                  <Dropdown
+                    title={
+                      <>
+                        <FontAwesomeIcon
+                          icon={faPaintBrush}
+                          className={classes.brushIcon}
+                        />
+                        {editorTheme}
+                      </>
+                    }
+                    items={themes.map((t) => ({
+                      content: t,
+                      onClick: () => setEditorTheme(t),
+                    }))}
+                    variant="contained"
+                  />
                 </Grid>
                 <Grid item>
-                  <Grid
-                    container
-                    alignItems="center"
-                    spacing={1}
-                    className={classes.submission}
-                  >
+                  <Grid container alignItems="center" spacing={1}>
                     <Grid item>
                       <SubmissionStatus loader={loader} {...submission} />
                     </Grid>
@@ -148,7 +185,7 @@ const Problem = (props) => {
             </Container>
             <AceEditor
               mode="python"
-              theme="dracula"
+              theme={editorTheme}
               width="100%"
               onChange={onChange}
               fontSize={14}

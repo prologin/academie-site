@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core';
 
 import Button from '@material-ui/core/Button';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCaretDown } from '@fortawesome/free-solid-svg-icons';
+
+import Dropdown from './Dropdown';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -24,20 +24,6 @@ const useStyles = makeStyles((theme) => ({
 
 const SubmissionButton = ({ onSubmit, onSave }) => {
   const classes = useStyles();
-  const [anchorEl, setAnchorEl] = useState(null);
-
-  const handleOpenExtraActionsMenu = (e) => {
-    setAnchorEl(e.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const handleSave = () => {
-    onSave();
-    handleClose();
-  };
 
   return (
     <div className={classes.root}>
@@ -49,32 +35,23 @@ const SubmissionButton = ({ onSubmit, onSave }) => {
       >
         Corriger
       </Button>
-      <Button
+      <Dropdown
         variant="contained"
         color="primary"
-        onClick={handleOpenExtraActionsMenu}
-        className={classes.extraActionsButton}
-      >
-        <FontAwesomeIcon icon={faCaretDown} />
-      </Button>
-      <Menu
-        id="simple-menu"
-        anchorEl={anchorEl}
-        keepMounted
-        open={Boolean(anchorEl)}
-        onClose={handleClose}
-        getContentAnchorEl={null}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'right',
+        items={[{ content: 'Enregistrer le brouillon', onClick: onSave }]}
+        title={<FontAwesomeIcon icon={faCaretDown} />}
+        buttonProps={{ className: classes.extraActionsButton }}
+        menuProps={{
+          anchorOrigin: {
+            vertical: 'bottom',
+            horizontal: 'right',
+          },
+          transformOrigin: {
+            vertical: 'top',
+            horizontal: 'right',
+          },
         }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}
-      >
-        <MenuItem onClick={handleSave}>Enregistrer le brouillon</MenuItem>
-      </Menu>
+      />
     </div>
   );
 };
