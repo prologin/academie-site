@@ -7,6 +7,8 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import SocialNetworks from './components/SocialNetworks';
 import Navigation from './components/Navigation';
 import Tracks from './components/Tracks';
+import Track from './components/Track';
+import Problem from './components/Problem';
 
 function ComingSoon() {
   return (
@@ -47,6 +49,16 @@ function App() {
           <Route path="/tracks">
             <Navigation>
               <Tracks />
+            </Navigation>
+          </Route>
+          <Route exact path="/track/:trackId">
+            <Navigation>
+              <Track />
+            </Navigation>
+          </Route>
+          <Route path="/track/:trackId/problem/:problemId">
+            <Navigation>
+              <Problem />
             </Navigation>
           </Route>
           <Route path="*">
