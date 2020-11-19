@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core';
 
 import Button from '@material-ui/core/Button';
@@ -54,6 +55,11 @@ const SubmissionButton = ({ onSubmit, onSave }) => {
       />
     </div>
   );
+};
+
+SubmissionButton.propTypes = {
+  onSubmit: PropTypes.func.isRequired,
+  onSave: PropTypes.func.isRequired,
 };
 
 export default SubmissionButton;

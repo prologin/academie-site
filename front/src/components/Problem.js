@@ -55,7 +55,7 @@ const newSubmission = (trackId, problemId) => ({
   code: '',
 });
 
-const Problem = (props) => {
+const Problem = () => {
   const mounted = useRef(false);
   const theme = useTheme();
   const classes = useStyles();

@@ -2,7 +2,11 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTwitter, faFacebook, faLinkedin } from '@fortawesome/free-brands-svg-icons';
+import {
+  faTwitter,
+  faFacebook,
+  faLinkedin,
+} from '@fortawesome/free-brands-svg-icons';
 
 const useStyles = makeStyles((theme) => ({
   socialMediaIcon: {
@@ -44,7 +48,10 @@ const SocialNetworks = () => {
         target="_blank"
         rel="noopener noreferrer"
       >
-        <FontAwesomeIcon className={classes.socialMediaIcon} icon={faLinkedin} />
+        <FontAwesomeIcon
+          className={classes.socialMediaIcon}
+          icon={faLinkedin}
+        />
       </a>
     </div>
   );

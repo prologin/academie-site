@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core';
 
 import Tooltip from '@material-ui/core/Tooltip';
@@ -67,6 +68,14 @@ const SubmissionStatus = ({
       </Tooltip>
     );
   return null;
+};
+
+SubmissionStatus.propTypes = {
+  submission_count: PropTypes.number,
+  submission_date: PropTypes.string,
+  correction_date: PropTypes.string,
+  passed: PropTypes.bool,
+  loader: PropTypes.bool.isRequired,
 };
 
 export default SubmissionStatus;

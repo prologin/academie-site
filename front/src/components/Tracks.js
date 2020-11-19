@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -37,7 +38,12 @@ const TrackNode = ({ id, properties }) => {
   );
 };
 
-const Home = () => {
+TrackNode.propTypes = {
+  id: PropTypes.number.isRequired,
+  properties: PropTypes.object.isRequired,
+};
+
+const Tracks = () => {
   const mounted = useRef(false);
   const classes = useStyles();
   const [tracks, setTracks] = useState(null);
@@ -51,7 +57,7 @@ const Home = () => {
     if (!mounted.current) onComponentMount();
   });
 
-  const Tracks = () =>
+  const TrackList = () =>
     tracks && tracks.length ? (
       tracks.map((track, index) => (
         <Grid item xs={12} key={`track-${index}`}>
@@ -65,10 +71,10 @@ const Home = () => {
   return (
     <Container maxWidth="md" className={classes.root}>
       <Grid container justify="center" spacing={2}>
-        <Tracks />
+        <TrackList />
       </Grid>
     </Container>
   );
 };
 
-export default Home;
+export default Tracks;
