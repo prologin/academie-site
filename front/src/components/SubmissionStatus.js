@@ -34,7 +34,6 @@ const SubmissionStatus = ({
       return (
         <Tooltip
           title={`Tests réussis le ${correctioDate}`}
-          placement="top"
           arrow
         >
           <Alert severity="success" className={classes.alert}>
@@ -45,7 +44,6 @@ const SubmissionStatus = ({
     return (
       <Tooltip
         title={`Tests échoués le ${correctioDate}`}
-        placement="top"
         arrow
       >
         <Alert severity="warning" className={classes.alert}>
@@ -59,7 +57,6 @@ const SubmissionStatus = ({
     return (
       <Tooltip
         title={new Date(submission_date).toLocaleString()}
-        placement="top"
         arrow
       >
         <Alert severity="info" className={classes.alert}>

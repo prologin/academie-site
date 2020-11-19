@@ -6,20 +6,19 @@ import { useTheme } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
 import Container from '@material-ui/core/Container';
-import Markdown from 'markdown-to-jsx';
 import AceEditor from 'react-ace';
-import { markdownOptions } from '../config/markdown';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPaintBrush } from '@fortawesome/free-solid-svg-icons';
 
 import TrackApi from '../api/trackApi';
 import SubmissionButton from './SubmissionButton';
 import SubmissionApi from '../api/submissionApi';
 import SubmissionStatus from './SubmissionStatus';
+import Dropdown from './Dropdown';
+import Markdown from './Markdown';
 
 import 'ace-builds/src-noconflict/mode-python';
 import 'ace-builds/src-noconflict/snippets/python';
-import Dropdown from './Dropdown';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPaintBrush } from '@fortawesome/free-solid-svg-icons';
 
 const themes = [
   'dracula',
@@ -39,7 +38,19 @@ themes.forEach((theme) => require(`ace-builds/src-noconflict/theme-${theme}`));
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    padding: 16,
+    height: '100%',
+    overflow: 'auto',
+  },
+  container: {
+    height: 'inherit',
+  },
+  subject: {
+    overflowY: 'auto',
+    maxHeight: '100%',
+    padding: theme.spacing(4),
+  },
+  editor: {
+    height: '100%',
   },
   editorHeader: {
     padding: 5,
@@ -124,28 +135,27 @@ const Problem = () => {
   useEffect(() => {
     const onComponentMount = async () => {
       const data = await TrackApi.getProblem(trackId, problemId);
+      mounted.current = true;
       setProblem(data);
-      if (data && data.submission) {
+      setSubmission({ ...submission, code: data.scaffold });
+      if (data.submission) {
         const submissionData = await SubmissionApi.getSubmission(
           data.submission,
         );
         setSubmission(submissionData);
       }
-      mounted.current = true;
     };
     if (!mounted.current) onComponentMount();
   });
 
   return (
     <div className={classes.root}>
-      <Grid container spacing={2}>
-        <Grid item sm={12} md={6}>
-          <Markdown options={markdownOptions}>
-            {problem ? problem.subject : 'Not found.'}
-          </Markdown>
+      <Grid container className={classes.container}>
+        <Grid item sm={12} md={6} className={classes.subject}>
+          <Markdown>{problem ? problem.subject : 'Not found.'}</Markdown>
         </Grid>
-        <Grid item xs={12} md={6}>
-          <Card variant="outlined">
+        <Grid item xs={12} md={6} className={classes.container}>
+          <Card square className={classes.editor}>
             <Container maxWidth={false}>
               <Grid
                 container
@@ -187,8 +197,9 @@ const Problem = () => {
               mode="python"
               theme={editorTheme}
               width="100%"
+              height="calc(100% - 46px)"
               onChange={onChange}
-              fontSize={14}
+              fontSize={20}
               showPrintMargin={true}
               showGutter={true}
               highlightActiveLine={true}

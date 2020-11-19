@@ -37,13 +37,34 @@ function App() {
         palette: {
           type: prefersDarkMode ? 'dark' : 'light',
         },
+        overrides: {
+          MuiCssBaseline: {
+            '@global': {
+              '.hljs': {
+                background: '#282a36',
+              },
+              code: {
+                backgroundColor: prefersDarkMode ? '#282a36' : 'gainsboro',
+              },
+            },
+          },
+        },
+        mixins: {
+          container: {
+            height: 'calc(100vh - 56px)',
+            '@media (min-width:0px) and (orientation: landscape)': {
+              height: 'calc(100vh - 48px)',
+            },
+            '@media (min-width:600px)': { height: 'calc(100vh - 64px)' },
+          },
+        },
       }),
     [prefersDarkMode],
   );
 
   return (
     <ThemeProvider theme={theme}>
-      <CssBaseline/>
+      <CssBaseline />
       <Router>
         <Switch>
           <Route path="/tracks">

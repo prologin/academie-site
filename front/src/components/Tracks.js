@@ -51,8 +51,8 @@ const Tracks = () => {
   useEffect(() => {
     const onComponentMount = async () => {
       const data = await TrackApi.getTracks();
-      setTracks(data);
       mounted.current = true;
+      setTracks(data);
     };
     if (!mounted.current) onComponentMount();
   });

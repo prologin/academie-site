@@ -10,6 +10,7 @@ import Typography from '@material-ui/core/Typography';
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
+    height: '100vh',
   },
   title: {
     flexGrow: 1,
@@ -20,13 +21,13 @@ const useStyles = makeStyles((theme) => ({
     display: 'inherit',
     alignItems: 'inherit',
     marginRight: 60,
-    marginLeft: 33,
     '& img': {
       maxHeight: 46,
       marginRight: 10,
     },
   },
   toolbar: theme.mixins.toolbar,
+  container: theme.mixins.container,
 }));
 
 function Navigation({ children }) {
@@ -34,18 +35,18 @@ function Navigation({ children }) {
 
   return (
     <div className={classes.root}>
-      <AppBar position="fixed">
+      <AppBar position="fixed" elevation={2}>
         <Toolbar>
           <Link to="/" className={classes.logo}>
             <img src="/images/logo_cube.png" alt="logo" />
             <Typography variant="h6" className={classes.title}>
-              Prologin
+              Academie Prologin
             </Typography>
           </Link>
         </Toolbar>
       </AppBar>
       <div className={classes.toolbar} />
-      {children}
+      <div className={classes.container}>{children}</div>
     </div>
   );
 }
