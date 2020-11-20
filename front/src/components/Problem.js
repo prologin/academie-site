@@ -140,7 +140,7 @@ const Problem = () => {
       setSubmission({ ...submission, code: data.scaffold });
       if (data.submission) {
         const submissionData = await SubmissionApi.getSubmission(
-          data.submission,
+          data.submission.id,
         );
         setSubmission(submissionData);
       }
