@@ -8,7 +8,7 @@ import Card from '@material-ui/core/Card';
 import Container from '@material-ui/core/Container';
 import AceEditor from 'react-ace';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPaintBrush } from '@fortawesome/free-solid-svg-icons';
+import { faFont, faPaintBrush } from '@fortawesome/free-solid-svg-icons';
 
 import TrackApi from '../api/trackApi';
 import SubmissionButton from './SubmissionButton';
@@ -36,6 +36,8 @@ const themes = [
 
 themes.forEach((theme) => require(`ace-builds/src-noconflict/theme-${theme}`));
 
+const sizes = [12, 14, 16, 18, 20, 24, 30];
+
 const useStyles = makeStyles((theme) => ({
   root: {
     height: '100%',
@@ -55,8 +57,11 @@ const useStyles = makeStyles((theme) => ({
   editorHeader: {
     padding: 5,
   },
-  brushIcon: {
+  textIcon: {
     marginRight: theme.spacing(1),
+  },
+  optionDropdown: {
+    marginRight: 5,
   },
 }));
 
@@ -75,6 +80,7 @@ const Problem = () => {
   const [editorTheme, setEditorTheme] = useState(
     theme.palette.type === 'dark' ? 'dracula' : 'xcode',
   );
+  const [fontSize, setFontSize] = useState(20);
   const [problem, setProblem] = useState(null);
   const [submission, setSubmission] = useState(
     newSubmission(trackId, problemId),
@@ -169,7 +175,7 @@ const Problem = () => {
                       <>
                         <FontAwesomeIcon
                           icon={faPaintBrush}
-                          className={classes.brushIcon}
+                          className={classes.textIcon}
                         />
                         {editorTheme}
                       </>
@@ -179,6 +185,24 @@ const Problem = () => {
                       onClick: () => setEditorTheme(t),
                     }))}
                     variant="contained"
+                    buttonProps={{ className: classes.optionDropdown }}
+                  />
+                  <Dropdown
+                    title={
+                      <>
+                        <FontAwesomeIcon
+                          icon={faFont}
+                          className={classes.textIcon}
+                        />
+                        {fontSize}px
+                      </>
+                    }
+                    items={sizes.map((t) => ({
+                      content: t,
+                      onClick: () => setFontSize(t),
+                    }))}
+                    variant="contained"
+                    buttonProps={{ className: classes.optionDropdown }}
                   />
                 </Grid>
                 <Grid item>
@@ -199,7 +223,7 @@ const Problem = () => {
               width="100%"
               height="calc(100% - 46px)"
               onChange={onChange}
-              fontSize={20}
+              fontSize={fontSize}
               showPrintMargin={true}
               showGutter={true}
               highlightActiveLine={true}
