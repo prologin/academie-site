@@ -40,6 +40,7 @@ class SubmissionSerializer(serializers.ModelSerializer):
             "submission_date",
             "correction_date",
             "submission_count",
+            "correction_count",
             "passed",
             "correction_data",
         )
@@ -49,6 +50,7 @@ class SubmissionSerializer(serializers.ModelSerializer):
             "submission_date",
             "correction_date",
             "submission_count",
+            "correction_count",
             "passed",
             "correction_data",
         )

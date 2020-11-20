@@ -109,7 +109,7 @@ class ProblemViewSet(viewsets.ViewSet):
         for p in track_instance.track.problems:
             res = {"problem_id": p.id}
             res["properties"] = p.properties
-            res["solved"] = self._get_related_user_submission(
+            res["submission"] = self._get_related_user_submission(
                 request.user, track_instance, p
             )
             problems.append(res)

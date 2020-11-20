@@ -46,6 +46,7 @@ class Submission(models.Model):
     submission_date = models.DateTimeField(null=True, blank=True)
     correction_date = models.DateTimeField(null=True, blank=True)
     submission_count = models.IntegerField(default=1, editable=True)
+    correction_count = models.IntegerField(default=0, editable=True)
     passed = models.BooleanField(default=False, editable=True)
     correction_data = models.JSONField(blank=True, null=True)
 

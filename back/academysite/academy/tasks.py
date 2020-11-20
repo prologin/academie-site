@@ -56,6 +56,7 @@ def run_code_submission(submission_id) -> bool:
     submission.correction_date = timezone.now()
     submission.correction_data = camisole_response
     submission.passed = passed
+    submission.correction_count += 1
     submission.save()
 
     return True
