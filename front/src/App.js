@@ -3,6 +3,8 @@ import './App.css';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 import { createMuiTheme, CssBaseline, ThemeProvider } from '@material-ui/core';
+import { getMuiThemeConfig } from './config/theming';
+
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import SocialNetworks from './components/SocialNetworks';
 import Navigation from './components/Navigation';
@@ -32,33 +34,7 @@ function App() {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
 
   const theme = React.useMemo(
-    () =>
-      createMuiTheme({
-        palette: {
-          type: prefersDarkMode ? 'dark' : 'light',
-        },
-        overrides: {
-          MuiCssBaseline: {
-            '@global': {
-              '.hljs': {
-                background: '#282a36',
-              },
-              code: {
-                backgroundColor: prefersDarkMode ? '#282a36' : 'gainsboro',
-              },
-            },
-          },
-        },
-        mixins: {
-          container: {
-            height: 'calc(100vh - 56px)',
-            '@media (min-width:0px) and (orientation: landscape)': {
-              height: 'calc(100vh - 48px)',
-            },
-            '@media (min-width:600px)': { height: 'calc(100vh - 64px)' },
-          },
-        },
-      }),
+    () => createMuiTheme(getMuiThemeConfig(prefersDarkMode)),
     [prefersDarkMode],
   );
 

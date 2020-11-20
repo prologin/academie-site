@@ -28,11 +28,14 @@ const TrackNode = ({ id, properties }) => {
         <Typography variant="body2">{description}</Typography>
       </CardContent>
       <CardActions>
-        <Link to={`/track/${id}`}>
-          <Button variant="contained" color="primary">
-            Commencer les exercices
-          </Button>
-        </Link>
+        <Link
+          to={`/track/${id}/`}
+          component={({ href }) => (
+            <Button variant="contained" color="primary" href={href}>
+              Commencer les exercices
+            </Button>
+          )}
+        ></Link>
       </CardActions>
     </Card>
   );

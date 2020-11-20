@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
+import { indigo } from '@material-ui/core/colors';
 
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -26,6 +27,9 @@ const useStyles = makeStyles((theme) => ({
       marginRight: 10,
     },
   },
+  appBar: {
+    backgroundColor: indigo[600]
+  },
   toolbar: theme.mixins.toolbar,
   container: theme.mixins.container,
 }));
@@ -35,7 +39,7 @@ function Navigation({ children }) {
 
   return (
     <div className={classes.root}>
-      <AppBar position="fixed" elevation={2}>
+      <AppBar position="fixed" elevation={2} className={classes.appBar}>
         <Toolbar>
           <Link to="/" className={classes.logo}>
             <img src="/images/logo_cube.png" alt="logo" />
