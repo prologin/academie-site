@@ -19,22 +19,6 @@ import Track from './components/Track';
 import Problem from './components/Problem';
 import StateProvider from './config/store';
 
-function ComingSoon() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src="/images/logo_cube.png" className="App-logo" alt="logo" />
-        <h1>Coming soon !</h1>
-        <p>
-          Le lancement de ce site sera annoncé sur nos réseaux, alors si vous
-          <br />
-          souhaitez apprendre la programmation, suivez nous sur nos réseaux !
-        </p>
-        <SocialNetworks />
-      </header>
-    </div>
-  );
-}
 
 const AppRouter = () => {
   const history = useHistory();
@@ -62,7 +46,7 @@ const AppRouter = () => {
         </Navigation>
       </Route>
       <Route path="*">
-        <ComingSoon />
+          <Tracks />
       </Route>
     </Switch>
   );
