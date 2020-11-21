@@ -5,6 +5,9 @@ import pink from '@material-ui/core/colors/pink';
 export const lightTheme = createMuiTheme({
   palette: {
     type: 'light',
+    background: {
+      default: '#f2f3f3',
+    },
   },
   overrides: {
     MuiCssBaseline: {

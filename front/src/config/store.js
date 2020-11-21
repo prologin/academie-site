@@ -5,6 +5,7 @@ import produce from 'immer';
 import trackApi from '../api/trackApi';
 import submissionApi from '../api/submissionApi';
 
+const TOGGLE_DARK_THEME = 'TOGGLE_DARK_THEME';
 const FETCH_TRACKS = 'FETCH_TRACKS';
 const FETCH_TRACK = 'FETCH_TRACK';
 const FETCH_PROBLEMS = 'FETCH_PROBLEMS';
@@ -14,6 +15,11 @@ const CHANGE_SUBMISSION = 'CHANGE_SUBMISSION';
 const initialState = {
   tracks: [],
   problems: [],
+  // Get user's device theme mode (light/dark)
+  darkTheme:
+    localStorage.darkTheme === 'true' ||
+    (window.matchMedia &&
+      window.matchMedia('(prefers-color-scheme: dark)').matches),
 };
 
 const reducer = (state, action) => {
@@ -61,10 +67,19 @@ const reducer = (state, action) => {
           draft.problems[problemIndex].submission = action.submission;
         break;
 
+      case TOGGLE_DARK_THEME:
+        draft.darkTheme = !draft.darkTheme;
+        localStorage.darkTheme = draft.darkTheme;
+        break;
+
       default:
         break;
     }
   });
+};
+
+const toggleDarkTheme = {
+  type: TOGGLE_DARK_THEME,
 };
 
 const fetchTracks = () => {
@@ -163,6 +178,7 @@ const {
   Provider,
   useTracked,
   useSelector,
+  useTrackedState,
   useUpdate: useDispatch,
 } = createContainer(useValue);
 
@@ -172,6 +188,7 @@ export {
   useTracked,
   useDispatch,
   useSelector,
+  useTrackedState,
   fetchProblem,
   fetchProblems,
   fetchSubmission,
@@ -179,6 +196,7 @@ export {
   fetchTrack,
   fetchTracks,
   changeSubmission,
+  toggleDarkTheme,
 };
 
 export default StateProvider;

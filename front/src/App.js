@@ -11,63 +11,54 @@ import {
 import { CssBaseline, ThemeProvider } from '@material-ui/core';
 import { getMuiThemeConfig } from './config/theming';
 
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import SocialNetworks from './components/SocialNetworks';
 import Navigation from './components/Navigation';
 import Tracks from './components/Tracks';
 import Track from './components/Track';
 import Problem from './components/Problem';
-import StateProvider from './config/store';
-
+import StateProvider, { useTrackedState } from './config/store';
 
 const AppRouter = () => {
   const history = useHistory();
   const { pathname } = useLocation();
+  const { darkTheme } = useTrackedState();
 
   useEffect(() => {
     if (pathname.substr(-1) !== '/') history.replace(`${pathname}/`);
   });
 
   return (
-    <Switch>
-      <Route path="/tracks">
-        <Navigation>
+    <ThemeProvider theme={getMuiThemeConfig(darkTheme)}>
+      <CssBaseline />
+      <Switch>
+        <Route path="/tracks">
+          <Navigation>
+            <Tracks />
+          </Navigation>
+        </Route>
+        <Route exact path="/track/:trackId">
+          <Navigation>
+            <Track />
+          </Navigation>
+        </Route>
+        <Route exact path="/track/:trackId/problem/:problemId">
+          <Navigation problemProgress>
+            <Problem />
+          </Navigation>
+        </Route>
+        <Route path="*">
           <Tracks />
-        </Navigation>
-      </Route>
-      <Route exact path="/track/:trackId">
-        <Navigation>
-          <Track />
-        </Navigation>
-      </Route>
-      <Route exact path="/track/:trackId/problem/:problemId">
-        <Navigation problemProgress>
-          <Problem />
-        </Navigation>
-      </Route>
-      <Route path="*">
-          <Tracks />
-      </Route>
-    </Switch>
+        </Route>
+      </Switch>
+    </ThemeProvider>
   );
 };
 
 function App() {
-  // Get user's device theme mode (light/dark)
-  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
-
-  const theme = React.useMemo(() => getMuiThemeConfig(prefersDarkMode), [
-    prefersDarkMode,
-  ]);
-
   return (
     <StateProvider>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <Router>
-          <AppRouter />
-        </Router>
-      </ThemeProvider>
+      <Router>
+        <AppRouter />
+      </Router>
     </StateProvider>
   );
 }

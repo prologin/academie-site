@@ -9,9 +9,14 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
+import Tooltip from '@material-ui/core/Tooltip';
 import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
+import LightIcon from '@material-ui/icons/Brightness7';
+import DarkIcon from '@material-ui/icons/Brightness3';
 
 import TrackProgress from './TrackProgress';
+import { toggleDarkTheme, useTracked } from '../config/store';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -50,6 +55,12 @@ const useStyles = makeStyles((theme) => ({
 
 function Navigation({ children, problemProgress }) {
   const classes = useStyles();
+  const [state, dispatch] = useTracked();
+  const { darkTheme: prefersDarkTheme } = state;
+
+  const handleClickTheme = () => {
+    dispatch(toggleDarkTheme);
+  };
 
   return (
     <div className={classes.root}>
@@ -74,6 +85,17 @@ function Navigation({ children, problemProgress }) {
                 <Link to="/tracks">
                   <Button>Cursus</Button>
                 </Link>
+                <IconButton onClick={handleClickTheme}>
+                  {prefersDarkTheme ? (
+                    <Tooltip title="Turn off dark theme">
+                      <LightIcon />
+                    </Tooltip>
+                  ) : (
+                    <Tooltip title="Turn on dark theme">
+                      <DarkIcon />
+                    </Tooltip>
+                  )}
+                </IconButton>
               </Grid>
             </Grid>
           </Toolbar>
