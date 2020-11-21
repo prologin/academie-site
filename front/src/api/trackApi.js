@@ -15,6 +15,6 @@ const getProblem = async (track_id, problem_id) => {
   return httpClient.get(`${TRACK_API_URL}${track_id}/problem/${problem_id}/`);
 };
 
-const TrackApi = { getTracks, getTrack, getProblems, getProblem };
+const trackApi = { getTracks, getTrack, getProblems, getProblem };
 
-export default TrackApi;
+export default trackApi;

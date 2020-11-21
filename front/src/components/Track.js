@@ -12,9 +12,14 @@ import CardContent from '@material-ui/core/CardContent';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 
-import TrackApi from '../api/trackApi';
 import { Typography } from '@material-ui/core';
 import SubmissionStatus from './SubmissionStatus';
+import {
+  fetchProblems,
+  fetchTrack,
+  useDispatch,
+  useSelector,
+} from '../config/store';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -43,9 +48,7 @@ const ProblemNode = ({
 }) => {
   const { name, description } = properties;
   const classes = useStyles();
-  const [forceExpanded, setExpanded] = useState(
-    expanded || (submission && submission.passed),
-  );
+  const [forceExpanded, setExpanded] = useState(false);
 
   let buttonContent;
   if (submission) {
@@ -56,9 +59,19 @@ const ProblemNode = ({
 
   const handleClick = () => setExpanded(true);
 
+  useEffect(() => {
+    // reset force expanded on unmount
+    return () => {
+      setExpanded(false);
+    };
+  }, []);
+
+  const finalExpanded =
+    expanded || (submission && submission.passed) || forceExpanded;
+
   return (
-    <Step expanded={forceExpanded} {...props}>
-      <StepButton onClick={handleClick} disabled={forceExpanded}>
+    <Step expanded={finalExpanded} {...props}>
+      <StepButton onClick={handleClick} disabled={finalExpanded}>
         {name}
       </StepButton>
       <StepContent>
@@ -76,17 +89,12 @@ const ProblemNode = ({
                 {description}
                 <Link
                   to={`problem/${problem_id}/`}
-                  component={({ href }) => (
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      href={href}
-                      className={classes.problemButton}
-                    >
-                      {buttonContent}
-                    </Button>
-                  )}
-                />
+                  className={classes.problemButton}
+                >
+                  <Button variant="contained" color="primary" fullWidth>
+                    {buttonContent}
+                  </Button>
+                </Link>
               </Grid>
               <Grid item md={6} xs={12} className={classes.flex}>
                 <SubmissionStatus variant="detailed" {...submission} />
@@ -103,16 +111,17 @@ const Track = () => {
   const mounted = useRef(false);
   const classes = useStyles();
   const { trackId } = useParams();
-  const [track, setTrack] = useState(null);
-  const [problems, setProblems] = useState([]);
+  const dispatch = useDispatch();
+  const { track, problems } = useSelector((state) => {
+    const t = state.tracks.find((x) => x.id === trackId);
+    return { track: t, problems: state.problems };
+  });
 
   useEffect(() => {
-    const onComponentMount = async () => {
-      const trackData = await TrackApi.getTrack(trackId);
+    const onComponentMount = () => {
+      dispatch(fetchProblems(trackId));
+      dispatch(fetchTrack(trackId));
       mounted.current = true;
-      setTrack(trackData);
-      const problemsData = await TrackApi.getProblems(trackId);
-      setProblems(problemsData);
     };
     if (!mounted.current) onComponentMount();
   });

@@ -17,11 +17,11 @@ const runSubmission = async (submissionId) => {
   return httpClient.post(`${SUBMISSION_API_URL}${submissionId}/run/`);
 };
 
-const SubmissionApi = {
+const submissionApi = {
   getSubmission,
   newSubmission,
   updateSubmission,
   runSubmission,
 };
 
-export default SubmissionApi;
+export default submissionApi;

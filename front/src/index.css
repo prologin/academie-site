@@ -11,6 +11,10 @@ code {
   border-radius: 4px;
 }
 
+a {
+  text-decoration: unset;
+}
+
 ::-webkit-scrollbar {
   background-color: #20232488;
   color: #aba499;

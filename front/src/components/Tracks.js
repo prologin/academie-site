@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
@@ -10,8 +10,8 @@ import CardActions from '@material-ui/core/CardActions';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 
-import TrackApi from '../api/trackApi';
 import { Container } from '@material-ui/core';
+import { fetchTracks, useTracked } from '../config/store';
 
 const useStyles = makeStyles({
   root: {
@@ -28,14 +28,11 @@ const TrackNode = ({ id, properties }) => {
         <Typography variant="body2">{description}</Typography>
       </CardContent>
       <CardActions>
-        <Link
-          to={`/track/${id}/`}
-          component={({ href }) => (
-            <Button variant="contained" color="primary" href={href}>
-              Commencer les exercices
-            </Button>
-          )}
-        ></Link>
+        <Link to={`/track/${id}/`}>
+          <Button variant="contained" color="primary">
+            Commencer les exercices
+          </Button>
+        </Link>
       </CardActions>
     </Card>
   );
@@ -49,13 +46,13 @@ TrackNode.propTypes = {
 const Tracks = () => {
   const mounted = useRef(false);
   const classes = useStyles();
-  const [tracks, setTracks] = useState(null);
+  const [state, dispatch] = useTracked();
+  const { tracks } = state;
 
   useEffect(() => {
-    const onComponentMount = async () => {
-      const data = await TrackApi.getTracks();
+    const onComponentMount = () => {
+      dispatch(fetchTracks());
       mounted.current = true;
-      setTracks(data);
     };
     if (!mounted.current) onComponentMount();
   });

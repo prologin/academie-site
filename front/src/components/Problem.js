@@ -10,15 +10,23 @@ import AceEditor from 'react-ace';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFont, faPaintBrush } from '@fortawesome/free-solid-svg-icons';
 
-import TrackApi from '../api/trackApi';
 import SubmissionButton from './SubmissionButton';
-import SubmissionApi from '../api/submissionApi';
 import SubmissionStatus from './SubmissionStatus';
 import Dropdown from './Dropdown';
-import Markdown from './Markdown';
+import HighlightedMarkdown from './Markdown';
+import submissionApi from '../api/submissionApi';
+
+import {
+  changeSubmission,
+  useDispatch,
+  useSelector,
+  fetchSubmissionUntilCorrectionEnds,
+  fetchProblem,
+} from '../config/store';
 
 import 'ace-builds/src-noconflict/mode-python';
 import 'ace-builds/src-noconflict/snippets/python';
+import { usePrevious } from '../utils/utils';
 
 const themes = [
   'dracula',
@@ -76,28 +84,35 @@ const Problem = () => {
   const theme = useTheme();
   const classes = useStyles();
   const { trackId, problemId } = useParams();
+  const dispatch = useDispatch();
 
   const [editorTheme, setEditorTheme] = useState(
     theme.palette.type === 'dark' ? 'dracula' : 'xcode',
   );
   const [fontSize, setFontSize] = useState(20);
-  const [problem, setProblem] = useState(null);
-  const [submission, setSubmission] = useState(
-    newSubmission(trackId, problemId),
-  );
   const [loader, setLoader] = useState(false);
+  const { problem, submission } = useSelector((state) => {
+    const prob = state.problems.find((p) => p.problem_id === problemId);
+    let sub;
+    if (prob && prob.submission) sub = prob.submission;
+    else if (prob)
+      sub = { ...newSubmission(trackId, problemId), code: prob.scaffold };
+    else sub = newSubmission(trackId, problemId);
+    return { problem: prob, submission: sub };
+  });
+  const prevSubmission = usePrevious(submission);
 
   const onChange = (newValue) => {
-    setSubmission({ ...submission, code: newValue });
+    dispatch(changeSubmission({ ...submission, code: newValue }));
   };
 
   const onSave = async (throwError = false) => {
     try {
       setLoader(true);
       const newSubmission = submission.id
-        ? await SubmissionApi.updateSubmission(submission)
-        : await SubmissionApi.newSubmission(submission);
-      setSubmission(newSubmission);
+        ? await submissionApi.updateSubmission(submission)
+        : await submissionApi.newSubmission(submission);
+      dispatch(changeSubmission(newSubmission));
       if (!throwError) setLoader(false);
       return newSubmission;
     } catch {
@@ -110,28 +125,9 @@ const Problem = () => {
   const onSubmit = async () => {
     try {
       setLoader(true);
-      const startDate = Date.now();
       const newSubmission = await onSave(true);
-      await SubmissionApi.runSubmission(newSubmission.id);
-      let i = 0;
-      const interval = setInterval(async () => {
-        i++;
-        try {
-          const data = await SubmissionApi.getSubmission(newSubmission.id);
-          if (
-            (data.correction_date &&
-              new Date(data.correction_date).getTime() > startDate) ||
-            i > 60 // timeout after 60secs
-          ) {
-            setSubmission(data);
-            setLoader(false);
-            clearInterval(interval);
-          }
-        } catch {
-          clearInterval(interval);
-          setLoader(false);
-        }
-      }, 1000);
+      await submissionApi.runSubmission(newSubmission.id);
+      dispatch(fetchSubmissionUntilCorrectionEnds(newSubmission.id));
     } catch {
       console.log("Couldn't submit your code");
       setLoader(false);
@@ -139,26 +135,29 @@ const Problem = () => {
   };
 
   useEffect(() => {
-    const onComponentMount = async () => {
-      const data = await TrackApi.getProblem(trackId, problemId);
+    const onComponentMount = () => {
+      dispatch(fetchProblem(trackId, problemId));
       mounted.current = true;
-      setProblem(data);
-      setSubmission({ ...submission, code: data.scaffold });
-      if (data.submission) {
-        const submissionData = await SubmissionApi.getSubmission(
-          data.submission.id,
-        );
-        setSubmission(submissionData);
-      }
     };
     if (!mounted.current) onComponentMount();
   });
+
+  useEffect(() => {
+    if (
+      prevSubmission &&
+      submission &&
+      prevSubmission.correction_date !== submission.correction_date
+    )
+      setLoader(false);
+  }, [prevSubmission, submission]);
 
   return (
     <div className={classes.root}>
       <Grid container className={classes.container}>
         <Grid item sm={12} md={6} className={classes.subject}>
-          <Markdown>{problem ? problem.subject : 'Not found.'}</Markdown>
+          <HighlightedMarkdown>
+            {(problem && problem.subject) || 'Not found.'}
+          </HighlightedMarkdown>
         </Grid>
         <Grid item xs={12} md={6} className={classes.container}>
           <Card square className={classes.editor}>

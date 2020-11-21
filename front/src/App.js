@@ -11,6 +11,7 @@ import Navigation from './components/Navigation';
 import Tracks from './components/Tracks';
 import Track from './components/Track';
 import Problem from './components/Problem';
+import StateProvider from './config/store';
 
 function ComingSoon() {
   return (
@@ -39,31 +40,33 @@ function App() {
   );
 
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Router>
-        <Switch>
-          <Route path="/tracks">
-            <Navigation>
-              <Tracks />
-            </Navigation>
-          </Route>
-          <Route exact path="/track/:trackId">
-            <Navigation>
-              <Track />
-            </Navigation>
-          </Route>
-          <Route path="/track/:trackId/problem/:problemId">
-            <Navigation>
-              <Problem />
-            </Navigation>
-          </Route>
-          <Route path="*">
-            <ComingSoon />
-          </Route>
-        </Switch>
-      </Router>
-    </ThemeProvider>
+    <StateProvider>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <Router>
+          <Switch>
+            <Route path="/tracks">
+              <Navigation>
+                <Tracks />
+              </Navigation>
+            </Route>
+            <Route exact path="/track/:trackId">
+              <Navigation>
+                <Track />
+              </Navigation>
+            </Route>
+            <Route exact path="/track/:trackId/problem/:problemId">
+              <Navigation>
+                <Problem />
+              </Navigation>
+            </Route>
+            <Route path="*">
+              <ComingSoon />
+            </Route>
+          </Switch>
+        </Router>
+      </ThemeProvider>
+    </StateProvider>
   );
 }
 
