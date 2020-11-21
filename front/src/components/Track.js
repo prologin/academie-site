@@ -113,7 +113,7 @@ const Track = () => {
   const { trackId } = useParams();
   const dispatch = useDispatch();
   const { track, problems } = useSelector((state) => {
-    const t = state.tracks.find((x) => x.id === trackId);
+    const t = state.tracks.find((x) => x.id === Number(trackId));
     return { track: t, problems: state.problems };
   });
 
