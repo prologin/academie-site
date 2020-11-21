@@ -134,11 +134,12 @@ const Problem = () => {
     }
   };
 
+  const onComponentMount = () => {
+    dispatch(fetchProblem(trackId, problemId));
+    mounted.current = true;
+  };
+
   useEffect(() => {
-    const onComponentMount = () => {
-      dispatch(fetchProblem(trackId, problemId));
-      mounted.current = true;
-    };
     if (!mounted.current) onComponentMount();
   });
 
@@ -150,6 +151,12 @@ const Problem = () => {
     )
       setLoader(false);
   }, [prevSubmission, submission]);
+
+  useEffect(() => {
+    // call componentMount only if problemId changed
+    onComponentMount();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [problemId]);
 
   return (
     <div className={classes.root}>

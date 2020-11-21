@@ -1,8 +1,14 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './App.css';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  useHistory,
+  useLocation,
+} from 'react-router-dom';
 
-import { createMuiTheme, CssBaseline, ThemeProvider } from '@material-ui/core';
+import { CssBaseline, ThemeProvider } from '@material-ui/core';
 import { getMuiThemeConfig } from './config/theming';
 
 import useMediaQuery from '@material-ui/core/useMediaQuery';
@@ -30,40 +36,52 @@ function ComingSoon() {
   );
 }
 
+const AppRouter = () => {
+  const history = useHistory();
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    if (pathname.substr(-1) !== '/') history.replace(`${pathname}/`);
+  });
+
+  return (
+    <Switch>
+      <Route path="/tracks">
+        <Navigation>
+          <Tracks />
+        </Navigation>
+      </Route>
+      <Route exact path="/track/:trackId">
+        <Navigation>
+          <Track />
+        </Navigation>
+      </Route>
+      <Route exact path="/track/:trackId/problem/:problemId">
+        <Navigation problemProgress>
+          <Problem />
+        </Navigation>
+      </Route>
+      <Route path="*">
+        <ComingSoon />
+      </Route>
+    </Switch>
+  );
+};
+
 function App() {
   // Get user's device theme mode (light/dark)
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
 
-  const theme = React.useMemo(
-    () => createMuiTheme(getMuiThemeConfig(prefersDarkMode)),
-    [prefersDarkMode],
-  );
+  const theme = React.useMemo(() => getMuiThemeConfig(prefersDarkMode), [
+    prefersDarkMode,
+  ]);
 
   return (
     <StateProvider>
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <Router>
-          <Switch>
-            <Route path="/tracks">
-              <Navigation>
-                <Tracks />
-              </Navigation>
-            </Route>
-            <Route exact path="/track/:trackId">
-              <Navigation>
-                <Track />
-              </Navigation>
-            </Route>
-            <Route exact path="/track/:trackId/problem/:problemId">
-              <Navigation>
-                <Problem />
-              </Navigation>
-            </Route>
-            <Route path="*">
-              <ComingSoon />
-            </Route>
-          </Switch>
+          <AppRouter />
         </Router>
       </ThemeProvider>
     </StateProvider>

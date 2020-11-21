@@ -39,7 +39,7 @@ const reducer = (state, action) => {
           const prevProblem = state.problems.find(
             (prob) => prob.problem_id === problem.problem_id,
           );
-          // Keep detailed data from previous FETCH_PROBLEM actions if it 
+          // Keep detailed data from previous FETCH_PROBLEM actions if it
           // still exists in the new problems list
           return { ...prevProblem, ...problem };
         });
@@ -150,21 +150,23 @@ const fetchSubmissionUntilCorrectionEnds = (submissionId, timeout = 60) => {
   };
 };
 
-const useValue = () => useReducer(reducer, initialState);
-const { Provider, useTracked, useSelector, useUpdate } = createContainer(
-  useValue,
-);
-
-const StateProvider = ({ children }) => <Provider>{children}</Provider>;
-
-const useDispatch = () => {
-  const dispatch = useUpdate();
+const useValue = () => {
+  const [state, dispatch] = useReducer(reducer, initialState);
   const dispatchWithCallback = (dispatcher) => {
     if (typeof dispatcher === 'function') dispatcher(dispatchWithCallback);
     else dispatch(dispatcher);
   };
-  return dispatchWithCallback;
+  return [state, dispatchWithCallback];
 };
+
+const {
+  Provider,
+  useTracked,
+  useSelector,
+  useUpdate: useDispatch,
+} = createContainer(useValue);
+
+const StateProvider = ({ children }) => <Provider>{children}</Provider>;
 
 export {
   useTracked,

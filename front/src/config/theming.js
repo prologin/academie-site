@@ -1,7 +1,8 @@
+import { createMuiTheme } from '@material-ui/core';
 import blue from '@material-ui/core/colors/blue';
 import pink from '@material-ui/core/colors/pink';
 
-const lightTheme = {
+export const lightTheme = createMuiTheme({
   palette: {
     type: 'light',
   },
@@ -26,9 +27,9 @@ const lightTheme = {
       '@media (min-width:600px)': { height: 'calc(100vh - 64px)' },
     },
   },
-};
+});
 
-const darkTheme = {
+export const darkTheme = createMuiTheme({
   palette: {
     type: 'dark',
     primary: {
@@ -59,7 +60,7 @@ const darkTheme = {
       '@media (min-width:600px)': { height: 'calc(100vh - 64px)' },
     },
   },
-};
+});
 
 export const getMuiThemeConfig = (prefersDarkMode) => {
   return prefersDarkMode ? darkTheme : lightTheme;
