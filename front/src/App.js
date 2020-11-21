@@ -6,6 +6,7 @@ import {
   Route,
   useHistory,
   useLocation,
+  Redirect,
 } from 'react-router-dom';
 
 import { CssBaseline, ThemeProvider } from '@material-ui/core';
@@ -46,7 +47,7 @@ const AppRouter = () => {
           </Navigation>
         </Route>
         <Route path="*">
-          <Tracks />
+          <Redirect to="/tracks/" />
         </Route>
       </Switch>
     </ThemeProvider>
