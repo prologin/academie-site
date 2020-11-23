@@ -82,9 +82,10 @@ class ProblemViewSet(viewsets.ViewSet):
 
     def _get_related_user_submission(self, user, track, problem):
         try:
-            return Submission.objects.get(
+            sub = Submission.objects.get(
                 track=track, author=user, problem_id=problem.id
-            ).id
+            )
+            return serializers.SubmissionSerializer(instance=sub).data
         except ObjectDoesNotExist:
             return None
 
