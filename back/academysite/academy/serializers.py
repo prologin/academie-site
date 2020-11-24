@@ -66,4 +66,5 @@ class UserSerializer(serializers.ModelSerializer):
             "last_name",
             "email",
             "groups",
+            "is_staff",
         )
