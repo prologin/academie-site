@@ -48,8 +48,8 @@ const useStyles = makeStyles((theme) => ({
   },
   menu: {
     textAlign: 'right',
-    justifyContent: "flex-end",
-    alignItems: "center"
+    justifyContent: 'flex-end',
+    alignItems: 'center',
   },
   progress: {
     textAlign: 'center',

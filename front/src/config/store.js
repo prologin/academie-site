@@ -74,7 +74,7 @@ const reducer = (state, action) => {
         draft.darkTheme = !draft.darkTheme;
         localStorage.darkTheme = draft.darkTheme;
         break;
-      
+
       case CHANGE_MY_PROFILE:
         draft.profile = action.profile;
         break;
@@ -173,15 +173,16 @@ const fetchSubmissionUntilCorrectionEnds = (submissionId, timeout = 60) => {
 };
 
 const changeMyProfile = (profile) => {
-  return {type: CHANGE_MY_PROFILE, profile };
-}
+  return { type: CHANGE_MY_PROFILE, profile };
+};
 
 const fetchMyProfile = () => {
   return async (dispatch) => {
-    await userApi.getMyProfile()
+    await userApi
+      .getMyProfile()
       .catch(() => dispatch(changeMyProfile(false)))
-      .then(profile => dispatch(changeMyProfile(profile)));
-  }
+      .then((profile) => dispatch(changeMyProfile(profile)));
+  };
 };
 
 const useValue = () => {
