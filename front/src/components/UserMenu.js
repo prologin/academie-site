@@ -18,7 +18,6 @@ import {
 
 function UserMenu() {
   const mounted = React.useRef(false);
-  const [menu, setMenu] = React.useState([]);
   const [state, dispatch] = useTracked();
   const { darkTheme, profile } = state;
   const redirectTo = (url, next = false) => {
@@ -35,12 +34,9 @@ function UserMenu() {
     if (!mounted.current) onComponentMount();
   });
 
-  React.useEffect(() => {
-    if (menu.length > 0) {
-      return;
-    } // memoize the menu
-    if (!profile) {
-      return;
+  const menu = React.useMemo(() => {
+    if (profile == null) {
+      return [];
     }
     let res = profile.is_staff
       ? [
@@ -53,28 +49,26 @@ function UserMenu() {
         ]
       : [];
     res.push({ content: 'Déconnexion', onClick: () => redirectTo(LOGOUT_URL) });
-    setMenu(res);
-  }, [menu, profile]);
+    return res;
+  }, [profile]);
 
-  return (
-    <ThemeProvider theme={getMuiThemeConfig(darkTheme)}>
-      {profile ? (
-        <Dropdown
-          items={menu}
-          title={profile.username}
-          variant="contained"
-          buttonProps={{
-            endIcon: <KeyboardArrowDownIcon />,
-            startIcon: <PersonIcon />,
-          }}
-        />
+  return (profile != null ? (
+        <ThemeProvider theme={getMuiThemeConfig(darkTheme)}>
+          <Dropdown
+            items={menu}
+            title={profile.username}
+            variant="contained"
+            buttonProps={{
+              endIcon: <KeyboardArrowDownIcon />,
+              startIcon: <PersonIcon />,
+            }}
+          />
+        </ThemeProvider>
       ) : (
         <IconButton onClick={() => redirectTo(LOGIN_URL, true)}>
           <PersonIcon />
         </IconButton>
-      )}
-    </ThemeProvider>
-  );
+      ));
 }
 
 export default UserMenu;

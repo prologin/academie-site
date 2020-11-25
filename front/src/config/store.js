@@ -15,7 +15,7 @@ const CHANGE_SUBMISSION = 'CHANGE_SUBMISSION';
 const CHANGE_MY_PROFILE = 'CHANGE_MY_PROFILE';
 
 const initialState = {
-  profile: false,
+  profile: null,
   tracks: [],
   problems: [],
   // Get user's device theme mode (light/dark)
@@ -178,10 +178,12 @@ const changeMyProfile = (profile) => {
 
 const fetchMyProfile = () => {
   return async (dispatch) => {
-    await userApi
-      .getMyProfile()
-      .catch(() => dispatch(changeMyProfile(false)))
-      .then((profile) => dispatch(changeMyProfile(profile)));
+    try {
+      const data = await userApi.getMyProfile();
+      dispatch(changeMyProfile(data));
+    } catch {
+      dispatch(changeMyProfile(null))
+    }
   };
 };
 
