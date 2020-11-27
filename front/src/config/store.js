@@ -4,6 +4,7 @@ import produce from 'immer';
 
 import trackApi from '../api/trackApi';
 import submissionApi from '../api/submissionApi';
+import userApi from '../api/userApi';
 
 const TOGGLE_DARK_THEME = 'TOGGLE_DARK_THEME';
 const FETCH_TRACKS = 'FETCH_TRACKS';
@@ -11,8 +12,10 @@ const FETCH_TRACK = 'FETCH_TRACK';
 const FETCH_PROBLEMS = 'FETCH_PROBLEMS';
 const FETCH_PROBLEM = 'FETCH_PROBLEM';
 const CHANGE_SUBMISSION = 'CHANGE_SUBMISSION';
+const CHANGE_MY_PROFILE = 'CHANGE_MY_PROFILE';
 
 const initialState = {
+  profile: null,
   tracks: [],
   problems: [],
   // Get user's device theme mode (light/dark)
@@ -70,6 +73,10 @@ const reducer = (state, action) => {
       case TOGGLE_DARK_THEME:
         draft.darkTheme = !draft.darkTheme;
         localStorage.darkTheme = draft.darkTheme;
+        break;
+
+      case CHANGE_MY_PROFILE:
+        draft.profile = action.profile;
         break;
 
       default:
@@ -165,6 +172,21 @@ const fetchSubmissionUntilCorrectionEnds = (submissionId, timeout = 60) => {
   };
 };
 
+const changeMyProfile = (profile) => {
+  return { type: CHANGE_MY_PROFILE, profile };
+};
+
+const fetchMyProfile = () => {
+  return async (dispatch) => {
+    try {
+      const data = await userApi.getMyProfile();
+      dispatch(changeMyProfile(data));
+    } catch {
+      dispatch(changeMyProfile(null))
+    }
+  };
+};
+
 const useValue = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const dispatchWithCallback = (dispatcher) => {
@@ -197,6 +219,7 @@ export {
   fetchTracks,
   changeSubmission,
   toggleDarkTheme,
+  fetchMyProfile,
 };
 
 export default StateProvider;

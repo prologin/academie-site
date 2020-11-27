@@ -16,6 +16,7 @@ import LightIcon from '@material-ui/icons/Brightness7';
 import DarkIcon from '@material-ui/icons/Brightness3';
 
 import TrackProgress from './TrackProgress';
+import UserMenu from './UserMenu';
 import { toggleDarkTheme, useTracked } from '../config/store';
 
 const useStyles = makeStyles((theme) => ({
@@ -47,6 +48,8 @@ const useStyles = makeStyles((theme) => ({
   },
   menu: {
     textAlign: 'right',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
   },
   progress: {
     textAlign: 'center',
@@ -81,21 +84,28 @@ function Navigation({ children, problemProgress }) {
                   <TrackProgress />
                 </Grid>
               )}
-              <Grid item md={4} className={classes.menu}>
-                <Link to="/tracks">
-                  <Button>Cursus</Button>
-                </Link>
-                <IconButton onClick={handleClickTheme}>
-                  {prefersDarkTheme ? (
-                    <Tooltip title="Turn off dark theme">
-                      <LightIcon />
-                    </Tooltip>
-                  ) : (
-                    <Tooltip title="Turn on dark theme">
-                      <DarkIcon />
-                    </Tooltip>
-                  )}
-                </IconButton>
+              <Grid container item md={4} className={classes.menu}>
+                <Grid item>
+                  <Link to="/tracks">
+                    <Button>Cursus</Button>
+                  </Link>
+                </Grid>
+                <Grid item>
+                  <IconButton onClick={handleClickTheme}>
+                    {prefersDarkTheme ? (
+                      <Tooltip title="Turn off dark theme">
+                        <LightIcon />
+                      </Tooltip>
+                    ) : (
+                      <Tooltip title="Turn on dark theme">
+                        <DarkIcon />
+                      </Tooltip>
+                    )}
+                  </IconButton>
+                </Grid>
+                <Grid item>
+                  <UserMenu />
+                </Grid>
               </Grid>
             </Grid>
           </Toolbar>

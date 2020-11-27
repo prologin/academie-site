@@ -6,3 +6,11 @@ const ENDPOINT =
 export const TRACK_API_URL = `${ENDPOINT}/track/`;
 
 export const SUBMISSION_API_URL = `${ENDPOINT}/submission/`;
+
+export const USER_API_URL = `${ENDPOINT}/user/`;
+
+export const LOGIN_URL = '/api-auth/login';
+export const LOGOUT_URL = '/api-auth/logout?next=/';
+export const SWAGGER_URL = `${ENDPOINT}/doc`;
+export const ADMIN_URL = '/admin';
+export const BROWSABLE_API_URL = '/api';
