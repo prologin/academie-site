@@ -1,0 +1,29 @@
+stages:
+  - lint
+  - test
+
+pre-commit:
+  image: python:3.9-bullseye
+  stage: lint
+  before_script:
+    - pip install poetry
+    - poetry install
+  script:
+    - poetry run pre-commit run -a
+
+django-test:
+  image: python:3.9-bullseye
+  stage: test
+  before_script:
+    - pip install poetry
+    - poetry install
+  script:
+    - cd evaluator
+    - poetry run coverage run --source='.' manage.py test
+    - poetry run coverage report
+    - poetry run coverage xml
+  variables:
+    DJANGO_SETTINGS_MODULE: evaluator.settings.test
+  artifacts:
+    reports:
+      cobertura: evaluator/coverage.xml

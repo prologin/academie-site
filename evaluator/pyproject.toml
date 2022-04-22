@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "evaluator"
+version = "0.1.0"
+description = ""
+authors = ["Léo Portemont <leo.portemont@prologin.org>"]
+license = "UNLICENSED"
+
+[tool.black]
+line-length = 79
+
+[tool.poetry.dependencies]
+python = "^3.9"
+Django = "^4.0.2"
+celery = "^5.2.3"
+redis = "^4.1.4"
+Jinja2 = "^3.0.3"
+djangorestframework = "^3.13.1"
+django-filter = "^21.1"
+
+[tool.poetry.dev-dependencies]
+pre-commit = "^2.17.0"
+black = "^22.1.0"
+coverage = "^6.3.2"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
