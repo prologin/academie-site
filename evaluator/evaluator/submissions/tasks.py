@@ -69,6 +69,7 @@ def run_code_submission(submission_code_id: str) -> None:
     subcode.validated = validated
     if validated:
         sub.validated = True
+        sub.validated_by = subcode
     subcode.result = result
     subcode.date_corrected = sub.validated_at = timezone.now()
     subcode.save()

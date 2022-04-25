@@ -26,6 +26,13 @@ class ProblemSubmission(models.Model):
 
     validated_at = models.DateTimeField(null=True, blank=True)
 
+    validated_by = models.OneToOneField(
+        to="submissions.ProblemSubmissionCode",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True
+    )
+
     def __str__(self):
         return f"{self.user}: {self.problem}"
 
