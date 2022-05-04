@@ -1,0 +1,235 @@
+openapi: 3.0.3
+info:
+  title: Academie Prologin
+  version: 1.0.0
+  contact:
+    email: info@prologin.org
+servers:
+  - url: https://academie.prologin.org/api
+tags:
+  - name: Activities
+    description: Groups of problems
+  - name: Submissions
+    description: Code submitted by students
+paths:
+  /activities/{slug}:
+    put:
+      tags:
+        - Activities
+      summary: Add a new activity
+      parameters:
+        - name: slug
+          in: path
+          description: slug of the activity
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Manifest of the new version of the activity
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ActivityManifest'
+      responses:
+        '200':
+          description: Activity succesfully created
+        '405':
+          description: Invalid input
+  /activities:
+    get:
+      tags:
+        - Activities
+      summary: Get all activities ids
+      responses:
+        '200':
+          description: Array of activities
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  array_of_id:
+                    type: array
+                    items:
+                      type: string
+                      format: uuid
+                    minItems: 0
+  /activities/{activityId}:
+    get:
+      tags:
+        - Activities
+      summary: Get the activity manifest associated with the given Id
+      parameters:
+        - name: activityId
+          in: path
+          description: Activity Id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Activity manifest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActivityManifest'
+        '405':
+          description: Invalid Id
+  /submissions/code:
+    post:
+      tags:
+        - Submissions
+      summary: Submit a code
+      requestBody:
+        description: The code submission of a student for a problem
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubmissionCode'
+      responses:
+        '200':
+          description: Code succesfully dispatched
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  submission_id:
+                    type: string
+                    format: uuid
+        '405':
+          description: Invalid input
+  /submission/{submissionId}:
+    get:
+      tags:
+        - Submissions
+      summary: Get the status of the submission
+      parameters:
+        - name: submissionId
+          in: path
+          description: The submission Id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Status succesfully received
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubmissionStatus'
+        '405':
+          description: Invalid submission id
+components:
+  schemas:
+    ActivityManifest:
+      type: object
+      required:
+        - title
+        - description
+        - author
+        - version
+        - problems
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        author:
+          type: string
+        version:
+          type: string
+        problems:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProblemDefinition'
+    ProblemDefinition:
+      type: object
+      required:
+        - title
+        - description
+        - subject
+        - difficulty
+        - allowed_languages
+        - skeletons
+        - tests
+        - correction_templates
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        subject:
+          type: string
+        difficulty:
+          type: string
+          enum:
+            - trivial
+            - easy
+            - medium
+            - hard
+            - very_hard
+        allowed_languages:
+          type: array
+          items:
+            $ref: '#/components/schemas/AllowedLanguage'
+        skeletons:
+          type: object
+        tests:
+          type: object
+        correction_templates:
+          type: object
+    SubmissionCode:
+      type: object
+      required:
+        - problem_id
+        - user_id
+        - language
+        - code
+      properties:
+        problem_id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        language:
+          $ref: '#/components/schemas/AllowedLanguage'
+        code:
+          type: string
+    SubmissionStatus:
+      type: object
+      properties:
+        done:
+          type: boolean
+        validated:
+          type: boolean
+        validated_at:
+          type: string
+          format: date-time
+    AllowedLanguage:
+      type: string
+      enum:
+        - ada
+        - c
+        - c#
+        - c++
+        - d
+        - go
+        - haskell
+        - java
+        - javascript
+        - lua
+        - ocaml
+        - pascal
+        - perl
+        - php
+        - prolog
+        - python
+        - ruby
+        - rust
+        - scheme
