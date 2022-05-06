@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from activities import models
 from problems.models import Problem
+from problems.serializers import ProblemSerializer
 
 
 class PublishedActivitySerializer(serializers.ModelSerializer):
@@ -11,25 +12,16 @@ class PublishedActivitySerializer(serializers.ModelSerializer):
             "slug",
             "title",
             "description",
+            "author",
+            "version",
             "opening",
             "closing",
             "publication",
         )
 
 
-class ProblemListSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Problem
-        fields = (
-            "id",
-            "title",
-            "description",
-            "difficulty",
-        )
-
-
 class DetailedPublishedActivitySerializer(serializers.ModelSerializer):
-    problems = ProblemListSerializer(many=True)
+    problems = ProblemSerializer(many=True)
 
     class Meta:
         model = models.Activity
@@ -38,6 +30,8 @@ class DetailedPublishedActivitySerializer(serializers.ModelSerializer):
             "slug",
             "title",
             "description",
+            "author",
+            "version",
             "opening",
             "closing",
             "publication",
