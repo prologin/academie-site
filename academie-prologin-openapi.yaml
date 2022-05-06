@@ -6,6 +6,7 @@ info:
     email: info@prologin.org
 servers:
   - url: https://academie.prologin.org/api
+  - url: http://127.0.0.1:8080/api
 tags:
   - name: Activities
     description: Groups of problems
@@ -36,11 +37,11 @@ paths:
           description: Activity succesfully created
         '405':
           description: Invalid input
-  /activities:
+  /activities/:
     get:
       tags:
         - Activities
-      summary: Get all activities ids
+      summary: Get all activities
       responses:
         '200':
           description: Array of activities
@@ -52,10 +53,9 @@ paths:
                   array_of_id:
                     type: array
                     items:
-                      type: string
-                      format: uuid
+                      $ref: '#/components/schemas/ActivityManifest'
                     minItems: 0
-  /activities/{activityId}:
+  /activities/{activityId}/:
     get:
       tags:
         - Activities
@@ -77,7 +77,7 @@ paths:
                 $ref: '#/components/schemas/ActivityManifest'
         '405':
           description: Invalid Id
-  /submissions/code:
+  /submissions/code/:
     post:
       tags:
         - Submissions
@@ -102,7 +102,7 @@ paths:
                     format: uuid
         '405':
           description: Invalid input
-  /submission/{submissionId}:
+  /submission/{submissionId}/:
     get:
       tags:
         - Submissions
@@ -129,12 +129,21 @@ components:
     ActivityManifest:
       type: object
       required:
+        - id
+        - slug
         - title
         - description
         - author
         - version
-        - problems
+        - opening
+        - closing
+        - publication
       properties:
+        id:
+          type: string
+          format: uuid
+        slug:
+          type: string
         title:
           type: string
         description:
@@ -143,6 +152,15 @@ components:
           type: string
         version:
           type: string
+        opening:
+          type: string
+          format: date-time
+        closing:
+          type: string
+          format: date-time
+        publication:
+          type: string
+          format: date-time
         problems:
           type: array
           items:
@@ -150,15 +168,17 @@ components:
     ProblemDefinition:
       type: object
       required:
+        - id
         - title
         - description
         - subject
         - difficulty
         - allowed_languages
         - skeletons
-        - tests
-        - correction_templates
       properties:
+        id:
+          type: string
+          format: uuid
         title:
           type: string
         description:
@@ -179,10 +199,6 @@ components:
             $ref: '#/components/schemas/AllowedLanguage'
         skeletons:
           type: object
-        tests:
-          type: object
-        correction_templates:
-          type: object
     SubmissionCode:
       type: object
       required:
@@ -192,9 +208,6 @@ components:
         - code
       properties:
         problem_id:
-          type: string
-          format: uuid
-        user_id:
           type: string
           format: uuid
         language:
@@ -211,6 +224,8 @@ components:
         validated_at:
           type: string
           format: date-time
+        code:
+          type: string
     AllowedLanguage:
       type: string
       enum:
