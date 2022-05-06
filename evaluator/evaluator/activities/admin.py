@@ -37,9 +37,24 @@ class ActivityAdmin(admin.ModelAdmin):
     list_filter = ("managers",)
 
     fieldsets = (
-        (None, {"fields": ("id", "slug", "version")}),
-        ("PROJECT DETAILS", {"fields": ("title", "description")}),
-        ("DATES", {"fields": ("opening", "closing", "publication")}),
+        (
+            None, 
+            {
+                "fields": ("id", "slug", "version")
+            }
+        ),
+        (
+            "PROJECT DETAILS", 
+            {
+                "fields": ("title", "description", "author")
+            }
+        ),
+        (
+            "DATES",
+            {
+                "fields": ("opening", "closing", "publication")
+            }
+        ),
     )
 
     inlines = (
