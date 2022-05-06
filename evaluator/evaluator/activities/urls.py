@@ -6,8 +6,10 @@ app_name = "activities"
 urlpatterns = [
     path("", views.PublishedActivityList.as_view(), name="activity-list"),
     path(
-        "<uuid:pk>/",
+        "<uuid:id>/",
         views.PublishedActivityDetail.as_view(),
         name="activity-detil",
-    ),
+    )
 ]
+
+
