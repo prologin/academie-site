@@ -44,6 +44,10 @@ class Activity(models.Model):
         unique=True,
     )
 
+    author = models.CharField(
+        max_length=150,
+    )
+
     title = models.CharField(
         max_length=150,
     )
@@ -51,6 +55,7 @@ class Activity(models.Model):
     description = models.TextField()
 
     version = models.CharField(
+        validators=[RegexValidator("[a-f0-9]{7,}")],
         max_length=384,
     )
 

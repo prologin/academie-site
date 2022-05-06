@@ -9,7 +9,7 @@ class Difficulty(models.IntegerChoices):
     EASY = 1, _("easy")
     MEDIUM = 2, _("medium")
     HARD = 3, _("hard")
-    VERY_HARD = 4, _("very hard")
+    VERY_HARD = 4, _("very_hard")
 
 
 class Problem(models.Model):
@@ -23,6 +23,10 @@ class Problem(models.Model):
         max_length=150,
     )
 
+    author = models.CharField(
+        max_length=150
+    )
+
     description = models.TextField()
 
     subject = models.TextField()
@@ -33,7 +37,7 @@ class Problem(models.Model):
         validators=[validators.allowed_languages_validator],
     )
 
-    scaffolds = models.JSONField(
+    skeletons = models.JSONField(
         validators=[validators.language_string_mapping_validator],
         null=True,
         blank=True,
