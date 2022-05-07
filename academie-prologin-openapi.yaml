@@ -13,15 +13,15 @@ tags:
   - name: Submissions
     description: Code submitted by students
 paths:
-  /activities/{slug}:
-    put:
+  /activities/{activityId}:
+    post:
       tags:
         - Activities
-      summary: Add a new activity
+      summary: Modify an existing activity
       parameters:
-        - name: slug
+        - name: activityId
           in: path
-          description: slug of the activity
+          description: id of the activity
           required: true
           schema:
             type: string
@@ -31,12 +31,15 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ActivityManifest'
+              type: object
+              properties:
+                version:
+                  type: string
       responses:
         '200':
           description: Activity succesfully created
-        '405':
-          description: Invalid input
+        '404':
+          description: Invalid Id
   /activities/:
     get:
       tags:
@@ -50,11 +53,18 @@ paths:
               schema:
                 type: object
                 properties:
-                  array_of_id:
+                  count:
+                    type: integer
+                  next:
+                    type: string
+                    format: uri
+                  previous:
+                    type: string
+                    format: uri
+                  results:
                     type: array
                     items:
                       $ref: '#/components/schemas/ActivityManifest'
-                    minItems: 0
   /activities/{activityId}/:
     get:
       tags:
@@ -77,6 +87,7 @@ paths:
                 $ref: '#/components/schemas/ActivityManifest'
         '405':
           description: Invalid Id
+
   /submissions/code/:
     post:
       tags:
