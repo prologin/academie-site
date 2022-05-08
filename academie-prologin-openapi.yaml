@@ -13,7 +13,7 @@ tags:
   - name: Submissions
     description: Code submitted by students
 paths:
-  /activities/{activityId}/:
+  /activities/{Id}/:
     put:
       tags:
         - Activities
@@ -35,6 +35,10 @@ paths:
               properties:
                 version:
                   type: string
+                allowed_languages:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/AllowedLanguage'
       responses:
         '200':
           description: Activity succesfully created

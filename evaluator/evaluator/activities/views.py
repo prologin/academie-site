@@ -2,9 +2,6 @@ from rest_framework import generics
 from rest_framework.response import Response
 from activities import models, serializers, paginators
 from django import http
-import logging
-
-logger = logging.getLogger(__name__)
 
 
 class ActivityDetail(generics.RetrieveUpdateAPIView):
@@ -14,21 +11,19 @@ class ActivityDetail(generics.RetrieveUpdateAPIView):
     def get_queryset(self):
         return models.Activity.published_activities()
     
+    def patch(self, request, *args, **kwargs):
+        return http.HttpResponseNotAllowed("PATCH not allowed")
+    
     def put(self, request, *args, **kwargs):
-        logger.debug("GOT PUT REQUEST")
         def get_queryset(self):
             return models.Activity.open_activities()
         obj = self.get_object()
 
         valid_ser = serializers.UpdateActivityRequestSerializer(data=request.data)
         if not valid_ser.is_valid():
-            logger.debug("INVALID BODY")
             return http.HttpResponseBadRequest("Invalid request body")
-        logger.info("VALID BODY")
 
         return Response(self.serializer_class(obj).data)
-
-
 
 
 
