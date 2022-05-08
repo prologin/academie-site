@@ -13,8 +13,8 @@ tags:
   - name: Submissions
     description: Code submitted by students
 paths:
-  /activities/{activityId}:
-    post:
+  /activities/{activityId}/:
+    put:
       tags:
         - Activities
       summary: Modify an existing activity

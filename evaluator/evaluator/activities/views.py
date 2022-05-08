@@ -1,12 +1,34 @@
 from rest_framework import generics
+from rest_framework.response import Response
 from activities import models, serializers, paginators
+from django import http
+import logging
 
-class PublishedActivityDetail(generics.RetrieveAPIView):
+logger = logging.getLogger(__name__)
+
+
+class ActivityDetail(generics.RetrieveUpdateAPIView):
     serializer_class = serializers.DetailedPublishedActivitySerializer
     lookup_field = 'id'
 
     def get_queryset(self):
-        return models.Activity.open_activities()
+        return models.Activity.published_activities()
+    
+    def put(self, request, *args, **kwargs):
+        logger.debug("GOT PUT REQUEST")
+        def get_queryset(self):
+            return models.Activity.open_activities()
+        obj = self.get_object()
+
+        valid_ser = serializers.UpdateActivityRequestSerializer(data=request.data)
+        if not valid_ser.is_valid():
+            logger.debug("INVALID BODY")
+            return http.HttpResponseBadRequest("Invalid request body")
+        logger.info("VALID BODY")
+
+        return Response(self.serializer_class(obj).data)
+
+
 
 
 
