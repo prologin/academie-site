@@ -1,0 +1,80 @@
+import { Button, Grid, TextField, Typography } from "@mui/material";
+import { makeStyles } from "@mui/styles";
+
+const useStyles = makeStyles((theme) => ({
+  leftPanel: {
+    marginTop: "10% !important",
+  },
+  text: {
+    marginTop: "20%",
+  },
+  form: {
+    alignContent: "center",
+  },
+  img: {
+    maxWidth: "100%",
+    marginTop: -70,
+  },
+}));
+
+export default function Connection() {
+  const classes = useStyles();
+
+  return (
+    <>
+      <Grid container spacing={3}>
+        <Grid sm={7} item className={classes.leftPanel}>
+          <Typography variant="h3" className={classes.text}>
+            <b>Apprenez</b> les bases de l'informatique
+          </Typography>
+          <Typography variant="h4">
+            avec Académie <b>Prologin</b>
+          </Typography>
+          <img
+            src="images/connection.svg"
+            alt="connection"
+            className={classes.img}
+          />
+        </Grid>
+        <Grid spacing={2} container sm={5} item className={classes.form}>
+          <Grid item xs={12}>
+            <Typography variant="h6">
+              <b>Créer votre compte</b>
+            </Typography>
+            <Typography variant="caption">
+              Pour commencer votre apprentissage
+            </Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              variant="outlined"
+              type="email"
+              label="Email"
+              fullWidth
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              variant="outlined"
+              type="password"
+              label="Mot de passe"
+              fullWidth
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <Typography variant="caption">
+              En cliquant sur s’inscrire, j’accepte les conditions d’utilisation
+              et la politique de confidentialité de l’association Prologin.
+              <br />
+            </Typography>
+          </Grid>
+          <Grid item xs={12} textAlign="right">
+            <Button styles={{ marginLeft: "auto" }} variant="contained">
+              S'inscrire
+            </Button>
+          </Grid>
+        </Grid>
+      </Grid>
+    </>
+  );
+}
