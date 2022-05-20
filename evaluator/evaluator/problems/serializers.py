@@ -13,3 +13,18 @@ class ProblemSerializer(serializers.ModelSerializer):
             "allowed_languages",
             "skeletons",
         )
+
+class UpdateProblemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Problem
+        fields = (
+            "title",
+            "allowed_languages",
+            "tests",
+            "skeletons",
+            "correction_templates",
+            "author",
+            "description",
+            "subject",
+            "difficulty",
+        )

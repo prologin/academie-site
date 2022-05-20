@@ -20,18 +20,23 @@ class Problem(models.Model):
     )
 
     title = models.CharField(
+        unique=True,
         max_length=150,
     )
 
     author = models.CharField(
-        max_length=150
+        max_length=150,
     )
 
-    description = models.TextField()
+    description = models.TextField(
+    )
 
-    subject = models.TextField()
+    subject = models.TextField(
+    )
 
-    difficulty = models.PositiveSmallIntegerField(choices=Difficulty.choices)
+    difficulty = models.PositiveSmallIntegerField(
+        choices=Difficulty.choices,
+    )
 
     allowed_languages = models.JSONField(
         validators=[validators.allowed_languages_validator],
@@ -39,19 +44,18 @@ class Problem(models.Model):
 
     skeletons = models.JSONField(
         validators=[validators.language_string_mapping_validator],
-        null=True,
         blank=True,
     )
 
     correction_templates = models.JSONField(
         validators=[validators.language_string_mapping_validator],
-        null=True,
         blank=True,
     )
 
     tests = models.JSONField(
         validators=[validators.tests_validator],
     )
+
 
     def __str__(self):
         return str(self.id)
