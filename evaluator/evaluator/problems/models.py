@@ -21,11 +21,11 @@ class Problem(models.Model):
 
     title = models.CharField(
         unique=True,
-        max_length=150,
+        max_length=64,
     )
 
     author = models.CharField(
-        max_length=150,
+        max_length=64,
     )
 
     description = models.TextField(

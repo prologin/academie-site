@@ -1,11 +1,11 @@
 from celery import shared_task
-from problems import models
+from problems.models import Problem
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.cache import cache
 from rest_framework.parsers import JSONParser
 from status.models import CeleryTaskStatus
 
-import traceback
+from activities.models import ActivityProblem
 
 
 class ProblemExecption(Exception):
@@ -22,7 +22,7 @@ def set_status(task, status, msg):
 def update_problem(slug, body, taskid):
     task = cache.get(taskid)
     try:
-        problem, is_created = models.Problem.objects.update_or_create(
+        problem, is_created = Problem.objects.update_or_create(
             title=slug,
             defaults={
                 'title': slug,
@@ -36,6 +36,13 @@ def update_problem(slug, body, taskid):
                 'tests': body['tests']
             }
         )
+
+        if is_created:
+            ActivityProblem.objects.create(
+                problem=problem,
+                slug=slug,
+                order=0,
+            )
 
         task.model_id = problem.id
     except Exception:
