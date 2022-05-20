@@ -1,12 +1,16 @@
 from django.db import models
 import uuid
 
+app_name = "status"
 
-class CeleryTaskStatusModel(models.Model):
+class CeleryTaskStatus(models.Model):
+    class Meta:
+        managed = False
 
     MODEL_TYPE_CHOICES = (
         ("ACTIVITY", "Activity"),
         ("SUBMISSION", "Submission"),
+        ("PROBLEM", "Problem"),
     )
 
     STATUS_CHOICES = (
@@ -23,7 +27,8 @@ class CeleryTaskStatusModel(models.Model):
     )
 
     model_type = models.CharField(
-        choices=MODEL_TYPE,
+        choices=MODEL_TYPE_CHOICES,
+        max_length=64,
     )
 
     model_id = models.UUIDField()
@@ -31,6 +36,7 @@ class CeleryTaskStatusModel(models.Model):
     status = models.CharField(
         choices=STATUS_CHOICES,
         default="PENDING",
+        max_length=64,
     )
 
     info = models.TextField(
