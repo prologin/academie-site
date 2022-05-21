@@ -10,6 +10,11 @@ urlpatterns = [
         views.ActivityDetail.as_view(),
         name="activity-detail",
     ),
+    path(
+        "<slug:title>/",
+        views.CreateUpdateActivity.as_view(),
+        name="CreateUpdateActivity"
+    )
 ]
 
 

@@ -6,31 +6,6 @@ from django.utils import timezone
 import uuid
 
 
-class ActivityProblem(models.Model):
-    problem = models.ForeignKey(
-        to="problems.Problem",
-        on_delete=models.CASCADE,
-    )
-
-    slug = models.CharField(
-        validators=[RegexValidator("^[a-zA-Z0-9_-]{1,64}$")], max_length=64
-    )
-
-    activity = models.ForeignKey(
-        to="activities.Activity",
-        on_delete=models.CASCADE,
-    )
-
-    order = models.PositiveIntegerField()
-
-    def __str__(self):
-        return f"({self.order}) {self.slug} in {self.activity}"
-
-    class Meta:
-        unique_together = (("activity", "slug"),)
-        ordering = ("order",)
-
-
 class Activity(models.Model):
     id = models.UUIDField(
         default=uuid.uuid4,
@@ -38,7 +13,7 @@ class Activity(models.Model):
         editable=False,
     )
 
-    slug = models.CharField(
+    title = models.CharField(
         validators=[RegexValidator("^[a-zA-Z0-9-_]{4,64}$")],
         max_length=64,
         unique=True,
@@ -48,22 +23,17 @@ class Activity(models.Model):
         max_length=150,
     )
 
-    title = models.CharField(
-        max_length=150,
-    )
-
     description = models.TextField()
 
-    version = models.CharField(
-        validators=[RegexValidator("[a-f0-9]{7,}")],
-        max_length=384,
+    version = models.PositiveIntegerField(
+        default=1,
+        blank=False,
+        null=False,
     )
 
     problems = models.ManyToManyField(
         to=Problem,
-        through=ActivityProblem,
-        through_fields=("activity", "problem"),
-        blank=True,
+        blank=False,
     )
 
     opening = models.DateTimeField(blank=True, null=True)

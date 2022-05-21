@@ -18,7 +18,6 @@ class UpdateProblemSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Problem
         fields = (
-            "title",
             "allowed_languages",
             "tests",
             "skeletons",

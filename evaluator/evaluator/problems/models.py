@@ -25,7 +25,7 @@ class Problem(models.Model):
     )
 
     author = models.CharField(
-        max_length=64,
+        max_length=150,
     )
 
     description = models.TextField(
@@ -58,4 +58,4 @@ class Problem(models.Model):
 
 
     def __str__(self):
-        return str(self.id)
+        return str(self.title)

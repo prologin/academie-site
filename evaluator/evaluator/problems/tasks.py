@@ -5,8 +5,6 @@ from django.core.cache import cache
 from rest_framework.parsers import JSONParser
 from status.models import CeleryTaskStatus
 
-from activities.models import ActivityProblem
-
 
 class ProblemExecption(Exception):
     pass
@@ -21,6 +19,8 @@ def set_status(task, status, msg):
 @shared_task(name="update_problem")
 def update_problem(slug, body, taskid):
     task = cache.get(taskid)
+    if task is None:
+        return
     try:
         problem, is_created = Problem.objects.update_or_create(
             title=slug,
@@ -37,15 +37,9 @@ def update_problem(slug, body, taskid):
             }
         )
 
-        if is_created:
-            ActivityProblem.objects.create(
-                problem=problem,
-                slug=slug,
-                order=0,
-            )
-
         task.model_id = problem.id
     except Exception:
+        traceback.print_exc()
         set_status(task, "ERROR", "Failed to get or create the problem " + slug)
         return
     set_status(task, "DONE", "")

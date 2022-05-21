@@ -4,21 +4,44 @@ from problems.models import Problem
 from problems.validators import allowed_languages_validator
 from problems.serializers import ProblemSerializer
 
-class UpdateActivityRequestSerializer(serializers.Serializer):
-    version = serializers.CharField(
+class CreateUpdateActivitySerializer(serializers.Serializer):
+    title = serializers.CharField(
+        max_length=64,
         required=True,
-        label="version",
-        validators=[validators.commit_hash_validator],
         allow_null=False,
+        allow_blank=False,
+        label="title",
     )
 
-    allowed_languages = serializers.ListField(
+    description = serializers.CharField(
         required=True,
-        label="allowed_languages",
-        validators=[allowed_languages_validator],
+        allow_blank=False,
         allow_null=False,
-        min_length=1
+        label='description',
     )
+
+    opening = serializers.DateTimeField(
+        allow_null=False,
+        label='opening',
+    )
+
+    closing = serializers.DateTimeField(
+        allow_null=False,
+        label='closing',
+    )
+
+    publication = serializers.DateTimeField(
+        allow_null=False,
+        label='publication',
+    )
+
+    problems_slug = serializers.ListField(
+        min_length=1,
+        allow_null=False,
+        validators=[validators.list_slug_validator],
+        label='problems_slug',
+    )
+
 
 class PublishedActivitySerializer(serializers.ModelSerializer):
     class Meta:

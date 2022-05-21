@@ -1,35 +1,18 @@
 from django.contrib import admin
 from activities import models
 
-
-class ActivityProblemInlineAdmin(admin.TabularInline):
-    model = models.ActivityProblem
-    fields = ("problem", "slug", "order")
-    ordering = ("order",)
-    raw_id_fields = ("problem",)
-    extra = 0
-
-
-class ActivityManagerInlineAdmin(admin.TabularInline):
-    model = models.Activity.managers.through
-    raw_id_fields = ("user",)
-    extra = 0
-
-
 @admin.register(models.Activity)
 class ActivityAdmin(admin.ModelAdmin):
     list_display = (
         "title",
-        "slug",
         "version",
         "id",
     )
 
-    readonly_fields = ("id",)
+    readonly_fields = ("id", "problems")
 
     search_fields = (
         "title",
-        "slug",
         "version",
         "id",
     )
@@ -40,13 +23,13 @@ class ActivityAdmin(admin.ModelAdmin):
         (
             None, 
             {
-                "fields": ("id", "slug", "version")
+                "fields": ("id", "title", "version", "problems")
             }
         ),
         (
             "PROJECT DETAILS", 
             {
-                "fields": ("title", "description", "author")
+                "fields": ("description", "author", "managers")
             }
         ),
         (
@@ -56,8 +39,9 @@ class ActivityAdmin(admin.ModelAdmin):
             }
         ),
     )
-
+"""
     inlines = (
-        ActivityManagerInlineAdmin,
+#        ActivityManagerInlineAdmin,
         ActivityProblemInlineAdmin,
     )
+    """
