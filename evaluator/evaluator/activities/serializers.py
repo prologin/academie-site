@@ -11,9 +11,7 @@ class ActivitySerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         time = datetime.now()
         if attrs['closing'] < attrs['opening']:
-            close = attrs['closing']
-            attrs['closing'] = attrs['opening']
-            attrs['opening'] = close
+            attrs['closing'], attrs['opening'] = attrs['opening'], attrs['closing']
         
         return attrs
 
