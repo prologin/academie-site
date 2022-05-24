@@ -1,9 +1,33 @@
-import { httpClient } from './httpClient';
+import { httpClient } from "./httpClient";
 
-import { USER_API_URL } from './constants';
+import { LOGIN_URL, REFRESH_TOKEN_URL, REGISTER_URL } from "./constants";
 
-const getMyProfile = async () => httpClient.get(`${USER_API_URL}me/`);
+const login = (email, password) => {
+  return httpClient.post(LOGIN_URL, {
+    email: email,
+    password: password,
+  });
+};
 
-const userApi = { getMyProfile };
+const refreshToken = (refresh) => {
+  return httpClient.post(REFRESH_TOKEN_URL, { refresh });
+};
 
-export default userApi;
+const register = (email, password) => {
+  return httpClient.post(REGISTER_URL, {
+    email,
+    password,
+    username: email,
+    first_name: "test",
+    last_name: "test",
+    birthdate: "2000-01-01",
+  });
+};
+
+const UserApi = {
+  login,
+  refreshToken,
+  register,
+};
+
+export { UserApi };

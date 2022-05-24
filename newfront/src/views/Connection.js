@@ -1,5 +1,7 @@
 import { Button, Grid, TextField, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
+import { useState } from "react";
+import { register, useDispatch } from "../config/store";
 
 const useStyles = makeStyles((theme) => ({
   leftPanel: {
@@ -19,6 +21,14 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Connection() {
   const classes = useStyles();
+  const dispatch = useDispatch();
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleRegister = () => {
+    dispatch(register(email, password));
+  };
 
   return (
     <>
@@ -50,6 +60,8 @@ export default function Connection() {
               variant="outlined"
               type="email"
               label="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               fullWidth
             />
           </Grid>
@@ -58,6 +70,8 @@ export default function Connection() {
               variant="outlined"
               type="password"
               label="Mot de passe"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               fullWidth
             />
           </Grid>
@@ -69,7 +83,11 @@ export default function Connection() {
             </Typography>
           </Grid>
           <Grid item xs={12} textAlign="right">
-            <Button styles={{ marginLeft: "auto" }} variant="contained">
+            <Button
+              styles={{ marginLeft: "auto" }}
+              variant="contained"
+              onClick={handleRegister}
+            >
               S'inscrire
             </Button>
           </Grid>
