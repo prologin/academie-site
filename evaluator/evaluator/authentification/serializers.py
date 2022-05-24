@@ -14,68 +14,28 @@ class TokenObtainPairSerializer(TokenObtainPairSerializer):
         token['username'] = user.username
         return token
 
-
 class RegisterSerializer(serializers.ModelSerializer):
-    email = serializers.EmailField(
-            required=True,
-            validators=[UniqueValidator(queryset=get_user_model().objects.all())]
-            )
-
-    username = serializers.CharField(
-            required=True,
-            validators=[UniqueValidator(queryset=get_user_model().objects.all())]
-            )
-
-    password1 = serializers.CharField(
+    email = serializers.EmailField(required=True, allow_null=False, allow_blank=False)
+    password = serializers.CharField(
         write_only=True,
         required=True,
-        validators=[validate_password]
-        )
-
-    password2 = serializers.CharField(
-        write_only=True,
-        required=True,
-        )
-    
-    birthdate = serializers.DateField(
-        required=True,
-        allow_null=False,
+        style={'input_type': 'password', 'placeholder': 'Password'}
     )
-    
+
     class Meta:
         model = get_user_model()
         fields = (
             'username',
-            'password1',
-            'password2',
+            'password',
             'email',
             'first_name',
             'last_name',
             'birthdate',
-            )
-        extra_kwargs = {
-            'first_name': {'required': True},
-            'last_name': {'required': True},
-            'birthdate': {'required': True},
-        }
-
-    def validate(self, attrs):
-        if attrs['password'] != attrs['password2']:
-            raise serializers.ValidationError({"password": "Password fields didn't match."})
-
-        return attrs
-
-    def create(self, validated_data):
-        user = get_user_model().objects.create(
-            username=validated_data['username'],
-            email=validated_data['email'],
-            first_name=validated_data['first_name'],
-            last_name=validated_data['last_name'],
-            birthdate=validated_data['birthdate'],
         )
 
-        
-        user.set_password(validated_data['password'])
+    def create(self, validated_data):
+        password = validated_data.pop('password')
+        user = get_user_model()(**validated_data)
+        user.set_password(password)
         user.save()
-
         return user

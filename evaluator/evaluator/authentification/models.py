@@ -8,38 +8,22 @@ from django.db import models
 app_name = 'authentification'
 
 class ProloginUserManager(BaseUserManager):
-    def create_user(self, email, username, first_name, last_name, birthdate, password):
-        if not email:
-            raise ValueError('Users must have an email address')
-
-        user = self.model(
-            email=self.normalize_email(email),
-            username=username,
-            first_name=first_name,
-            last_name=last_name,
-            birthdate=birthdate,
-        )
-
+    def _create_user(self, email, password, **extra_fields):
+        email = self.normalize_email(email)
+        user = self.model(email=email, **extra_fields)
         user.set_password(password)
-        user.save(using=self._db)
+        user.save()
         return user
 
-
-    def create_superuser(self, email, username, first_name, last_name, birthdate, password):
-        user = self.model(
-            email=self.normalize_email(email),
-            username=username,
-            first_name=first_name,
-            last_name=last_name,
-            birthdate=birthdate,
+    def create_user(self, email, password, **extra_fields):
+        return self._create_user(
+            email, password, **extra_fields, is_staff=False, is_superuser=False
         )
 
-        user.is_superuser = True
-        user.is_staff = True
-        user.is_admin = True
-        user.set_password(password)
-        user.save(using=self._db)
-        return user
+    def create_superuser(self, email, password, **extra_fields):
+        return self._create_user(
+            email, password, **extra_fields, is_staff=True, is_superuser=True
+        )
 
 
 class ProloginUser(AbstractUser, PermissionsMixin):
