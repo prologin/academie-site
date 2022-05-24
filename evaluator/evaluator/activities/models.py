@@ -27,13 +27,10 @@ class Activity(models.Model):
 
     version = models.PositiveIntegerField(
         default=1,
-        blank=False,
-        null=False,
     )
 
     problems = models.ManyToManyField(
         to=Problem,
-        blank=False,
     )
 
     opening = models.DateTimeField(blank=True, null=True)

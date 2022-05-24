@@ -4,51 +4,38 @@ from problems.models import Problem
 from problems.validators import allowed_languages_validator
 from problems.serializers import ProblemSerializer
 
-class CreateUpdateActivitySerializer(serializers.Serializer):
-    title = serializers.CharField(
-        max_length=64,
-        required=True,
-        allow_null=False,
-        allow_blank=False,
-        label="title",
-    )
+from datetime import datetime
 
-    description = serializers.CharField(
-        required=True,
-        allow_blank=False,
-        allow_null=False,
-        label='description',
-    )
+class ActivitySerializer(serializers.ModelSerializer):
 
-    opening = serializers.DateTimeField(
-        allow_null=False,
-        label='opening',
-    )
-
-    closing = serializers.DateTimeField(
-        allow_null=False,
-        label='closing',
-    )
-
-    publication = serializers.DateTimeField(
-        allow_null=False,
-        label='publication',
-    )
+    def validate(self, attrs):
+        time = datetime.now()
+        if attrs['closing'] < attrs['opening']:
+            close = attrs['closing']
+            attrs['closing'] = attrs['opening']
+            attrs['opening'] = close
+        
+        return attrs
 
     problems_slug = serializers.ListField(
         min_length=1,
         allow_null=False,
         validators=[validators.list_slug_validator],
         label='problems_slug',
+        write_only=True,
     )
 
+    title = serializers.CharField(
+        allow_null=False,
+        validators=[validators.slug_validator],
+        label='title',
+        write_only=True,
+    )
 
-class PublishedActivitySerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Activity
         fields = (
             "id",
-            "slug",
             "title",
             "description",
             "author",
@@ -56,6 +43,13 @@ class PublishedActivitySerializer(serializers.ModelSerializer):
             "opening",
             "closing",
             "publication",
+            "problems_slug",
+        )
+        read_only_fields = (
+            "id",
+            "author",
+            "version",
+            "title",
         )
 
 
@@ -66,7 +60,6 @@ class DetailedPublishedActivitySerializer(serializers.ModelSerializer):
         model = models.Activity
         fields = (
             "id",
-            "slug",
             "title",
             "description",
             "author",

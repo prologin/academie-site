@@ -1,20 +1,16 @@
 from django.urls import path
 from activities import views
+from rest_framework.routers import DefaultRouter
 
 app_name = "activities"
 
+router = DefaultRouter()
+router.register(r'', views.ActivityView, basename="activities")
+
 urlpatterns = [
-    path("", views.PublishedActivityList.as_view(), name="activity-list"),
-    path(
-        "<uuid:id>/",
-        views.ActivityDetail.as_view(),
-        name="activity-detail",
-    ),
-    path(
-        "<slug:title>/",
-        views.CreateUpdateActivity.as_view(),
-        name="CreateUpdateActivity"
-    )
 ]
+
+urlpatterns += router.urls
+
 
 
