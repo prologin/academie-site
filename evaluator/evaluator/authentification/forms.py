@@ -44,14 +44,6 @@ class ProloginUserCreationForm(UserCreationForm):
             raise ValidationError(" Email Already Exist")  
         return email 
 
-    def clean_password2(self):
-        cleaned_data = self.cleaned_data
-        password1 = cleaned_data.get("password1")
-        password2 = cleaned_data.get("password2")
-        if password1 is not None and password1 != password2:
-            self.add_error("password2", "Your passwords must match")
-        return password2
-
     def save(self, commit=True):  
         user = User.objects.create_user(  
             self.cleaned_data['email'],
