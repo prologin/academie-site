@@ -14,17 +14,18 @@ import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
 import Navigation from "./components/Navigation";
 import StateProvider from "./config/store";
 import themeConfig from "./config/theming";
-import Connection from "./views/Connection";
+import Login from "./views/Login";
 import Courses from "./views/Courses";
 import Exercises from "./views/Exercises";
 import Code from "./views/Code";
+import Register from "./views/Register";
 
 const AppRouter = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
   useEffect(() => {
-    if (pathname.slice(-1) !== "/") navigate(`${pathname}/`, {replace: true});
+    if (pathname.slice(-1) !== "/") navigate(`${pathname}/`, { replace: true });
   });
 
   return (
@@ -35,7 +36,15 @@ const AppRouter = () => {
           path="/"
           element={
             <Navigation>
-              <Connection />
+              <Login />
+            </Navigation>
+          }
+        />
+        <Route
+          path="/register"
+          element={
+            <Navigation>
+              <Register />
             </Navigation>
           }
         />

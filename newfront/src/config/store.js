@@ -7,6 +7,19 @@ const TOGGLE_DARK_THEME = "TOGGLE_DARK_THEME";
 const REGISTER = "REGISTER";
 const LOGIN = "LOGIN";
 const LOGIN_SUCCESS = "LOGIN_SUCCESS";
+const LOGIN_ERROR = "LOGIN_ERROR";
+
+const validOrRemoveAccessToken = () => {
+  const token = sessionStorage.access_token;
+  if (!token) return false;
+  const parsed = JSON.parse(atob(token.split(".")[1]));
+  const valid = new Date(parsed.exp) > Date.now();
+  if (!valid) {
+    sessionStorage.removeItem("access_token");
+    sessionStorage.removeItem("refresh_token");
+  }
+  return valid;
+};
 
 const initialState = {
   // Get user's device theme mode (light/dark)
@@ -14,6 +27,10 @@ const initialState = {
     localStorage.darkTheme === "true" ||
     (window.matchMedia &&
       window.matchMedia("(prefers-color-scheme: dark)").matches),
+  user: {
+    authenticated: validOrRemoveAccessToken(),
+    error: null,
+  },
 };
 
 const reducer = (state, action) => {
@@ -24,10 +41,21 @@ const reducer = (state, action) => {
         localStorage.darkTheme = draft.darkTheme;
         break;
 
+      case LOGIN:
+      case REGISTER:
+        draft.user.error = null;
+        break;
+
       case LOGIN_SUCCESS:
         sessionStorage.setItem("access_token", action.access_token);
         sessionStorage.setItem("refresh_token", action.refresh_token);
         break;
+
+      case LOGIN_ERROR:
+        draft.user.error = action.error;
+        console.log(action.error);
+        break;
+
       default:
         break;
     }
@@ -41,13 +69,11 @@ const toggleDarkTheme = {
 const login = (email, password) => {
   return async (dispatch) => {
     try {
-      console.log("TTTTT");
       dispatch({ type: LOGIN });
       const data = await UserApi.login(email, password);
       dispatch(loginSuccess(data.access, data.refresh));
     } catch (e) {
-      // TODO: dispatch login error
-      // dispatch(loginError())
+      dispatch(loginError(e));
     }
   };
 };
@@ -58,16 +84,33 @@ const loginSuccess = (access_token, refresh_token) => ({
   refresh_token,
 });
 
-const register = (email, password) => {
+const loginError = (error) => ({
+  type: LOGIN_ERROR,
+  error,
+});
+
+const register = (
+  email,
+  password,
+  username,
+  first_name,
+  last_name,
+  birthdate
+) => {
   return async (dispatch) => {
     try {
       dispatch({ type: REGISTER });
-      await UserApi.register(email, password);
-      console.log("testtttt");
+      await UserApi.register(
+        email,
+        password,
+        username,
+        first_name,
+        last_name,
+        birthdate
+      );
       dispatch(login(email, password));
     } catch (e) {
-      // TODO: dispatch login error
-      // dispatch(loginError())
+      dispatch(loginError(e));
     }
   };
 };
@@ -79,6 +122,7 @@ const useValue = () => {
   const dispatchWithCallback = (dispatcher) => {
     if (typeof dispatcher === "function") dispatcher(dispatchWithCallback);
     else dispatch(dispatcher);
+    console.log(state);
   };
   return [state, dispatchWithCallback];
 };
@@ -100,6 +144,7 @@ export {
   useTrackedState,
   toggleDarkTheme,
   register,
+  login,
 };
 
 export default StateProvider;
