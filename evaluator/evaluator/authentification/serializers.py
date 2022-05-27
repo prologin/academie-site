@@ -31,6 +31,7 @@ class RegisterSerializer(serializers.ModelSerializer):
             'first_name',
             'last_name',
             'birthdate',
+            'accept_newsletter',
         )
 
     def create(self, validated_data):

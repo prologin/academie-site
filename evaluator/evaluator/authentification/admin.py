@@ -13,7 +13,7 @@ class UserAdmin(BaseUserAdmin):
     add_form = AdminProloginUserCreationForm
     fieldsets = (
         (None, {'fields': ('username', 'password')}),
-        (('Personal info'), {'fields': ('first_name', 'last_name', 'email', 'birthdate')}),
+        (('Personal info'), {'fields': ('first_name', 'last_name', 'email', 'birthdate', 'accept_newsletter')}),
         (('Permissions'), {
             'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions'),
         }),
@@ -22,7 +22,7 @@ class UserAdmin(BaseUserAdmin):
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('email', 'username', 'password1', 'password2', 'first_name', 'last_name', 'birthdate'),
+            'fields': ('email', 'username', 'password1', 'password2', 'first_name', 'last_name', 'birthdate', 'accept_newsletter'),
         }),
     )
 
