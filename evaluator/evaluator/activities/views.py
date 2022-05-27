@@ -46,30 +46,3 @@ class ActivityView(
         serializer = self.get_serializer()
         headers = self.get_success_headers(serializer.data)
         return Response(serializer(task).data, status=status.HTTP_201_CREATED, headers=headers)
-
-"""
-class CreateUpdateActivity(generics.CreateAPIView):
-    lookup_field = 'title'
-    queryset = Activity.objects.all()
-
-    def get_queryset(self):
-        return Activity.objects.all()
-    
-    def post(self, request, title):
-        valid_ser = CreateUpdateActivitySerializer(data=request.data)
-        if not valid_ser.is_valid():
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-        
-        body = request.data
-        time = datetime.now()
-        if body['closing'] <= body['opening'] or body['publication'] > body['opening']:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-        
-        task = CeleryTaskStatus(model_type="ACTIVITY")
-        cache.set(task.id, task, 300)
-        tasks.update_activity.delay(title, request.data, task.id)
-
-        return Response(status=status.HTTP_201_CREATED)
-
-
-"""

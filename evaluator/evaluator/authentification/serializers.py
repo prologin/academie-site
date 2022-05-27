@@ -14,6 +14,7 @@ class TokenObtainPairSerializer(TokenObtainPairSerializer):
         token['username'] = user.username
         return token
 
+
 class RegisterSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(required=True, allow_null=False, allow_blank=False)
     password = serializers.CharField(
