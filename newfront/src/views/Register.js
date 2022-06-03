@@ -1,4 +1,12 @@
-import { Button, Grid, TextField, Typography } from "@mui/material";
+import {
+  Button,
+  Checkbox,
+  FormControlLabel,
+  FormGroup,
+  Grid,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { makeStyles } from "@mui/styles";
@@ -31,7 +39,9 @@ export default function Register() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [username, setUsername] = useState("");
-  const [birthdate, setBirthdate] = useState("");
+  const [birthdate, setBirthdate] = useState(null);
+  const [acceptNewsletter, setAcceptNewsletter] = useState(false);
+  const [remember, setRemember] = useState(true);
 
   const handleRegister = () => {
     if (
@@ -43,7 +53,16 @@ export default function Register() {
       birthdate
     )
       dispatch(
-        register(email, password, username, firstName, lastName, birthdate)
+        register(
+          email,
+          password,
+          username,
+          firstName,
+          lastName,
+          birthdate,
+          acceptNewsletter,
+          remember
+        )
       );
   };
 
@@ -58,7 +77,7 @@ export default function Register() {
             avec Académie <b>Prologin</b>
           </Typography>
           <img
-            src="images/connection.svg"
+            src="/images/connection.svg"
             alt="connection"
             className={classes.img}
           />
@@ -120,7 +139,7 @@ export default function Register() {
             <LocalizationProvider dateAdapter={AdapterDateFns}>
               <DatePicker
                 disableFuture
-                label="Date d'anniversaire"
+                label="Date de naissance"
                 value={birthdate}
                 onChange={(newValue) => {
                   setBirthdate(newValue);
@@ -155,13 +174,33 @@ export default function Register() {
             />
           </Grid>
           <Grid item xs={12}>
+            <FormGroup>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={acceptNewsletter}
+                    onChange={(e) => setAcceptNewsletter(e.target.checked)}
+                  />
+                }
+                label="S'inscrire à notre newsletter"
+              />
+            </FormGroup>
             <Typography variant="caption">
-              En cliquant sur s’inscrire, j’accepte les conditions d’utilisation
-              et la politique de confidentialité de l’association Prologin.
+              Nous n'envoyons des e-mails que pour vous informer des news
+              importantes sur nos activités.
               <br />
             </Typography>
           </Grid>
           <Grid item xs={12} textAlign="right">
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={remember}
+                  onChange={(e) => setRemember(e.target.checked)}
+                />
+              }
+              label="Rester connecté"
+            />
             <Button
               styles={{ marginLeft: "auto" }}
               variant="contained"
@@ -169,6 +208,13 @@ export default function Register() {
             >
               S'inscrire
             </Button>
+          </Grid>
+          <Grid item xs={12}>
+            <Typography variant="caption">
+              En cliquant sur s’inscrire, j’accepte les conditions d’utilisation
+              et la politique de confidentialité de l’association Prologin.
+              <br />
+            </Typography>
           </Grid>
         </Grid>
       </Grid>

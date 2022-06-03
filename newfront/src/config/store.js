@@ -2,6 +2,7 @@ import { useReducer } from "react";
 import { createContainer } from "react-tracked";
 import produce from "immer";
 import { UserApi } from "../api/userApi";
+import { jwtToJson } from "./utils";
 
 const TOGGLE_DARK_THEME = "TOGGLE_DARK_THEME";
 const REGISTER = "REGISTER";
@@ -49,6 +50,20 @@ const reducer = (state, action) => {
       case LOGIN_SUCCESS:
         sessionStorage.setItem("access_token", action.access_token);
         sessionStorage.setItem("refresh_token", action.refresh_token);
+        if (action.remember) {
+          localStorage.setItem("remember_login", true);
+          localStorage.setItem("access_token", action.access_token);
+          localStorage.setItem("refresh_token", action.refresh_token);
+          localStorage.setItem(
+            "refresh_token_validity_timestamp",
+            jwtToJson(action.refresh_token).exp
+          );
+          localStorage.setItem(
+            "access_token_validity_timestamp",
+            jwtToJson(action.access_token).exp
+          );
+        }
+
         break;
 
       case LOGIN_ERROR:
@@ -66,22 +81,23 @@ const toggleDarkTheme = {
   type: TOGGLE_DARK_THEME,
 };
 
-const login = (email, password) => {
+const login = (email, password, remember = false) => {
   return async (dispatch) => {
     try {
       dispatch({ type: LOGIN });
       const data = await UserApi.login(email, password);
-      dispatch(loginSuccess(data.access, data.refresh));
+      dispatch(loginSuccess(data.access, data.refresh, remember));
     } catch (e) {
       dispatch(loginError(e));
     }
   };
 };
 
-const loginSuccess = (access_token, refresh_token) => ({
+const loginSuccess = (access_token, refresh_token, remember) => ({
   type: LOGIN_SUCCESS,
   access_token,
   refresh_token,
+  remember,
 });
 
 const loginError = (error) => ({
@@ -95,7 +111,9 @@ const register = (
   username,
   first_name,
   last_name,
-  birthdate
+  birthdate,
+  acceptNewsletter,
+  remember
 ) => {
   return async (dispatch) => {
     try {
@@ -106,9 +124,10 @@ const register = (
         username,
         first_name,
         last_name,
-        birthdate
+        birthdate,
+        acceptNewsletter
       );
-      dispatch(login(email, password));
+      dispatch(login(email, password, remember));
     } catch (e) {
       dispatch(loginError(e));
     }

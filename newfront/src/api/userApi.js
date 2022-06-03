@@ -20,7 +20,8 @@ const register = (
   username,
   first_name,
   last_name,
-  birthdate
+  birthdate,
+  acceptNewsletter
 ) => {
   return httpClient.post(REGISTER_URL, {
     email,
@@ -29,6 +30,7 @@ const register = (
     first_name,
     last_name,
     birthdate: format(birthdate, "yyyy-MM-dd"),
+    accept_newsletter: acceptNewsletter,
   });
 };
 

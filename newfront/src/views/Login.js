@@ -1,7 +1,15 @@
-import { Button, Grid, TextField, Typography } from "@mui/material";
+import {
+  Button,
+  Checkbox,
+  FormControlLabel,
+  Grid,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { makeStyles } from "@mui/styles";
+import { Link } from "react-router-dom";
 import { useState } from "react";
-import { login, register, useDispatch } from "../config/store";
+import { login, useDispatch } from "../config/store";
 
 const useStyles = makeStyles((theme) => ({
   leftPanel: {
@@ -25,9 +33,10 @@ export default function Connection() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [remember, setRemember] = useState(true);
 
   const handleLogin = () => {
-    dispatch(login(email, password));
+    dispatch(login(email, password, remember));
   };
 
   return (
@@ -49,10 +58,7 @@ export default function Connection() {
         <Grid spacing={2} container sm={5} item className={classes.form}>
           <Grid item xs={12}>
             <Typography variant="h6">
-              <b>Créer votre compte</b>
-            </Typography>
-            <Typography variant="caption">
-              Pour commencer votre apprentissage
+              <b>Se connecter à Académie Prologin</b>
             </Typography>
           </Grid>
           <Grid item xs={12}>
@@ -75,21 +81,29 @@ export default function Connection() {
               fullWidth
             />
           </Grid>
-          <Grid item xs={12}>
-            <Typography variant="caption">
-              En cliquant sur s’inscrire, j’accepte les conditions d’utilisation
-              et la politique de confidentialité de l’association Prologin.
-              <br />
-            </Typography>
-          </Grid>
           <Grid item xs={12} textAlign="right">
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={remember}
+                  onChange={(e) => setRemember(e.target.checked)}
+                />
+              }
+              label="Rester connecté"
+            />
             <Button
               styles={{ marginLeft: "auto" }}
               variant="contained"
               onClick={handleLogin}
             >
-              S'inscrire
+              Se connecter
             </Button>
+          </Grid>
+          <Grid item xs={12} textAlign="right">
+            <Typography variant="caption">
+              Pas encore de compte ? <Link to="/register">S'inscrire</Link> ici.
+              <br />
+            </Typography>{" "}
           </Grid>
         </Grid>
       </Grid>

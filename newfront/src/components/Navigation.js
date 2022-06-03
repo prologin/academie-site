@@ -92,9 +92,11 @@ function Navigation({ children, fullScreen }) {
               </MuiLink>
             </Grid>
             <Grid container item md={2} className={classes.menu}>
-              <Button variant="text" color="black">
-                <b>Se connecter</b>
-              </Button>
+              <Link to="/">
+                <Button variant="text" color="black">
+                  <b>Se connecter</b>
+                </Button>
+              </Link>
             </Grid>
           </Grid>
         </Toolbar>
