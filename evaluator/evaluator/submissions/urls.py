@@ -1,14 +1,13 @@
 from django.urls import path
 
-from problems import views
+from submissions import views
 
 from rest_framework.routers import DefaultRouter
 
-app_name = "problems"
+app_name = "submissions"
 
 router = DefaultRouter()
-router.register(r'', views.ProblemView, basename='problems')
-
+router.register(r'', views.SubmissionView, basename="submissions")
 
 urlpatterns = [
 ]

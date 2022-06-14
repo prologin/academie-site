@@ -5,11 +5,6 @@ from submissions.models import ProblemSubmissionCode
 from django.conf import settings
 from django.utils import timezone
 from django.core.exceptions import ObjectDoesNotExist
-from django.core.cache import cache
-
-from status.models import CeleryTaskStatus
-
-from problems.tasks import set_status
 
 import requests
 
@@ -36,13 +31,10 @@ def test_passed(ref, given) -> bool:
     return ref["stdout"] == given["stdout"]
 
 
-@shared_task(name="process_submission")
-def process_submission(taskid):
-    task = cache.get(task.id)
-
 
 @shared_task(name="run_code_submission")
 def run_code_submission(submission_code_id: str) -> None:
+    print("IN THE FUNCTION")
     try:
         subcode = ProblemSubmissionCode.objects.get(id=submission_code_id)
     except ObjectDoesNotExist:
@@ -50,7 +42,7 @@ def run_code_submission(submission_code_id: str) -> None:
         return None
 
     sub = subcode.submission
-    problem = sub.problem.problem
+    problem = sub.problem
 
     try:
         res = run_in_camisole(

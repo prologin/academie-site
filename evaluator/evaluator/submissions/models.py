@@ -1,6 +1,8 @@
 from django.contrib.auth import get_user_model
 from django.db import models
+
 from problems.languages import LANGUAGES
+
 import uuid
 
 LANGUAGE_CHOICES = tuple((lang, lang) for lang in LANGUAGES)
@@ -10,7 +12,7 @@ class ProblemSubmission(models.Model):
     id = models.UUIDField(default=uuid.uuid4, primary_key=True, editable=False)
 
     problem = models.ForeignKey(
-        to="activities.ActivityProblem",
+        to="problems.Problem",
         on_delete=models.CASCADE,
     )
 

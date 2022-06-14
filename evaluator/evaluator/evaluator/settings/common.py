@@ -29,6 +29,10 @@ INSTALLED_APPS = [
     'activities',
     'problems',
     'submissions',
+    'status',
+    'authentication',
+    'misc',
+    'reset'
 ]
 
 MIDDLEWARE = [

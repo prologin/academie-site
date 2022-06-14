@@ -46,15 +46,6 @@ class ActivitySerializer(serializers.ModelSerializer):
             "problems_slug",
         )
 
-        '''
-        read_only_fields = (
-            "id",
-            "author",
-            "version",
-            "title",
-        )
-        '''
-
 
 class DetailedPublishedActivitySerializer(serializers.ModelSerializer):
     problems = ProblemSerializer(many=True)

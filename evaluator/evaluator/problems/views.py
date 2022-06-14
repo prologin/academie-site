@@ -42,7 +42,6 @@ class ProblemView(
         cache.set(task.id, True)
         task_model = Status(id=task.id, status=task.status)
 
-
         serializer = StatusSerializer
         headers = self.get_success_headers(serializer.data)
         return Response(serializer(task_model).data, status=status.HTTP_201_CREATED, headers=headers)
