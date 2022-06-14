@@ -1,5 +1,7 @@
 from rest_framework import serializers
+
 from activities import models, validators
+
 from problems.models import Problem
 from problems.validators import allowed_languages_validator
 from problems.serializers import ProblemSerializer
@@ -43,12 +45,15 @@ class ActivitySerializer(serializers.ModelSerializer):
             "publication",
             "problems_slug",
         )
+
+        '''
         read_only_fields = (
             "id",
             "author",
             "version",
             "title",
         )
+        '''
 
 
 class DetailedPublishedActivitySerializer(serializers.ModelSerializer):

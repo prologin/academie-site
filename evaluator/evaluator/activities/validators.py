@@ -1,5 +1,10 @@
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
+
+from django.core.exceptions import ObjectDoesNotExist
+
+from problems.models import Problem
+
 import re
 
 def commit_hash_validator(commit):
@@ -18,3 +23,7 @@ def list_slug_validator(l_slug):
         raise serializers.ValidationError("It has to be a list")
     for slug in l_slug:
         slug_validator(slug)
+        try:
+            Problem.objects.get(title=slug)
+        except ObjectDoesNotExist:
+            raise serializers.ValidationError(f"{slug} does not exists")

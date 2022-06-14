@@ -14,7 +14,10 @@ class ProblemSubmission(models.Model):
         on_delete=models.CASCADE,
     )
 
-    user = models.ForeignKey(to=get_user_model(), on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        to=get_user_model(),
+        on_delete=models.CASCADE
+    )
 
     validated = models.BooleanField(
         default=False,

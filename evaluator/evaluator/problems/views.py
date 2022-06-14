@@ -8,11 +8,12 @@ from problems.models import Problem
 
 from django.core.cache import cache
 
-from status import models
+from status.models import Status
 from status.serializers import StatusSerializer
 
 from activities.validators import slug_validator
 from activities.paginators import ActivityPagination
+
 
 class ProblemView(
     mixins.DestroyModelMixin,
@@ -37,39 +38,11 @@ class ProblemView(
         if not serializer.is_valid():
             return Response(status=status.HTTP_400_BAD_REQUEST, data=serializer.errors)
 
-        task = models.CeleryTaskStatus(model_type="PROBLEM")
-        cache.set(task.id, task, 300)
-        tasks.update_problem.delay(title, request.data, task.id)
+        task = tasks.update_problem.delay(title, request.data)
+        cache.set(task.id, True)
+        task_model = Status(id=task.id, status=task.status)
+
 
         serializer = StatusSerializer
         headers = self.get_success_headers(serializer.data)
-        return Response(serializer(task).data, status=status.HTTP_201_CREATED, headers=headers)
-
-
-"""
-
-class ProblemCreateView(generics.CreateAPIView, generics.DestroyAPIView):
-    serializer_class = StatusSerializer
-    lookup_field = 'title'
-
-    def post(self, request, title):
-        valid_ser = UpdateProblemSerializer(data=request.data)
-        if not valid_ser.is_valid():
-            print(valid_ser.errors)
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-        try:
-            if not slug_validator(request.data['title']):
-                return Response(status=status.HTTP_400_BAD_REQUEST)
-        except:
-                return Response(status=status.HTTP_400_BAD_REQUEST)
-        
-        task = models.CeleryTaskStatus(model_type="PROBLEM")
-        cache.set(task.id, task, 300)
-        tasks.update_problem.delay(title, request.data, task.id)
-
-        return Response(self.serializer_class(task).data)
-
-    def get_queryset(self):
-        return Problem.objects.all()
-
-"""
+        return Response(serializer(task_model).data, status=status.HTTP_201_CREATED, headers=headers)

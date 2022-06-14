@@ -1,16 +1,19 @@
 from rest_framework import mixins, viewsets, generics
 from rest_framework.response import Response
-from activities import paginators
-from activities.models import Activity
-from status.models import CeleryTaskStatus
-from status.serializers import StatusSerializer
-from activities.serializers import DetailedPublishedActivitySerializer, ActivitySerializer
 from rest_framework import status
+
+from activities import paginators, tasks
+from activities.models import Activity
+from activities.serializers import DetailedPublishedActivitySerializer, ActivitySerializer
+
+from status.serializers import StatusSerializer
+from status.models import Status
+
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.cache import cache
-from activities import tasks
 
 from datetime import datetime
+
 
 class ActivityView(
     mixins.CreateModelMixin,
@@ -39,10 +42,12 @@ class ActivityView(
         if not serializer.is_valid():
             return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        serializer_class = StatusSerializer
-        task = CeleryTaskStatus(model_type="ACTIVITY")
-        cache.set(task.id, task, 300)
-        tasks.update_activity.delay(title, request.data, task.id)
-        serializer = self.get_serializer()
+        self.serializer_class = StatusSerializer
+
+        task = tasks.update_activity.delay(title, request.data)
+        cache.set(task.id, True)
+        task_model = Status(id=task.id, status=task.status)
+
+        serializer = self.get_serializer(task_model)
         headers = self.get_success_headers(serializer.data)
-        return Response(serializer(task).data, status=status.HTTP_201_CREATED, headers=headers)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
