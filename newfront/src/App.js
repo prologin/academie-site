@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import "./App.css";
+import React, { useEffect } from 'react';
+import './App.css';
 import {
   BrowserRouter as Router,
   Routes,
@@ -7,25 +7,48 @@ import {
   useNavigate,
   useLocation,
   Navigate,
-} from "react-router-dom";
+} from 'react-router-dom';
 
-import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
+import { CssBaseline, ThemeProvider, createTheme } from '@mui/material';
 
-import Navigation from "./components/Navigation";
-import StateProvider from "./config/store";
-import themeConfig from "./config/theming";
-import Login from "./views/Login";
-import Courses from "./views/Courses";
-import Exercises from "./views/Exercises";
-import Code from "./views/Code";
-import Register from "./views/Register";
+import Navigation from './components/Navigation';
+import themeConfig from './config/theming';
+import Login from './views/Login';
+import Courses from './views/Courses';
+import Exercises from './views/Exercises';
+import Code from './views/Code';
+import Register from './views/Register';
+
+import StateProvider, { useSelector } from './config/store';
+
+const Protected = ({ children }) => {
+  const isAuthenticated = useSelector((state) => state.user.authenticated);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isAuthenticated) navigate(`/`, { replace: true });
+  });
+
+  return isAuthenticated ? children : null;
+};
+
+const RedirectIfAuthenticated = ({ children }) => {
+  const isAuthenticated = useSelector((state) => state.user.authenticated);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isAuthenticated) navigate(`/courses/`, { replace: true });
+  });
+
+  return !isAuthenticated ? children : null;
+};
 
 const AppRouter = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
   useEffect(() => {
-    if (pathname.slice(-1) !== "/") navigate(`${pathname}/`, { replace: true });
+    if (pathname.slice(-1) !== '/') navigate(`${pathname}/`, { replace: true });
   });
 
   return (
@@ -35,41 +58,51 @@ const AppRouter = () => {
         <Route
           path="/"
           element={
-            <Navigation>
-              <Login />
-            </Navigation>
+            <RedirectIfAuthenticated>
+              <Navigation>
+                <Login />
+              </Navigation>
+            </RedirectIfAuthenticated>
           }
         />
         <Route
           path="/register"
           element={
-            <Navigation>
-              <Register />
-            </Navigation>
+            <RedirectIfAuthenticated>
+              <Navigation>
+                <Register />
+              </Navigation>
+            </RedirectIfAuthenticated>
           }
         />
         <Route
           path="/courses"
           element={
-            <Navigation>
-              <Courses />
-            </Navigation>
+            <Protected>
+              <Navigation>
+                <Courses />
+              </Navigation>
+            </Protected>
           }
         />
         <Route
           path="/exercises"
           element={
-            <Navigation>
-              <Exercises />
-            </Navigation>
+            <Protected>
+              <Navigation>
+                <Exercises />
+              </Navigation>
+            </Protected>
           }
         />
         <Route
           path="/code"
           element={
-            <Navigation fullScreen>
-              <Code />
-            </Navigation>
+            <Protected>
+              <Navigation fullScreen>
+                <Code />
+              </Navigation>
+            </Protected>
           }
         />
         <Route path="*" element={<Navigate to="/" replace />} />

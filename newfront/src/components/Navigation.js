@@ -1,62 +1,70 @@
-import React from "react";
-import PropTypes from "prop-types";
-import { Link } from "react-router-dom";
-import { makeStyles } from "@mui/styles";
+import React from 'react';
+import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
+import { makeStyles } from '@mui/styles';
 
-import AppBar from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
-import Grid from "@mui/material/Grid";
-import Button from "@mui/material/Button";
-import MuiLink from "@mui/material/Link";
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import Grid from '@mui/material/Grid';
+import Button from '@mui/material/Button';
+import MuiLink from '@mui/material/Link';
+
+import { useSelector, useDispatch } from '../config/store';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
-    height: "100vh",
+    height: '100vh',
   },
   title: {
     flexGrow: 1,
-    fontFamily: "Noto Sans",
+    fontFamily: 'Noto Sans',
   },
   logo: {
-    color: "inherit",
-    textDecoration: "inherit",
-    display: "flex",
-    alignItems: "center",
+    color: 'inherit',
+    textDecoration: 'inherit',
+    display: 'flex',
+    alignItems: 'center',
     marginRight: 60,
-    "& img": {
+    '& img': {
       maxHeight: 46,
       marginRight: theme.spacing(2),
     },
   },
   appBar: {
-    backgroundColor: "#FFF",
+    backgroundColor: '#FFF',
   },
   toolbar1: {
     maxWidth: 1000,
-    width: "100%",
-    margin: "auto",
-    color: "#000",
+    width: '100%',
+    margin: 'auto',
+    color: '#000',
   },
   toolbar: theme.mixins.toolbar,
   container: {
     ...theme.mixins.container,
     maxWidth: 1200,
-    margin: "auto",
+    margin: 'auto',
     padding: 30,
   },
   grow: {
     flexGrow: 1,
   },
   menu: {
-    justifyContent: "center",
-    alignItems: "center",
-    display: "inline-flex",
+    justifyContent: 'center',
+    alignItems: 'center',
+    display: 'inline-flex',
   },
 }));
 
 function Navigation({ children, fullScreen }) {
   const classes = useStyles();
+  const isAuthenticated = useSelector((state) => state.user.authenticated);
+  const dispatch = useDispatch();
+
+  const handleLogout = () => {
+    dispatch({ type: 'LOGOUT' });
+  };
 
   return (
     <div className={classes.root}>
@@ -92,11 +100,17 @@ function Navigation({ children, fullScreen }) {
               </MuiLink>
             </Grid>
             <Grid container item md={2} className={classes.menu}>
-              <Link to="/">
-                <Button variant="text" color="black">
-                  <b>Se connecter</b>
+              {!isAuthenticated ? (
+                <Link to="/">
+                  <Button variant="text" color="black">
+                    <b>Se connecter</b>
+                  </Button>
+                </Link>
+              ) : (
+                <Button variant="text" color="black" onClick={handleLogout}>
+                  Logout
                 </Button>
-              </Link>
+              )}
             </Grid>
           </Grid>
         </Toolbar>

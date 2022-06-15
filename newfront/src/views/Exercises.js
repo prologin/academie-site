@@ -7,13 +7,13 @@ import {
   StepLabel,
   Stepper,
   Typography,
-} from "@mui/material";
-import { makeStyles } from "@mui/styles";
-import { Link } from "react-router-dom";
+} from '@mui/material';
+import { makeStyles } from '@mui/styles';
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   fullWidth: {
-    maxWidth: "100%",
+    maxWidth: '100%',
     borderRadius: 10,
   },
 }));
@@ -118,7 +118,7 @@ export default function Exercises() {
                   </Typography>
                 </Grid>
               </Grid>
-              <Grid sm={6} textAlign="right">
+              <Grid sm={6} item textAlign="right">
                 <Link to="/code/">
                   <Button variant="contained">Continuer</Button>
                 </Link>
