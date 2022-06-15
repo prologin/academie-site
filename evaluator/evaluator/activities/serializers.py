@@ -1,10 +1,13 @@
 from rest_framework import serializers
 
 from activities import models, validators
+from activities.models import Activity
 
 from problems.models import Problem
 from problems.validators import allowed_languages_validator
 from problems.serializers import ProblemSerializer
+
+from django.core.exceptions import ValidationError
 
 from datetime import datetime
 
@@ -17,12 +20,23 @@ class ActivityImageSerializer(serializers.ModelSerializer):
 
 class ActivitySerializer(serializers.ModelSerializer):
 
-    def validate(self, attrs):
-        time = datetime.now()
-        if attrs['closing'] < attrs['opening']:
-            attrs['closing'], attrs['opening'] = attrs['opening'], attrs['closing']
-        
-        return attrs
+    def create(self, validated_data):
+        activity = Activity.objects.create(
+            title=validated_data['title'],
+            description=validated_data['description'],
+            opening=validated_data['opening'],
+            closing=validated_data['closing'],
+            publication=validated_data['publication'],
+            author=validated_data['author'],
+        )
+
+        new_list = []
+        for problem_slug in validated_data['problems_slug']:
+            problem = Problem.objects.get(title=problem_slug)
+            new_list.append(problem)
+        activity.problems.set(new_list)
+        return activity
+
 
     problems_slug = serializers.ListField(
         min_length=1,
@@ -36,7 +50,6 @@ class ActivitySerializer(serializers.ModelSerializer):
         allow_null=False,
         validators=[validators.slug_validator],
         label='title',
-        write_only=True,
     )
 
     class Meta:

@@ -46,34 +46,25 @@ class ActivityView(
     mixins.RetrieveModelMixin,
     mixins.DestroyModelMixin,
     mixins.ListModelMixin,
+    mixins.UpdateModelMixin,
     viewsets.GenericViewSet):
 
     pagination_class = paginators.ActivityPagination
     serializer_class = ActivitySerializer
-    queryset = Activity.published_activities()
+    queryset = Activity.objects.all()
 
     lookup_field = 'title'
 
     # list get
 
+    def create(self, request, *args, **kwargs):
+        try:
+            _ = Activity.objects.get(title=request.data['title'])
+            return Response(status=status.HTTP_200_OK)
+        except ObjectDoesNotExist:
+            return super().create(request, *args, **kwargs)
+
+
     def retrieve(self, request, title=None): # get with parameter
         serializer_class = DetailedPublishedActivitySerializer
         return super().retrieve(request, title)
-    
-    def create(self, request):
-        serializer = self.get_serializer(data=request.data)
-        title = request.query_params.get('title')
-        if title is None:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-        if not serializer.is_valid():
-            return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-        self.serializer_class = StatusSerializer
-
-        task = tasks.update_activity.delay(title, request.data)
-        cache.set(task.id, True)
-        task_model = Status(id=task.id, status=task.status)
-
-        headers = self.get_success_headers(serializer.data)
-        serializer = self.get_serializer(task_model)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)

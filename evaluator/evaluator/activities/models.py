@@ -22,14 +22,7 @@ class Activity(models.Model):
         os.remove('./' + path)
         return super().delete(using, keep_parents)
     
-    '''
-    def save(self, force_insert=False, force_update=False, using=None,
-             update_fields=None):
-        path = upload_image(self, "")
-        os.write(fd, data)
-        super().save(force_insert, force_update, using, update_fields)
-    '''
-
+    
     id = models.UUIDField(
         default=uuid.uuid4,
         primary_key=True,
@@ -56,7 +49,7 @@ class Activity(models.Model):
         to=Problem,
     )
 
-    image = ResizedImageField(size=[600, 400], quality=75, crop=['middle', 'center'], force_format='JPEG', keep_meta=False, upload_to=upload_image)
+    image = ResizedImageField(blank=True, null=True, size=[600, 400], quality=75, crop=['middle', 'center'], force_format='JPEG', keep_meta=False, upload_to=upload_image)
 
     opening = models.DateTimeField(blank=True, null=True)
     closing = models.DateTimeField(blank=True, null=True)
