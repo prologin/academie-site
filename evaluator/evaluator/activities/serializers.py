@@ -8,6 +8,13 @@ from problems.serializers import ProblemSerializer
 
 from datetime import datetime
 
+class ActivityImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Activity
+        fields = (
+            "image",
+        )
+
 class ActivitySerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):

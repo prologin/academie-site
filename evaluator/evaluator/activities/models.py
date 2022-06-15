@@ -21,6 +21,14 @@ class Activity(models.Model):
         path = upload_image(self, "")
         os.remove('./' + path)
         return super().delete(using, keep_parents)
+    
+    '''
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
+        path = upload_image(self, "")
+        os.write(fd, data)
+        super().save(force_insert, force_update, using, update_fields)
+    '''
 
     id = models.UUIDField(
         default=uuid.uuid4,

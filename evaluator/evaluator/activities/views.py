@@ -4,7 +4,7 @@ from rest_framework import status
 
 from activities import paginators, tasks
 from activities.models import Activity
-from activities.serializers import DetailedPublishedActivitySerializer, ActivitySerializer
+from activities.serializers import DetailedPublishedActivitySerializer, ActivitySerializer, ActivityImageSerializer
 
 from status.serializers import StatusSerializer
 from status.models import Status
@@ -13,6 +13,32 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.cache import cache
 
 from datetime import datetime
+
+import os
+
+class ActivityImageView(
+    mixins.UpdateModelMixin,
+    viewsets.GenericViewSet):
+
+    lookup_field = 'title'
+    serializer_class = ActivityImageSerializer
+    queryset = Activity.objects.all()
+
+    def update(self, request, *args, **kwargs):
+        obj = self.get_object()
+        serializer = self.get_serializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        path = f'./uploads/images/activities/{obj.id}'
+        if os.path.exists(path):
+            os.remove(path)
+
+        obj.image = request.FILES['image']
+        obj.save()
+
+        return Response(status=status.HTTP_200_OK)
+
 
 
 class ActivityView(
@@ -48,6 +74,6 @@ class ActivityView(
         cache.set(task.id, True)
         task_model = Status(id=task.id, status=task.status)
 
-        serializer = self.get_serializer(task_model)
         headers = self.get_success_headers(serializer.data)
+        serializer = self.get_serializer(task_model)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
