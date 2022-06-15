@@ -9,7 +9,7 @@ class ActivityAdmin(admin.ModelAdmin):
         "id",
     )
 
-    readonly_fields = ("id", "problems")
+    readonly_fields = ("id",)
 
     search_fields = (
         "title",
@@ -23,7 +23,7 @@ class ActivityAdmin(admin.ModelAdmin):
         (
             None, 
             {
-                "fields": ("id", "title", "version", "problems")
+                "fields": ("id", "title", "image", "version", "problems")
             }
         ),
         (

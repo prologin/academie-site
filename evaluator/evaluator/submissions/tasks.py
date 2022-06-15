@@ -34,7 +34,6 @@ def test_passed(ref, given) -> bool:
 
 @shared_task(name="run_code_submission")
 def run_code_submission(submission_code_id: str) -> None:
-    print("IN THE FUNCTION")
     try:
         subcode = ProblemSubmissionCode.objects.get(id=submission_code_id)
     except ObjectDoesNotExist:

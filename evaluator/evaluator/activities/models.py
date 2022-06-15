@@ -1,12 +1,27 @@
 from django.db import models
 from django.core.validators import RegexValidator
-from problems.models import Problem
 from django.contrib.auth import get_user_model
+
+from django_resized import ResizedImageField
+
+from problems.models import Problem
+
 from django.utils import timezone
+
 import uuid
 
+import os
+
+def upload_image(instance, filename):
+    return f'uploads/images/activities/{instance.id}'
 
 class Activity(models.Model):
+
+    def delete(self, using=None, keep_parents=False):
+        path = upload_image(self, "")
+        os.remove('./' + path)
+        return super().delete(using, keep_parents)
+
     id = models.UUIDField(
         default=uuid.uuid4,
         primary_key=True,
@@ -32,6 +47,8 @@ class Activity(models.Model):
     problems = models.ManyToManyField(
         to=Problem,
     )
+
+    image = ResizedImageField(size=[600, 400], quality=75, crop=['middle', 'center'], force_format='JPEG', keep_meta=False, upload_to=upload_image)
 
     opening = models.DateTimeField(blank=True, null=True)
     closing = models.DateTimeField(blank=True, null=True)
