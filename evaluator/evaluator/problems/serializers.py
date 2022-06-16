@@ -11,7 +11,6 @@ class ProblemSerializer(serializers.ModelSerializer):
         validators=[validators.slug_validator],
         allow_blank=False,
         label='title',
-        write_only=True,
     )
 
     class Meta:
