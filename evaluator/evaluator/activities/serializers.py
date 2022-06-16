@@ -71,6 +71,9 @@ class ActivitySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Activity
+        read_only_fields = (
+            "image",
+        )
         fields = (
             "id",
             "title",
@@ -83,6 +86,7 @@ class ActivitySerializer(serializers.ModelSerializer):
             "author",
             "version",
             "publication",
+            "image",
         )
         extra_kwargs = {
             "description": {'write_only': True},
