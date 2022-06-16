@@ -66,5 +66,5 @@ class ActivityView(
 
 
     def retrieve(self, request, title=None): # get with parameter
-        serializer_class = DetailedPublishedActivitySerializer
+        self.serializer_class = DetailedPublishedActivitySerializer
         return super().retrieve(request, title)
