@@ -13,7 +13,7 @@ import uuid
 import os
 
 def upload_image(instance, filename):
-    return f'./uploads/images/activities/{instance.id},jpg'
+    return f'./uploads/images/activities/{instance.id}.jpg'
 
 class Activity(models.Model):
 
