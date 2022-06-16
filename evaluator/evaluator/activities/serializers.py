@@ -97,7 +97,18 @@ class ActivitySerializer(serializers.ModelSerializer):
 
 
 class DetailedPublishedActivitySerializer(serializers.ModelSerializer):
+
     problems = ProblemSerializer(many=True)
+
+    languages_list = serializers.SerializerMethodField(read_only=True,)
+
+    def get_languages_list(self, instance):
+        languages = []
+        for problem in instance.problems.all():
+            for language in problem.allowed_languages:
+                if not language in languages:
+                    languages.append(language)
+        return languages
 
     class Meta:
         model = models.Activity
