@@ -30,7 +30,7 @@ class ActivityImageView(
         if not serializer.is_valid():
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
-        path = f'./uploads/images/activities/{obj.id}'
+        path = f'./uploads/images/activities/{obj.id}.jpg'
         if os.path.exists(path):
             os.remove(path)
 
