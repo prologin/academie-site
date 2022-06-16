@@ -18,16 +18,17 @@ class ActivityImageSerializer(serializers.ModelSerializer):
             "image",
         )
 
+
 class ActivitySerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         activity = Activity.objects.create(
             title=validated_data['title'],
+            author=validated_data['author'],
             description=validated_data['description'],
+            publication=validated_data['publication'],
             opening=validated_data['opening'],
             closing=validated_data['closing'],
-            publication=validated_data['publication'],
-            author=validated_data['author'],
         )
 
         new_list = []
@@ -52,19 +53,43 @@ class ActivitySerializer(serializers.ModelSerializer):
         label='title',
     )
 
+    count = serializers.SerializerMethodField(read_only=True,)
+
+    languages_list = serializers.SerializerMethodField(read_only=True,)
+
+    def get_count(self, instance):
+        return instance.problems.count()
+
+    def get_languages_list(self, instance):
+        languages = []
+        for problem in instance.problems.all():
+            for language in problem.allowed_languages:
+                if not language in languages:
+                    languages.append(language)
+        return languages
+
+
     class Meta:
         model = models.Activity
         fields = (
             "id",
             "title",
+            "opening",
+            "closing",
+            "problems_slug",
+            "count",
+            "languages_list",
             "description",
             "author",
             "version",
-            "opening",
-            "closing",
             "publication",
-            "problems_slug",
         )
+        extra_kwargs = {
+            "description": {'write_only': True},
+            "author": {'write_only': True},
+            "version": {'write_only': True},
+            "publication": {'write_only': True}
+        }
 
 
 class DetailedPublishedActivitySerializer(serializers.ModelSerializer):
