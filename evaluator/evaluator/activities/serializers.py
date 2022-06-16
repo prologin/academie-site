@@ -123,4 +123,5 @@ class DetailedPublishedActivitySerializer(serializers.ModelSerializer):
             "publication",
             "image",
             "problems",
+            "languages_list",
         )
