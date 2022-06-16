@@ -110,5 +110,6 @@ class DetailedPublishedActivitySerializer(serializers.ModelSerializer):
             "opening",
             "closing",
             "publication",
+            "image",
             "problems",
         )
