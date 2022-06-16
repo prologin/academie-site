@@ -1,9 +1,4 @@
-from celery import shared_task
-from celery.result import AsyncResult
 from problems.models import Problem
-
-from django.core.exceptions import ObjectDoesNotExist
-from django.core.cache import cache
 
 from rest_framework.parsers import JSONParser
 
@@ -11,17 +6,12 @@ from rest_framework.parsers import JSONParser
 class ProblemExecption(Exception):
     pass
 
-@shared_task(name='test')
-def test(a ,b):
-    return a + b
 
-
-@shared_task(name="update_problem")
-def update_problem(slug, body):
+def create_or_update_problem(title, body):
     problem, is_created = Problem.objects.update_or_create(
-        title=slug,
+        title=title,
         defaults={
-            'title': slug,
+            'title': body['title'],
             'author': body['author'],
             'description': body['description'],
             'subject': body['subject'],
@@ -32,3 +22,5 @@ def update_problem(slug, body):
             'tests': body['tests']
         }
     )
+
+    return problem
