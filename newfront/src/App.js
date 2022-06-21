@@ -86,7 +86,7 @@ const AppRouter = () => {
           }
         />
         <Route
-          path="/exercises"
+          path="/exercises/:courseId"
           element={
             <Protected>
               <Navigation>

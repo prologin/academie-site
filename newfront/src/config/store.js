@@ -13,6 +13,7 @@ const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 const LOGIN_ERROR = 'LOGIN_ERROR';
 const GET_PROFILE_SUCCESS = 'GET_PROFILE_SUCCESS';
 const GET_COURSES_SUCCESS = 'GET_COURSES_SUCCESS';
+const GET_COURSE_SUCCESS = 'GET_COURSE_SUCCESS';
 
 const validOrRemoveAccessToken = () => {
   const token = sessionStorage.access_token;
@@ -51,6 +52,7 @@ const initialState = {
     error: null,
   },
   courses: {},
+  course: {},
 };
 
 const reducer = (state, action) => {
@@ -108,6 +110,10 @@ const reducer = (state, action) => {
         draft.courses = action.data;
         break;
 
+      case GET_COURSE_SUCCESS:
+        draft.course = action.data;
+        break;
+
       default:
         break;
     }
@@ -139,6 +145,18 @@ const getCourses = () => {
 
 const getCoursesSuccess = (data) => ({
   type: GET_COURSES_SUCCESS,
+  data,
+});
+
+const getCourse = (courseId) => {
+  return async (dispatch) => {
+    const data = await coursesApi.getCourse(courseId);
+    dispatch(getCourseSuccess(data));
+  };
+};
+
+const getCourseSuccess = (data) => ({
+  type: GET_COURSE_SUCCESS,
   data,
 });
 
@@ -239,6 +257,7 @@ export {
   register,
   login,
   getCourses,
+  getCourse,
 };
 
 export default StateProvider;
