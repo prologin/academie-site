@@ -20,6 +20,7 @@ class ProblemSubmissionCodeSerializer(serializers.ModelSerializer):
             "title",
             "language",
             "code",
+            "result",
         )
 
         read_only_fields = (
