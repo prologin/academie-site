@@ -21,7 +21,7 @@ class StatusView(
     def retrieve(self, request, pk=None):
         task = AsyncResult(id=pk)
         tmp = cache.get(pk)
-        res = null
+        res = None
         if not (tmp is None):
             res = uuid4(tmp)
 
