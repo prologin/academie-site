@@ -65,7 +65,7 @@ class SubmissionView(
         self.serializer_class = StatusSerializer
 
         task = run_code_submission.delay(problem_submission_code.id)
-        cache.set(task.id, True)
+        cache.set(task.id, problem_submission_code.id)
         task_model = Status(id=task.id, status=task.status, result=problem_submission_code.id)
 
         serializer = self.get_serializer(task_model)

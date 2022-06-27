@@ -1,3 +1,4 @@
+from uuid import uuid4
 from rest_framework import mixins, viewsets, generics
 from rest_framework.response import Response
 from rest_framework import status
@@ -19,7 +20,12 @@ class StatusView(
 
     def retrieve(self, request, pk=None):
         task = AsyncResult(id=pk)
-        obj = Status(id=task.id, status=task.status)
+        tmp = cache.get(pk)
+        res = null
+        if not (tmp is None):
+            res = uuid4(tmp)
+
+        obj = Status(id=task.id, status=task.status, result=res)
         if (cache.get(task.id) is None):
             obj.status = "NOT FOUND"
         serializer = self.get_serializer(obj)
