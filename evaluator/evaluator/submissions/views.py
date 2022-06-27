@@ -1,3 +1,4 @@
+from cgitb import lookup
 from rest_framework import mixins, viewsets
 from rest_framework import status
 from rest_framework.response import Response
@@ -26,6 +27,7 @@ class SubmissionView(
 ):
     serializer_class = ProblemSubmissionCodeSerializer
     queryset = ProblemSubmissionCode.objects.all()
+    lookup_field = "id"
 
     def retrieve(self, request, id=None): # get with parameter
         return super().retrieve(request, id)
