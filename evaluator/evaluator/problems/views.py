@@ -33,8 +33,9 @@ class ProblemView(
         if not serializer.is_valid():
             return Response(status=status.HTTP_400_BAD_REQUEST, data=serializer.errors)
 
-        obj = create_or_update_problem(title, request.data)
+        obj = tasks.create_or_update_problem(title, request.data)
         serializer = self.get_serializer(data=obj)
+        serializer.is_valid()
 
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
