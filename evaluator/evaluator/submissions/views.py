@@ -21,9 +21,14 @@ User = get_user_model()
 
 class SubmissionView(
     mixins.CreateModelMixin,
+    mixins.RetrieveModelMixin,
     viewsets.GenericViewSet,
 ):
     serializer_class = ProblemSubmissionCodeSerializer
+    queryset = ProblemSubmissionCode.objects.all()
+
+    def retrieve(self, request, id=None): # get with parameter
+        return super().retrieve(request, id)
 
     def create(self, request):
         serializer = self.get_serializer(data=request.data)
@@ -59,7 +64,7 @@ class SubmissionView(
 
         task = run_code_submission.delay(problem_submission_code.id)
         cache.set(task.id, True)
-        task_model = Status(id=task.id, status=task.status)
+        task_model = Status(id=task.id, status=task.status, result=problem_submission_code.id)
 
         serializer = self.get_serializer(task_model)
         headers = self.get_success_headers(serializer.data)

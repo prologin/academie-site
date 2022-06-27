@@ -6,3 +6,4 @@ class Status(models.Model):
     
     id = models.UUIDField(primary_key=True)
     status = models.CharField(max_length=150)
+    result = models.UUIDField(null=True, blank=True)
