@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.validators import RegexValidator
 from django.contrib.auth import get_user_model
+from django.utils.translation import gettext_lazy as _
 
 from django_resized import ResizedImageField
 
@@ -11,6 +12,14 @@ from django.utils import timezone
 import uuid
 
 import os
+
+class Difficulty(models.IntegerChoices):
+    TRIVIAL = 0, _("trivial")
+    EASY = 1, _("easy")
+    MEDIUM = 2, _("medium")
+    HARD = 3, _("hard")
+    VERY_HARD = 4, _("very_hard")
+
 
 def upload_image(instance, filename):
     return f'./uploads/images/activities/{instance.id}.jpg'
@@ -27,6 +36,10 @@ class Activity(models.Model):
         default=uuid.uuid4,
         primary_key=True,
         editable=False,
+    )
+
+    difficulty = models.PositiveSmallIntegerField(
+        choices=Difficulty.choices,
     )
 
     title = models.CharField(

@@ -6,7 +6,6 @@ from problems import tasks
 from problems.serializers import ProblemSerializer
 from problems.models import Problem
 
-
 from activities.validators import slug_validator
 from activities.paginators import ActivityPagination
 

@@ -29,6 +29,7 @@ class ActivitySerializer(serializers.ModelSerializer):
             publication=validated_data['publication'],
             opening=validated_data['opening'],
             closing=validated_data['closing'],
+            difficulty=validated_data['difficulty'],
         )
 
         new_list = []
@@ -87,6 +88,7 @@ class ActivitySerializer(serializers.ModelSerializer):
             "version",
             "publication",
             "image",
+            "difficulty",
         )
         extra_kwargs = {
             "description": {'write_only': True},
@@ -124,4 +126,5 @@ class DetailedPublishedActivitySerializer(serializers.ModelSerializer):
             "image",
             "problems",
             "languages_list",
+            "difficulty",
         )
