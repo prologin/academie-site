@@ -7,9 +7,7 @@ def run_sub_in_camisole(model_admin, request, queryset):
     from submissions.tasks import run_code_submission
 
     for obj in queryset:
-        run_code_submission(obj.id)
-        # run_code_submission.apply_async(args=[obj.id])
-        # run_code_submission.delay(args=[obj.id])
+        run_code_submission.apply_async(args=[obj.id])
 
 
 @admin.register(models.ProblemSubmission)
