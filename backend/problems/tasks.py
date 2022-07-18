@@ -1,6 +1,6 @@
-from rest_framework.parsers import JSONParser
-
 from problems.models import Problem
+
+from rest_framework.parsers import JSONParser
 
 
 class ProblemExecption(Exception):

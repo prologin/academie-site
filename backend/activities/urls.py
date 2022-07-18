@@ -1,7 +1,8 @@
-from django.urls import path
+from activities import views
+
 from rest_framework.routers import DefaultRouter
 
-from activities import views
+from django.urls import path
 
 app_name = "activities"
 
