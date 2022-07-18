@@ -1,0 +1,15 @@
+.DS_Store
+.idea
+*.log
+.vscode
+tmp/
+
+*.py[cod]
+*.egg
+build
+htmlcov
+.coverage
+
+docker/volumes/
+docker/secrets/
+docker/.env
