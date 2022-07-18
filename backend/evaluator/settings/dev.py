@@ -1,7 +1,7 @@
 import os
 from datetime import timedelta
 
-from .common import *  # noqa
+#from .common import *  # noqa
 
 # Use this only in development
 DEBUG = True
@@ -38,7 +38,6 @@ AUTH_USER_MODEL = "authentification.ProloginUser"
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
-
 CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.redis.RedisCache",
@@ -66,7 +65,7 @@ DEFAULTS = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
     "ROTATE_REFRESH_TOKENS": False,
-    "BLACKLIST_AFTER_ROTATION": True,
+    "BLACKLIST_AFTER_ROTATION": False,
     "ALGORITHM": "HS256",
     "SIGNING_KEY": SECRET_KEY,
     "VERIFYING_KEY": None,
