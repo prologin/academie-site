@@ -59,7 +59,7 @@ services:
     restart: unless-stopped
     build:
       context: ../backend
-    command: celery -A evaluator worker -l info
+    command: celery -A evaluator worker -l info --concurrency=4
     env_file:
       - ./.env.dev
     depends_on:
@@ -75,6 +75,19 @@ services:
       - s3-access
       - s3-secret
 
+  celery_flower_dev:
+    image: mher/flower
+    hostname: db_adminer_dev
+    restart: unless-stopped
+    environment:
+      - CELERY_BROKER_URL=redis://redis_dev:6379/0
+      - FLOWER_PORT=8888
+    ports:
+      - $FLOWER_PORT:8888
+    depends_on:
+      - celery_dev
+      - redis_dev
+
   backend_dev:
     image: backend_dev
     build:
@@ -86,6 +99,8 @@ services:
     restart: unless-stopped
     env_file:
       - ./.env.dev
+    environment:
+      - S3_CUSTOM_DOMAIN=localhost:$S3_PORT/evaluator
     depends_on:
       - db_dev
       - s3_dev
