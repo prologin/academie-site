@@ -1,62 +1,61 @@
+from datetime import datetime
+
+from django.core.exceptions import ValidationError
 from rest_framework import serializers
 
 from activities import models, validators
 from activities.models import Activity
-
 from problems.models import Problem
-from problems.validators import allowed_languages_validator
 from problems.serializers import ProblemSerializer
+from problems.validators import allowed_languages_validator
 
-from django.core.exceptions import ValidationError
-
-from datetime import datetime
 
 class ActivityImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Activity
-        fields = (
-            "image",
-        )
+        fields = ("image",)
 
 
 class ActivitySerializer(serializers.ModelSerializer):
-
     def create(self, validated_data):
         activity = Activity.objects.create(
-            title=validated_data['title'],
-            author=validated_data['author'],
-            description=validated_data['description'],
-            publication=validated_data['publication'],
-            opening=validated_data['opening'],
-            closing=validated_data['closing'],
-            difficulty=validated_data['difficulty'],
+            title=validated_data["title"],
+            author=validated_data["author"],
+            description=validated_data["description"],
+            publication=validated_data["publication"],
+            opening=validated_data["opening"],
+            closing=validated_data["closing"],
+            difficulty=validated_data["difficulty"],
         )
 
         new_list = []
-        for problem_slug in validated_data['problems_slug']:
+        for problem_slug in validated_data["problems_slug"]:
             problem = Problem.objects.get(title=problem_slug)
             new_list.append(problem)
         activity.problems.set(new_list)
         return activity
 
-
     problems_slug = serializers.ListField(
         min_length=1,
         allow_null=False,
         validators=[validators.list_slug_validator],
-        label='problems_slug',
+        label="problems_slug",
         write_only=True,
     )
 
     title = serializers.CharField(
         allow_null=False,
         validators=[validators.slug_validator],
-        label='title',
+        label="title",
     )
 
-    count = serializers.SerializerMethodField(read_only=True,)
+    count = serializers.SerializerMethodField(
+        read_only=True,
+    )
 
-    languages_list = serializers.SerializerMethodField(read_only=True,)
+    languages_list = serializers.SerializerMethodField(
+        read_only=True,
+    )
 
     def get_count(self, instance):
         return instance.problems.count()
@@ -69,12 +68,9 @@ class ActivitySerializer(serializers.ModelSerializer):
                     languages.append(language)
         return languages
 
-
     class Meta:
         model = models.Activity
-        read_only_fields = (
-            "image",
-        )
+        read_only_fields = ("image",)
         fields = (
             "id",
             "title",
@@ -91,10 +87,10 @@ class ActivitySerializer(serializers.ModelSerializer):
             "difficulty",
         )
         extra_kwargs = {
-            "description": {'write_only': True},
-            "author": {'write_only': True},
-            "version": {'write_only': True},
-            "publication": {'write_only': True}
+            "description": {"write_only": True},
+            "author": {"write_only": True},
+            "version": {"write_only": True},
+            "publication": {"write_only": True},
         }
 
 
@@ -102,7 +98,9 @@ class DetailedPublishedActivitySerializer(serializers.ModelSerializer):
 
     problems = ProblemSerializer(many=True)
 
-    languages_list = serializers.SerializerMethodField(read_only=True,)
+    languages_list = serializers.SerializerMethodField(
+        read_only=True,
+    )
 
     def get_languages_list(self, instance):
         languages = []

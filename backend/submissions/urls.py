@@ -1,15 +1,13 @@
 from django.urls import path
+from rest_framework.routers import DefaultRouter
 
 from submissions import views
-
-from rest_framework.routers import DefaultRouter
 
 app_name = "submissions"
 
 router = DefaultRouter()
-router.register(r'', views.SubmissionView, basename="submissions")
+router.register(r"", views.SubmissionView, basename="submissions")
 
-urlpatterns = [
-]
+urlpatterns = []
 
 urlpatterns += router.urls

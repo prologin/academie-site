@@ -3,6 +3,6 @@
 *.pyc
 
 # settings
-evaluator/evaluator/settings/dev.py
-evaluator/evaluator/settings/prod.py
+evaluator/settings/dev.py
+evaluator/settings/prod.py
 evaluator/db.sqlite3

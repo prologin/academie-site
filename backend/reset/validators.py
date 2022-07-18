@@ -3,6 +3,7 @@ from django.core.exceptions import ValidationError
 
 User = get_user_model()
 
+
 def email_exist(email):
     try:
         user = User.objects.get(email=email)

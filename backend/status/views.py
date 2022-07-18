@@ -1,19 +1,15 @@
 from uuid import uuid4
-from rest_framework import mixins, viewsets, generics
-from rest_framework.response import Response
-from rest_framework import status
 
 from celery.result import AsyncResult
-
-from status.serializers import StatusSerializer
-from status.models import Status
-
 from django.core.cache import cache
+from rest_framework import generics, mixins, status, viewsets
+from rest_framework.response import Response
+
+from status.models import Status
+from status.serializers import StatusSerializer
 
 
-class StatusView(
-    mixins.RetrieveModelMixin,
-    viewsets.GenericViewSet):
+class StatusView(mixins.RetrieveModelMixin, viewsets.GenericViewSet):
 
     serializer_class = StatusSerializer
     queryset = Status.objects.all()
@@ -24,7 +20,7 @@ class StatusView(
         res = tmp
 
         obj = Status(id=task.id, status=task.status, result=res)
-        if (cache.get(task.id) is None):
+        if cache.get(task.id) is None:
             obj.status = "NOT FOUND"
         serializer = self.get_serializer(obj)
         return Response(serializer.data)

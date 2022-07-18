@@ -1,7 +1,9 @@
+import uuid
+
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+
 from problems import validators
-import uuid
 
 
 class Difficulty(models.IntegerChoices):
@@ -28,11 +30,9 @@ class Problem(models.Model):
         max_length=150,
     )
 
-    description = models.TextField(
-    )
+    description = models.TextField()
 
-    subject = models.TextField(
-    )
+    subject = models.TextField()
 
     difficulty = models.PositiveSmallIntegerField(
         choices=Difficulty.choices,
@@ -55,7 +55,6 @@ class Problem(models.Model):
     tests = models.JSONField(
         validators=[validators.tests_validator],
     )
-
 
     def __str__(self):
         return str(self.title)

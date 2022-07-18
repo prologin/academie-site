@@ -6,13 +6,36 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('submissions', '0001_initial'),
+        ("submissions", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='problemsubmissioncode',
-            name='language',
-            field=models.CharField(choices=[('c', 'c'), ('scheme', 'scheme'), ('lua', 'lua'), ('go', 'go'), ('pascal', 'pascal'), ('rust', 'rust'), ('c#', 'c#'), ('php', 'php'), ('prolog', 'prolog'), ('c++', 'c++'), ('java', 'java'), ('haskell', 'haskell'), ('ocaml', 'ocaml'), ('javascript', 'javascript'), ('perl', 'perl'), ('ada', 'ada'), ('ruby', 'ruby'), ('d', 'd'), ('python', 'python')], max_length=32),
+            model_name="problemsubmissioncode",
+            name="language",
+            field=models.CharField(
+                choices=[
+                    ("c", "c"),
+                    ("scheme", "scheme"),
+                    ("lua", "lua"),
+                    ("go", "go"),
+                    ("pascal", "pascal"),
+                    ("rust", "rust"),
+                    ("c#", "c#"),
+                    ("php", "php"),
+                    ("prolog", "prolog"),
+                    ("c++", "c++"),
+                    ("java", "java"),
+                    ("haskell", "haskell"),
+                    ("ocaml", "ocaml"),
+                    ("javascript", "javascript"),
+                    ("perl", "perl"),
+                    ("ada", "ada"),
+                    ("ruby", "ruby"),
+                    ("d", "d"),
+                    ("python", "python"),
+                ],
+                max_length=32,
+            ),
         ),
     ]

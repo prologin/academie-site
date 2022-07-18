@@ -1,5 +1,7 @@
 from django.contrib import admin
+
 from problems import models
+
 
 @admin.register(models.Problem)
 class ProblemAdmin(admin.ModelAdmin):

@@ -1,5 +1,7 @@
 from django.contrib import admin
+
 from activities import models
+
 
 @admin.register(models.Activity)
 class ActivityAdmin(admin.ModelAdmin):
@@ -20,25 +22,12 @@ class ActivityAdmin(admin.ModelAdmin):
     list_filter = ("managers",)
 
     fieldsets = (
-        (
-            None, 
-            {
-                "fields": ("id", "title", "image", "version", "problems")
-            }
-        ),
-        (
-            "PROJECT DETAILS", 
-            {
-                "fields": ("description", "author", "managers")
-            }
-        ),
-        (
-            "DATES",
-            {
-                "fields": ("opening", "closing", "publication")
-            }
-        ),
+        (None, {"fields": ("id", "title", "image", "version", "problems")}),
+        ("PROJECT DETAILS", {"fields": ("description", "author", "managers")}),
+        ("DATES", {"fields": ("opening", "closing", "publication")}),
     )
+
+
 """
     inlines = (
 #        ActivityManagerInlineAdmin,

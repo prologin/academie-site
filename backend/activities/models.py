@@ -1,17 +1,15 @@
-from django.db import models
-from django.core.validators import RegexValidator
-from django.contrib.auth import get_user_model
-from django.utils.translation import gettext_lazy as _
+import os
+import uuid
 
+from django.contrib.auth import get_user_model
+from django.core.validators import RegexValidator
+from django.db import models
+from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
 from django_resized import ResizedImageField
 
 from problems.models import Problem
 
-from django.utils import timezone
-
-import uuid
-
-import os
 
 class Difficulty(models.IntegerChoices):
     TRIVIAL = 0, _("trivial")
@@ -22,16 +20,15 @@ class Difficulty(models.IntegerChoices):
 
 
 def upload_image(instance, filename):
-    return f'./uploads/images/activities/{instance.id}.jpg'
+    return f"./uploads/images/activities/{instance.id}.jpg"
+
 
 class Activity(models.Model):
-
     def delete(self, using=None, keep_parents=False):
         path = upload_image(self, "")
-        os.remove('./' + path)
+        os.remove("./" + path)
         return super().delete(using, keep_parents)
-    
-    
+
     id = models.UUIDField(
         default=uuid.uuid4,
         primary_key=True,
@@ -62,7 +59,16 @@ class Activity(models.Model):
         to=Problem,
     )
 
-    image = ResizedImageField(blank=True, null=True, size=[600, 400], quality=75, crop=['middle', 'center'], force_format='JPEG', keep_meta=False, upload_to=upload_image)
+    image = ResizedImageField(
+        blank=True,
+        null=True,
+        size=[600, 400],
+        quality=75,
+        crop=["middle", "center"],
+        force_format="JPEG",
+        keep_meta=False,
+        upload_to=upload_image,
+    )
 
     opening = models.DateTimeField(blank=True, null=True)
     closing = models.DateTimeField(blank=True, null=True)
@@ -99,19 +105,9 @@ class Activity(models.Model):
                 opening__lte=now,
                 closing__gte=now,
             )
-            | models.Q(
-                opening=None,
-                closing__isnull=False,
-                closing__gte=now
-            )
-            | models.Q(
-                opening__isnull=False, 
-                closing=None, 
-                opening__lte=now)
-            | models.Q(
-                opening__isnull=True,
-                closing__isnull=True
-            )
+            | models.Q(opening=None, closing__isnull=False, closing__gte=now)
+            | models.Q(opening__isnull=False, closing=None, opening__lte=now)
+            | models.Q(opening__isnull=True, closing__isnull=True)
         )
 
     class Meta:

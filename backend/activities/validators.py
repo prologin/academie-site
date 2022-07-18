@@ -1,16 +1,19 @@
+import re
+
+from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
 
-from django.core.exceptions import ObjectDoesNotExist
-
 from problems.models import Problem
 
-import re
 
 def commit_hash_validator(commit):
-    if not re.match(r'^[a-f0-9]{7,32}$', commit):
-        raise serializers.ValidationError("The given string is not a hash commit")
+    if not re.match(r"^[a-f0-9]{7,32}$", commit):
+        raise serializers.ValidationError(
+            "The given string is not a hash commit"
+        )
     return commit
+
 
 def slug_validator(slug):
     if not re.match(r"^[a-zA-Z0-9-_]{4,64}$", slug):

@@ -7,18 +7,17 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Status',
+            name="Status",
             fields=[
-                ('id', models.UUIDField(primary_key=True, serialize=False)),
-                ('status', models.CharField(max_length=150)),
+                ("id", models.UUIDField(primary_key=True, serialize=False)),
+                ("status", models.CharField(max_length=150)),
             ],
             options={
-                'managed': False,
+                "managed": False,
             },
         ),
     ]

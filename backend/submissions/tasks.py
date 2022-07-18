@@ -1,12 +1,10 @@
+import requests
 from celery import shared_task
+from django.conf import settings
+from django.core.exceptions import ObjectDoesNotExist
+from django.utils import timezone
 
 from submissions.models import ProblemSubmissionCode
-
-from django.conf import settings
-from django.utils import timezone
-from django.core.exceptions import ObjectDoesNotExist
-
-import requests
 
 
 class CamisoleException(Exception):
@@ -29,7 +27,6 @@ def run_in_camisole(lang: str, code: str, tests: list[dict[str, str]]):
 
 def test_passed(ref, given) -> bool:
     return ref["stdout"] == given["stdout"]
-
 
 
 @shared_task(name="run_code_submission")

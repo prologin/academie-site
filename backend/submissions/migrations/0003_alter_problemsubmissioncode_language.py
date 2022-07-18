@@ -6,13 +6,36 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('submissions', '0002_alter_problemsubmissioncode_language'),
+        ("submissions", "0002_alter_problemsubmissioncode_language"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='problemsubmissioncode',
-            name='language',
-            field=models.CharField(choices=[('perl', 'perl'), ('python', 'python'), ('pascal', 'pascal'), ('prolog', 'prolog'), ('javascript', 'javascript'), ('haskell', 'haskell'), ('lua', 'lua'), ('go', 'go'), ('ocaml', 'ocaml'), ('d', 'd'), ('c', 'c'), ('rust', 'rust'), ('c#', 'c#'), ('php', 'php'), ('c++', 'c++'), ('scheme', 'scheme'), ('java', 'java'), ('ruby', 'ruby'), ('ada', 'ada')], max_length=32),
+            model_name="problemsubmissioncode",
+            name="language",
+            field=models.CharField(
+                choices=[
+                    ("perl", "perl"),
+                    ("python", "python"),
+                    ("pascal", "pascal"),
+                    ("prolog", "prolog"),
+                    ("javascript", "javascript"),
+                    ("haskell", "haskell"),
+                    ("lua", "lua"),
+                    ("go", "go"),
+                    ("ocaml", "ocaml"),
+                    ("d", "d"),
+                    ("c", "c"),
+                    ("rust", "rust"),
+                    ("c#", "c#"),
+                    ("php", "php"),
+                    ("c++", "c++"),
+                    ("scheme", "scheme"),
+                    ("java", "java"),
+                    ("ruby", "ruby"),
+                    ("ada", "ada"),
+                ],
+                max_length=32,
+            ),
         ),
     ]

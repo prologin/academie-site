@@ -1,9 +1,9 @@
+import uuid
+
 from django.contrib.auth import get_user_model
 from django.db import models
 
 from problems.languages import LANGUAGES
-
-import uuid
 
 LANGUAGE_CHOICES = tuple((lang, lang) for lang in LANGUAGES)
 
@@ -16,10 +16,7 @@ class ProblemSubmission(models.Model):
         on_delete=models.CASCADE,
     )
 
-    user = models.ForeignKey(
-        to=get_user_model(),
-        on_delete=models.CASCADE
-    )
+    user = models.ForeignKey(to=get_user_model(), on_delete=models.CASCADE)
 
     validated = models.BooleanField(
         default=False,
@@ -35,7 +32,7 @@ class ProblemSubmission(models.Model):
         to="submissions.ProblemSubmissionCode",
         on_delete=models.CASCADE,
         null=True,
-        blank=True
+        blank=True,
     )
 
     def __str__(self):

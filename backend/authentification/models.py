@@ -1,12 +1,12 @@
-from rest_framework import serializers
-from django.contrib.auth.models import AbstractUser, BaseUserManager, PermissionsMixin
-from rest_framework.validators import UniqueValidator
-from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth import get_user_model
-
+from django.contrib.auth.models import AbstractUser, BaseUserManager, PermissionsMixin
+from django.contrib.auth.password_validation import validate_password
 from django.db import models
+from rest_framework import serializers
+from rest_framework.validators import UniqueValidator
 
-app_name = 'authentification'
+app_name = "authentification"
+
 
 class ProloginUserManager(BaseUserManager):
     def _create_user(self, email, password, **extra_fields):
@@ -39,24 +39,22 @@ class ProloginUser(AbstractUser, PermissionsMixin):
         null=False,
     )
 
-    first_name = models.CharField(
-        max_length=150,
-        blank=False,
-        null=False
-        )
+    first_name = models.CharField(max_length=150, blank=False, null=False)
 
-    last_name = models.CharField(
-        max_length=150,
-        blank=False,
-        null=False
-        )
-    
+    last_name = models.CharField(max_length=150, blank=False, null=False)
+
     accept_newsletter = models.BooleanField(
         blank=False,
         null=False,
     )
-    
+
     objects = ProloginUserManager()
 
     USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = ['birthdate', 'first_name', 'last_name', 'username', 'accept_newsletter']
+    REQUIRED_FIELDS = [
+        "birthdate",
+        "first_name",
+        "last_name",
+        "username",
+        "accept_newsletter",
+    ]

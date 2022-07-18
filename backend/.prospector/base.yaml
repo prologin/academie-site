@@ -1,0 +1,22 @@
+---
+
+inherits:
+  - default
+
+test-warnings: true
+
+strictness: veryhigh
+
+uses:
+  - django
+
+pep8:
+  full: true
+  options:
+    max-line-length: 79
+  uses:
+    - django
+
+pylint:
+  disable:
+    - django-not-configured

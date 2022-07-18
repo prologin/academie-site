@@ -1,7 +1,6 @@
 from rest_framework import serializers
 
 from activities import validators
-
 from problems import models
 
 
@@ -10,7 +9,7 @@ class ProblemSerializer(serializers.ModelSerializer):
         allow_null=False,
         validators=[validators.slug_validator],
         allow_blank=False,
-        label='title',
+        label="title",
     )
 
     class Meta:
