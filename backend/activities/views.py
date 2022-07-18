@@ -26,9 +26,7 @@ class ActivityImageView(mixins.UpdateModelMixin, viewsets.GenericViewSet):
         if not serializer.is_valid():
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
-        print(request.FILES["image"])
         obj.image = request.FILES["image"]
-        print(obj.image.url)
         obj.save()
 
         return Response(status=status.HTTP_200_OK)
