@@ -1,4 +1,3 @@
-import os
 import uuid
 
 from django.contrib.auth import get_user_model
@@ -20,13 +19,12 @@ class Difficulty(models.IntegerChoices):
 
 
 def upload_image(instance, filename):
-    return f"./uploads/images/activities/{instance.id}.jpg"
+    return f"media/images/activities/{instance.id}.jpg"
 
 
 class Activity(models.Model):
     def delete(self, using=None, keep_parents=False):
-        path = upload_image(self, "")
-        os.remove("./" + path)
+        self.image.delete(save=False)
         return super().delete(using, keep_parents)
 
     id = models.UUIDField(

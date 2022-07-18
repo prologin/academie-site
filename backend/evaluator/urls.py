@@ -1,5 +1,4 @@
 from django.conf import settings
-from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
 
@@ -21,6 +20,12 @@ urlpatterns = [
     path(
         "redoc/",
         SchemaView.with_ui("redoc", cache_timeout=0),
-        name="swagger",
+        name="redoc",
     ),
-] + static("uploads/", document_root="./uploads")
+    path("", include("django_prometheus.urls")),
+]
+
+if settings.DEBUG:
+    urlpatterns = [
+        path("__debug__/", include("debug_toolbar.urls"))
+    ] + urlpatterns

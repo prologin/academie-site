@@ -2,7 +2,6 @@ from django.contrib import admin
 
 from activities import models
 
-
 @admin.register(models.Activity)
 class ActivityAdmin(admin.ModelAdmin):
     list_display = (
@@ -23,7 +22,7 @@ class ActivityAdmin(admin.ModelAdmin):
 
     fieldsets = (
         (None, {"fields": ("id", "title", "image", "version", "problems")}),
-        ("PROJECT DETAILS", {"fields": ("description", "author", "managers")}),
+        ("PROJECT DETAILS", {"fields": ("description", "difficulty", "author", "managers")}),
         ("DATES", {"fields": ("opening", "closing", "publication")}),
     )
 

@@ -1,20 +1,17 @@
 import os
 from datetime import datetime
 
-from django.core.cache import cache
 from django.core.exceptions import ObjectDoesNotExist
-from rest_framework import generics, mixins, status, viewsets
+from rest_framework import mixins, status, viewsets
 from rest_framework.response import Response
 
-from activities import paginators, tasks
+from activities import paginators
 from activities.models import Activity
 from activities.serializers import (
     ActivityImageSerializer,
     ActivitySerializer,
     DetailedPublishedActivitySerializer,
 )
-from status.models import Status
-from status.serializers import StatusSerializer
 
 
 class ActivityImageView(mixins.UpdateModelMixin, viewsets.GenericViewSet):
@@ -29,11 +26,9 @@ class ActivityImageView(mixins.UpdateModelMixin, viewsets.GenericViewSet):
         if not serializer.is_valid():
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
-        path = f"./uploads/images/activities/{obj.id}.jpg"
-        if os.path.exists(path):
-            os.remove(path)
-
+        print(request.FILES["image"])
         obj.image = request.FILES["image"]
+        print(obj.image.url)
         obj.save()
 
         return Response(status=status.HTTP_200_OK)
