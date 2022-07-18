@@ -55,6 +55,26 @@ services:
     volumes:
       - redis_dev_data:/data
 
+  celery_dev:
+    restart: unless-stopped
+    build:
+      context: ../backend
+    command: celery -A evaluator worker -l info
+    env_file:
+      - ./.env.dev
+    depends_on:
+      - redis_dev
+      - backend_dev
+    volumes:
+      - type: bind
+        source: ../backend
+        target: /app/template/
+    secrets:
+      - django-secret-key
+      - postgres-passwd
+      - s3-access
+      - s3-secret
+
   backend_dev:
     image: backend_dev
     build:
@@ -64,23 +84,8 @@ services:
         DJANGO_GID: 1000
         BUILDKIT_INLINE_CACHE: 1
     restart: unless-stopped
-    environment:
-      DEV: 1
-      DJANGO_DEBUG: 1
-      DJANGO_ALLOWED_HOSTS: "*"
-      DJANGO_SECRET_KEY_FILE: /run/secrets/django-secret-key
-      DJANGO_SETTINGS_MODULE: evaluator.settings.settings
-      DB_NAME: template_dev
-      DB_USER: template_dev
-      DB_HOST: db_dev
-      DB_PASSWORD_FILE: /run/secrets/postgres-passwd
-      S3_ACCESS_KEY_FILE: /run/secrets/s3-access
-      S3_SECRET_KEY_FILE: /run/secrets/s3-secret
-      S3_ENDPOINT: http://s3-dev:8000/
-      S3_BUCKET: evaluator
-      S3_CUSTOM_DOMAIN: localhost:$S3_PORT/evaluator
-      S3_SECURE_URLS: 0
-      REDIS_HOSTNAME: "redis_dev"
+    env_file:
+      - ./.env.dev
     depends_on:
       - db_dev
       - s3_dev
