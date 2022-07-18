@@ -1,23 +1,38 @@
 [tool.poetry]
-name = "evaluator"
+name = "academie prologin"
 version = "0.1.0"
 description = ""
-authors = ["Léo Portemont <leo.portemont@prologin.org>"]
-license = "UNLICENSED"
+authors = ["Marc 'risson' Schmitt <marc.schmitt@prologin.org>", "Association Prologin <info@prologin.org>"]
+license = "AGPL-3.0"
+
+[[tool.poetry.source]]
+name = "gitlab-prologin"
+url = "https://gitlab.com/api/v4/groups/1331525/-/packages/pypi/simple"
+secondary = true
 
 [tool.black]
 line-length = 79
 
 [tool.poetry.dependencies]
 python = "^3.9"
+boto3 = "^1.24"
+collectfast = "*"
+coverage = { version = "*", extras = [ "toml" ] }
 Django = "^4.0.2"
 celery = "^5.2.3"
 redis = "^4.1.4"
 Jinja2 = "^3.0.3"
 djangorestframework = "^3.13.1"
 django-filter = "^21.1"
+django-debug-toolbar = "*"
+django-prometheus = "*"
+django-storages = "^1.12"
+gunicorn = "^20.1"
+ipython = "*"
+prologin-django-utils = "0.0.1"
+prospector = {extras = ["with_everything"], version = "*"}
+psycopg2 = "^2.9"
 requests = "^2.27.1"
-GitPython = "^3.1.27"
 python-dateutil = "^2.8.2"
 drf-yasg = "^1.20.0"
 djangorestframework-simplejwt = "^5.1.0"
