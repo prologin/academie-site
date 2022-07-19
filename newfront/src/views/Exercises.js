@@ -1,6 +1,5 @@
 import { useRef, useEffect } from 'react';
 import {
-  Button,
   Card,
   CardContent,
   Grid,
@@ -10,9 +9,10 @@ import {
   Typography,
 } from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
-import { useDispatch, getCourse, useSelector } from '../config/store';
+import { useDispatch, useSelector } from '../config/store';
+import { getCourse } from '../config/reducers/course';
 import ExercisesNode from '../components/ExercisesNode';
 
 const useStyles = makeStyles((theme) => ({
