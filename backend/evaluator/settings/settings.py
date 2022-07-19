@@ -48,13 +48,13 @@ SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 # redis config
-REDIS_HOSTNAME = env.get_string("REDIS_HOSTNAME", "localhost"),
+REDIS_HOST = env.get_string("REDIS_HOSTNAME", "localhost")
 
 # celery config
 
 CELERY_RESULT_EXPIRES = timedelta(minutes=1)
-CELERY_BROKER_URL = f"redis://redis_dev:6379/0"
-CELERY_RESULT_BACKEND = f"redis://redis_dev:6379/0"
+CELERY_BROKER_URL = f"redis://{REDIS_HOST}:6379/0"
+CELERY_RESULT_BACKEND = f"redis://{REDIS_HOST}:6379/0"
 
 # camisole config
 
@@ -119,7 +119,7 @@ DATABASES = {
 CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.redis.RedisCache",
-        "LOCATION": f"redis://redis_dev:6379/1",
+        "LOCATION": f"redis://{REDIS_HOST}:6379/1",
         "TIMEOUT": 60,
     },
 }
