@@ -96,7 +96,7 @@ const AppRouter = () => {
           }
         />
         <Route
-          path="/code"
+          path="/code/:exerciseSlug"
           element={
             <Protected>
               <Navigation fullScreen>

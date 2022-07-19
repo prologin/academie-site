@@ -1,24 +1,25 @@
-import { useState } from "react";
-import { Box } from "@mui/material";
+import { useState } from 'react';
+import { Box, Button } from '@mui/material';
 
-import AceEditor from "react-ace";
+import AceEditor from 'react-ace';
+import { submitCode, useDispatch } from '../config/store';
 
-import "ace-builds/src-noconflict/mode-python";
-import "ace-builds/src-noconflict/snippets/python";
-import DropMenu from "./Menu";
-const languages = ["python", "c_cpp", "javascript", "java", "golang", "csharp"];
+import 'ace-builds/src-noconflict/mode-python';
+import 'ace-builds/src-noconflict/snippets/python';
+import DropMenu from './Menu';
+const languages = ['python', 'c_cpp', 'javascript', 'java', 'golang', 'csharp'];
 
 const themes = [
-  "monokai",
-  "github",
-  "tomorrow",
-  "kuroir",
-  "twilight",
-  "xcode",
-  "textmate",
-  "solarized_dark",
-  "solarized_light",
-  "terminal",
+  'monokai',
+  'github',
+  'tomorrow',
+  'kuroir',
+  'twilight',
+  'xcode',
+  'textmate',
+  'solarized_dark',
+  'solarized_light',
+  'terminal',
 ];
 
 languages.forEach((lang) => {
@@ -28,14 +29,19 @@ languages.forEach((lang) => {
 
 themes.forEach((theme) => require(`ace-builds/src-noconflict/theme-${theme}`));
 
-require("ace-builds/src-min-noconflict/ext-searchbox");
-require("ace-builds/src-min-noconflict/ext-language_tools");
+require('ace-builds/src-min-noconflict/ext-searchbox');
+require('ace-builds/src-min-noconflict/ext-language_tools');
 
-export default function Editor() {
-  const [selectedLanguage, setSelectedLanguage] = useState("python");
-  const [selectedTheme, setSelectedTheme] = useState("monokai");
+export default function Editor({ title, languages, skeleton }) {
+  const dispatch = useDispatch();
+  const [selectedLanguage, setSelectedLanguage] = useState(languages[0]);
+  const [selectedTheme, setSelectedTheme] = useState('monokai');
 
-  const [code, setCode] = useState("");
+  const [code, setCode] = useState(skeleton || '');
+
+  const handleSubmit = () => {
+    dispatch(submitCode(title, selectedLanguage, code));
+  };
 
   return (
     <>
@@ -52,6 +58,14 @@ export default function Editor() {
           name="theme"
           onChange={setSelectedTheme}
         />
+        <Button
+          variant="contained"
+          color="success"
+          sx={{ float: 'right' }}
+          onClick={handleSubmit}
+        >
+          Submit
+        </Button>
       </Box>
       <AceEditor
         width="100%"
