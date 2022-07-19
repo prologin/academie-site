@@ -3,10 +3,10 @@ import uuid
 from django.contrib.auth import get_user_model
 from django.core.validators import RegexValidator
 from django.db import models
+from django.dispatch import receiver
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django_resized import ResizedImageField
-
 from problems.models import Problem
 
 
@@ -23,9 +23,6 @@ def upload_image(instance, filename):
 
 
 class Activity(models.Model):
-    def delete(self, using=None, keep_parents=False):
-        self.image.delete(save=False)
-        return super().delete(using, keep_parents)
 
     id = models.UUIDField(
         default=uuid.uuid4,
@@ -110,3 +107,9 @@ class Activity(models.Model):
 
     class Meta:
         verbose_name_plural = "activities"
+
+
+@receiver(models.signals.post_delete, sender=Activity)
+def auto_delete_file_on_delete(sender, instance, **kwargs):
+    if instance.image:
+        instance.image.delete(save=False)
