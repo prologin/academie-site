@@ -1,3 +1,4 @@
+from tkinter import CASCADE
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractUser, BaseUserManager, PermissionsMixin
 from django.contrib.auth.password_validation import validate_password
@@ -48,6 +49,9 @@ class ProloginUser(AbstractUser, PermissionsMixin):
         null=False,
     )
 
+    is_student = models.BooleanField(default=False)
+    is_teacher = models.BooleanField(default=False)
+
     objects = ProloginUserManager()
 
     USERNAME_FIELD = "email"
@@ -58,3 +62,15 @@ class ProloginUser(AbstractUser, PermissionsMixin):
         "username",
         "accept_newsletter",
     ]
+
+class Student(models.Model):
+    user = models.OneToOneField(ProloginUser, on_delete=models.CASCADE, primary_key=True)
+
+class Class(models.Model):
+    students = models.ManyToManyField(Student)
+
+class Teacher(models.Model):
+    user = models.OneToOneField(ProloginUser, on_delete=models.CASCADE, primary_key=True)
+    is_super_teacher = models.BooleanField(default=False)
+    classes = models.ManyToManyField(Class)
+
