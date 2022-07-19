@@ -14,6 +14,7 @@ const LOGIN_ERROR = 'LOGIN_ERROR';
 const GET_PROFILE_SUCCESS = 'GET_PROFILE_SUCCESS';
 const GET_COURSES_SUCCESS = 'GET_COURSES_SUCCESS';
 const GET_COURSE_SUCCESS = 'GET_COURSE_SUCCESS';
+const GET_SUBMISSION_RESULT_SUCCESS = 'GET_SUBMISSION_RESULT_SUCCESS';
 
 const validOrRemoveAccessToken = () => {
   const token = sessionStorage.access_token;
@@ -53,6 +54,7 @@ const initialState = {
   },
   courses: {},
   course: {},
+  submission: {},
 };
 
 const reducer = (state, action) => {
@@ -108,10 +110,16 @@ const reducer = (state, action) => {
 
       case GET_COURSES_SUCCESS:
         draft.courses = action.data;
+        draft.submission = {};
         break;
 
       case GET_COURSE_SUCCESS:
         draft.course = action.data;
+        draft.submission = {};
+        break;
+
+      case GET_SUBMISSION_RESULT_SUCCESS:
+        draft.submission = action.data;
         break;
 
       default:
@@ -215,6 +223,55 @@ const register = (
   };
 };
 
+const getSubmissionStatus = (id) => {
+  return async (dispatch) => {
+    try {
+      const data = await coursesApi.getSubmissionStatus(id);
+      dispatch(submitCodeSuccess(data));
+    } catch (e) {
+      console.log(e);
+    }
+  };
+};
+
+const getSubmissionResult = (id) => {
+  return async (dispatch) => {
+    try {
+      const data = await coursesApi.getSubmissionResult(id);
+      dispatch(getSubmissionResultSuccess(data));
+    } catch (e) {
+      console.log(e);
+    }
+  };
+};
+
+const getSubmissionResultSuccess = (data) => ({
+  type: GET_SUBMISSION_RESULT_SUCCESS,
+  data,
+});
+
+const submitCodeSuccess = (data) => {
+  return async (dispatch) => {
+    if (data.status === 'PENDING')
+      setTimeout(() => dispatch(getSubmissionStatus(data.id)), 1000);
+    else if (data.status === 'SUCCESS') {
+      dispatch(getSubmissionResult(data.result));
+    } else console.log('ERROR SUBMITTING CODE');
+  };
+};
+
+const submitCode = (title, language, code) => {
+  return async (dispatch) => {
+    try {
+      const data = await coursesApi.submitCode(title, language, code);
+      dispatch(submitCodeSuccess(data));
+    } catch (e) {
+      console.log(e);
+      // dispatch(submitCodeError(e));
+    }
+  };
+};
+
 // ============ REACT-TRACKED elements =================
 const useMiddleware = (state, dispatch) => {
   const prevState = usePrevious(state);
@@ -258,6 +315,7 @@ export {
   login,
   getCourses,
   getCourse,
+  submitCode,
 };
 
 export default StateProvider;

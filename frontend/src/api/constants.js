@@ -5,7 +5,8 @@ const ENDPOINT =
 
 export const ACTIVITIES_API_URL = `${ENDPOINT}/api/activities/`;
 
-export const SUBMISSION_API_URL = `${ENDPOINT}/submission/`;
+export const SUBMISSION_API_URL = `${ENDPOINT}/api/submissions/`;
+export const SUBMISSION_STATUS_API_URL = `${ENDPOINT}/api/status/`;
 
 export const USER_API_URL = `${ENDPOINT}/user/`;
 

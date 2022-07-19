@@ -18,7 +18,7 @@ export default function ExercisesNode({ exercises }) {
                   <Grid item container spacing={1} sm={6}>
                     <Grid sm={12} item>
                       <Typography variant="subtitle1">
-                        <b>Difficulté :</b>
+                        <b>Difficulté : {exercise.difficulty}</b>
                       </Typography>
                     </Grid>
                     <Grid sm={12} item>
@@ -28,7 +28,7 @@ export default function ExercisesNode({ exercises }) {
                     </Grid>
                   </Grid>
                   <Grid sm={6} item textAlign="right">
-                    <Link to="/code/">
+                    <Link to={`/code/${exercise.title}/`}>
                       <Button variant="contained">Continuer</Button>
                     </Link>
                   </Grid>
