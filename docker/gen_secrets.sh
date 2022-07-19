@@ -1,6 +1,6 @@
 #!/bin/sh
 
-RAND_SECRET_NAMES="django-secret-key postgres-passwd"
+RAND_SECRET_NAMES="django-secret-key postgres-passwd pgadmin-passwd"
 
 for name in $RAND_SECRET_NAMES; do
     DEST=./secrets/"$name"
