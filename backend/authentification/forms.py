@@ -78,34 +78,6 @@ class AdminProloginUserCreationForm(ProloginUserCreationForm):
         return user
 
 
-class StudentUserCreationForm(ProloginUserCreationForm):
-
-    class Meta(ProloginUserCreationForm.Meta):
-        model = User
-
-    @transaction.atomic
-    def save(self):
-        user = super().save(commit=False)
-        user.is_student = True
-        user.save()
-        models.Student.objects.create(user=user)
-        return user
-
-class StudentUserCreationForm(ProloginUserCreationForm):
-
-    class Meta(ProloginUserCreationForm.Meta):
-        model = User
-
-    @transaction.atomic
-    def save(self):
-        user = super().save(commit=False)
-        user.is_teacher = True
-        user.save()
-        models.Student.objects.create(user=user)
-        return user
-
-
-
 class AdminProloginUserChangeForm(forms.ModelForm):
     password = ReadOnlyPasswordHashField()
 

@@ -18,6 +18,10 @@ class RegisterView(generics.CreateAPIView):
     permission_classes = (AllowAny,)
     serializer_class = RegisterSerializer
 
+    def perform_create(self, serializer):
+        serializer.save()
+
+
 
 class UserProfileView(generics.RetrieveAPIView):
     serializer_class = RegisterSerializer

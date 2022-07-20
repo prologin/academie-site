@@ -1,7 +1,7 @@
+from authentification.academies import ACADEMIES
+from authentification import models
 from django.contrib.auth import get_user_model
-from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
-from rest_framework.validators import UniqueValidator
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 
@@ -47,5 +47,14 @@ class RegisterSerializer(serializers.ModelSerializer):
         password = validated_data.pop("password")
         user = get_user_model()(**validated_data)
         user.set_password(password)
+        is_teacher = validated_data["email"].split('@')[1] in ACADEMIES
+        user.is_teacher = is_teacher
+        user.is_student = not is_teacher
         user.save()
+
+        if is_teacher:
+            models.Teacher.objects.create(user=user)
+        else:
+            models.Student.objects.create(user=user)
+
         return user
