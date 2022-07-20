@@ -34,6 +34,13 @@ class RegisterSerializer(serializers.ModelSerializer):
             "last_name",
             "birthdate",
             "accept_newsletter",
+            "is_student",
+            "is_teacher",
+        )
+
+        read_only_fields = (
+            "is_student",
+            "is_teacher",
         )
 
     def create(self, validated_data):

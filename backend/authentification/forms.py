@@ -1,3 +1,4 @@
+from traitlets import default
 from authentification import models
 from django import forms
 from django.db import transaction
@@ -20,9 +21,6 @@ class ProloginUserCreationForm(UserCreationForm):
     password2 = forms.CharField(
         label="Confirm Password", widget=forms.PasswordInput
     )
-    accept_newsletter = forms.BooleanField(widget=forms.CheckboxInput)
-    is_student = forms.BooleanField(widget=forms.CheckboxInput)
-    is_teacher = forms.BooleanField(widget=forms.CheckboxInput)
 
     class Meta:
         model = User

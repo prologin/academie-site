@@ -41,9 +41,7 @@ class ProloginUser(AbstractUser, PermissionsMixin):
 
     last_name = models.CharField(max_length=150, blank=False, null=False)
 
-    accept_newsletter = models.BooleanField(
-        default=False,
-    )
+    accept_newsletter = models.BooleanField(default=False)
 
     is_student = models.BooleanField(default=False)
     is_teacher = models.BooleanField(default=False)
