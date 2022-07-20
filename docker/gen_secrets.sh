@@ -9,5 +9,10 @@ for name in $RAND_SECRET_NAMES; do
     fi
 done
 
+# quick and dirty
+if [ ! -e "./config/pgpass" ]; then
+    echo "db_dev:5432:template_dev:template_dev:$(cat ./secrets/postgres-passwd)" > ./config/pgpass
+fi
+
 echo "accessKey1" > ./secrets/s3-access
 echo "verySecretKey1" > ./secrets/s3-secret

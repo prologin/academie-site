@@ -90,6 +90,7 @@ class Activity(models.Model):
     def published_activities(cls):
         return cls.objects.filter(publication__lte=timezone.now())
 
+
     @classmethod
     def open_activities(cls):
         now = timezone.now()
@@ -100,9 +101,19 @@ class Activity(models.Model):
                 opening__lte=now,
                 closing__gte=now,
             )
-            | models.Q(opening=None, closing__isnull=False, closing__gte=now)
-            | models.Q(opening__isnull=False, closing=None, opening__lte=now)
-            | models.Q(opening__isnull=True, closing__isnull=True)
+            | models.Q(
+                opening=None,
+                closing__isnull=False,
+                closing__gte=now
+            )
+            | models.Q(
+                opening__isnull=False, 
+                closing=None, 
+                opening__lte=now)
+            | models.Q(
+                opening__isnull=True,
+                closing__isnull=True
+            )
         )
 
     class Meta:

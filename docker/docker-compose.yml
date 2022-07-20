@@ -47,8 +47,15 @@ services:
       - "$PGADMIN_PORT:80"
     depends_on:
       - db_dev
+      - backend_dev
     secrets:
       - pgadmin-passwd
+    volumes:
+      - ./config/servers.json:/pgadmin4/servers.json
+    entrypoint:
+      - "/bin/sh"
+      - "-c"
+      - "echo 'db_dev:5432:*:template_dev:29EdkmCHLtUxyFlA76DrhrsNOJmNTgkl' > /tmp/pgpass && chmod 600 /tmp/pgpass && /entrypoint.sh"
 
   redis_dev:
     image: redis:7.0.3

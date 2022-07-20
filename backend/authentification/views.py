@@ -6,6 +6,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 
 from authentification.serializers import RegisterSerializer, TokenObtainPairSerializer
 
+User = get_user_model
 
 class ObtainTokenPairView(TokenObtainPairView):
     permission_classes = (AllowAny,)

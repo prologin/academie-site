@@ -1,5 +1,3 @@
-from tkinter import CASCADE
-from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractUser, BaseUserManager, PermissionsMixin
 from django.contrib.auth.password_validation import validate_password
 from django.db import models
@@ -7,7 +5,6 @@ from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 
 app_name = "authentification"
-
 
 class ProloginUserManager(BaseUserManager):
     def _create_user(self, email, password, **extra_fields):
@@ -45,8 +42,7 @@ class ProloginUser(AbstractUser, PermissionsMixin):
     last_name = models.CharField(max_length=150, blank=False, null=False)
 
     accept_newsletter = models.BooleanField(
-        blank=False,
-        null=False,
+        default=False,
     )
 
     is_student = models.BooleanField(default=False)
@@ -60,7 +56,6 @@ class ProloginUser(AbstractUser, PermissionsMixin):
         "first_name",
         "last_name",
         "username",
-        "accept_newsletter",
     ]
 
 class Student(models.Model):

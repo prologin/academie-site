@@ -1,8 +1,9 @@
+from authentification import models
 from django import forms
+from django.db import transaction
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import (
     ReadOnlyPasswordHashField,
-    UserChangeForm,
     UserCreationForm,
 )
 
@@ -20,6 +21,8 @@ class ProloginUserCreationForm(UserCreationForm):
         label="Confirm Password", widget=forms.PasswordInput
     )
     accept_newsletter = forms.BooleanField(widget=forms.CheckboxInput)
+    is_student = forms.BooleanField(widget=forms.CheckboxInput)
+    is_teacher = forms.BooleanField(widget=forms.CheckboxInput)
 
     class Meta:
         model = User
@@ -39,6 +42,7 @@ class ProloginUserCreationForm(UserCreationForm):
             raise ValidationError(" Email Already Exist")
         return email
 
+    @transaction.atomic
     def save(self, commit=True):
         user = User.objects.create_user(
             self.cleaned_data["email"],
@@ -59,6 +63,8 @@ class ProloginUserCreationForm(UserCreationForm):
 
 
 class AdminProloginUserCreationForm(ProloginUserCreationForm):
+
+    @transaction.atomic
     def save(self, commit=True):
         user = User.objects.create_superuser(
             self.cleaned_data["email"],
@@ -72,6 +78,34 @@ class AdminProloginUserCreationForm(ProloginUserCreationForm):
         if commit:
             user.save()
         return user
+
+
+class StudentUserCreationForm(ProloginUserCreationForm):
+
+    class Meta(ProloginUserCreationForm.Meta):
+        model = User
+
+    @transaction.atomic
+    def save(self):
+        user = super().save(commit=False)
+        user.is_student = True
+        user.save()
+        models.Student.objects.create(user=user)
+        return user
+
+class StudentUserCreationForm(ProloginUserCreationForm):
+
+    class Meta(ProloginUserCreationForm.Meta):
+        model = User
+
+    @transaction.atomic
+    def save(self):
+        user = super().save(commit=False)
+        user.is_teacher = True
+        user.save()
+        models.Student.objects.create(user=user)
+        return user
+
 
 
 class AdminProloginUserChangeForm(forms.ModelForm):
