@@ -10,8 +10,6 @@ class TeacherPermission(permissions.BasePermission):
         return request.user in obj.managers.all() or request.user.is_superuser
 
 class ReadActivityOrProblem(permissions.BasePermission):
-    def has_permission(self, request, view):
-        return True
 
     def has_object_permission(self, request, view, obj):
         if request.user.is_superuser:
@@ -22,7 +20,6 @@ class ReadActivityOrProblem(permissions.BasePermission):
 
         if request.user.is_student:
             student_teachers = models.Student.objects.get(user=request.user).get_teachers()
-            print(student_teachers)
 
             for t in obj.managers.all():
                 if t in student_teachers:
