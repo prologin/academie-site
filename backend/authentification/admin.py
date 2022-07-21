@@ -18,16 +18,22 @@ class StudentAdmin(admin.ModelAdmin):
 
     autocomplete_fields = ['user']
 
+    @admin.display(description='username')
     def user_username(self, student):
         return student.user.username
 
+    @admin.display(description='email')
     def user_email(self, student):
         return student.user.email
+
+    @admin.display(description='teachers')
+    def get_teachers(self, student):
+        return ", ".join(str(s) for s in student.get_teachers())
 
 
 @admin.register(models.Teacher)
 class TeacherAdmin(admin.ModelAdmin):
-    list_display = ("user", "user_username", "user_email", "is_super_teacher",)
+    list_display = ("user", "user_username", "user_email", "is_super_teacher", "get_classes")
 
     search_fields = ("user", "user__username", "user_email", "classes__name",)
 
@@ -35,11 +41,17 @@ class TeacherAdmin(admin.ModelAdmin):
 
     list_filter = ("is_super_teacher",)
 
+    @admin.display(description='username')
     def user_username(self, teacher):
         return teacher.user.username
 
+    @admin.display(description='email')
     def user_email(self, teacher):
         return teacher.user.email
+    
+    @admin.display(description='classes')
+    def get_classes(self, teacher):
+        return ", ".join(str(c) for c in teacher.classes.all())
 
 
 @admin.register(models.Class)
@@ -47,6 +59,10 @@ class ClassAdmin(admin.ModelAdmin):
     list_display = ("name", "get_teachers",)
 
     search_fields = ("name",)
+
+    @admin.display(description='teachers')
+    def get_teachers(self, _class):
+        return ", ".join(str(t) for t in _class.get_teachers())
 
 
 class UserAdmin(BaseUserAdmin):
