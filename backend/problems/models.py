@@ -1,5 +1,6 @@
 import uuid
 
+from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -28,6 +29,11 @@ class Problem(models.Model):
 
     author = models.CharField(
         max_length=150,
+    )
+
+    managers = models.ManyToManyField(
+        to=get_user_model(),
+        blank=True,
     )
 
     description = models.TextField()
