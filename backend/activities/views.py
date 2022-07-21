@@ -46,6 +46,7 @@ class ActivityView(
     permission_classes_by_action = {
                                     'create': [TeacherPermission],
                                     'update': [TeacherPermission],
+                                    'partial_update': [TeacherPermission],
                                     'destroy': [TeacherPermission]
                                 }
 
@@ -60,7 +61,6 @@ class ActivityView(
         return super().destroy(self, request, *args, **kwargs)
 
     def create(self, request, *args, **kwargs):
-        self.permission_classes = [TeacherPermission]
         try:
             _ = Activity.objects.get(title=request.data["title"])
             return Response(status=status.HTTP_200_OK)
