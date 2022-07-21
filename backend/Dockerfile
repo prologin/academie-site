@@ -35,7 +35,7 @@ RUN --mount=type=bind,target=./pyproject.toml,src=./pyproject.toml \
 
 FROM base
 
-ARG WORKDIR=/app/evaluator
+ARG WORKDIR=/app/template
 ARG DJANGO_UID=1000
 ARG DJANGO_GID=1000
 
