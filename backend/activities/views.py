@@ -1,6 +1,7 @@
 from django.core.exceptions import ObjectDoesNotExist
 from authentification.permissions import TeacherPermission
 from rest_framework import mixins, status, viewsets
+from rest_framework import generics
 from rest_framework.response import Response
 
 from activities import paginators
@@ -47,7 +48,8 @@ class ActivityView(
                                     'create': [TeacherPermission],
                                     'update': [TeacherPermission],
                                     'partial_update': [TeacherPermission],
-                                    'destroy': [TeacherPermission]
+                                    'destroy': [TeacherPermission],
+                                    'retrieve': []
                                 }
 
     lookup_field = "title"
