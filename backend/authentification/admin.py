@@ -14,7 +14,7 @@ User = get_user_model()
 class StudentAdmin(admin.ModelAdmin):
     list_display = ("user", "user_username", "user_email", "get_teachers",)
 
-    search_fields = ("user", "user__username", "user_email",)
+    search_fields = ("user__username", "user__email",)
 
     autocomplete_fields = ['user']
 
@@ -35,7 +35,7 @@ class StudentAdmin(admin.ModelAdmin):
 class TeacherAdmin(admin.ModelAdmin):
     list_display = ("user", "user_username", "user_email", "is_super_teacher", "get_classes")
 
-    search_fields = ("user", "user__username", "user_email", "classes__name",)
+    search_fields = ("user__username", "user__email", "classes__name",)
 
     autocomplete_fields = ['user']
 
@@ -59,6 +59,12 @@ class ClassAdmin(admin.ModelAdmin):
     list_display = ("name", "get_teachers",)
 
     search_fields = ("name",)
+
+    fieldsets = (
+        (None, {"fields": ("name", "students", "get_teachers")}),
+    )
+
+    readonly_fields = ("get_teachers",)
 
     @admin.display(description='teachers')
     def get_teachers(self, _class):

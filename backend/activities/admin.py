@@ -24,7 +24,7 @@ class ActivityAdmin(admin.ModelAdmin):
     fieldsets = (
         (None, {"fields": ("id", "title", "image", "version", "problems")}),
         ("PROJECT DETAILS", {"fields": ("description", "difficulty", "author", "managers")}),
-        ("DATES", {"fields": ("opening", "closing", "publication")}),
+        ("DATES", {"fields": ("opening", "closing", "published")}),
     )
 
 

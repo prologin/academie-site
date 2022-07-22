@@ -67,7 +67,7 @@ class Activity(models.Model):
 
     opening = models.DateTimeField(blank=True, null=True)
     closing = models.DateTimeField(blank=True, null=True)
-    publication = models.DateTimeField()
+    published = models.BooleanField()
 
     managers = models.ManyToManyField(
         to=get_user_model(),

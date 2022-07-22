@@ -11,12 +11,10 @@ from problems.serializers import ProblemSerializer
 class ProblemView(
     mixins.DestroyModelMixin,
     mixins.CreateModelMixin,
-    mixins.ListModelMixin,
     mixins.UpdateModelMixin,
     viewsets.GenericViewSet,
 ):
 
-    pagination_class = ActivityPagination
     serializer_class = ProblemSerializer
     queryset = Problem.objects.all()
 

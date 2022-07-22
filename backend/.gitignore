@@ -2,6 +2,8 @@
 *__pycache__/
 *.pyc
 
+db.sqlite3
+
 # settings
 evaluator/settings/dev.py
 evaluator/settings/prod.py

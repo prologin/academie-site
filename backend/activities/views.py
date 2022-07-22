@@ -1,9 +1,9 @@
-from django.core.exceptions import ObjectDoesNotExist
-from authentification.permissions import TeacherPermission, ReadActivityOrProblem
+from authentification.permissions import CanReadActivity, TeacherPermission
 from rest_framework import mixins, status, viewsets
 from rest_framework.response import Response
 
 from activities import paginators
+from activities.filters import ActivityVisibleForUser
 from activities.models import Activity
 from activities.serializers import (
     ActivityImageSerializer,
@@ -43,24 +43,29 @@ class ActivityView(
     pagination_class = paginators.ActivityPagination
     serializer_class = ActivitySerializer
     queryset = Activity.objects.all()
+    filter_backends=[ActivityVisibleForUser]
     permission_classes_by_action = {
                                     'create': [TeacherPermission],
                                     'update': [TeacherPermission],
                                     'partial_update': [TeacherPermission],
                                     'destroy': [TeacherPermission],
-                                    'retrieve': [ReadActivityOrProblem]
+                                    'retrieve': [CanReadActivity]
                                 }
 
     lookup_field = "title"
 
-    # list get
+    # list
+
+    # delete
+
+    # update
+
+    # partial_update
 
     def create(self, request, *args, **kwargs):
-        try:
-            _ = Activity.objects.get(title=request.data["title"])
+        if self.queryset.filter(title=request.data["title"]).exist():
             return Response(status=status.HTTP_200_OK)
-        except ObjectDoesNotExist:
-            return super().create(request, *args, **kwargs)
+        return super().create(request, *args, **kwargs)
 
     def retrieve(self, request, title=None):  # get with parameter
         self.serializer_class = DetailedPublishedActivitySerializer
