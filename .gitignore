@@ -12,6 +12,5 @@ htmlcov
 
 docker/volumes/
 docker/secrets/
-docker/.env
 
 backend/git_activities
