@@ -1,8 +1,8 @@
 import re
 
-from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import serializers
-from rest_framework.validators import UniqueTogetherValidator
+
+from uuid import UUID
 
 from problems.models import Problem
 
@@ -16,17 +16,19 @@ def commit_hash_validator(commit):
 
 
 def slug_validator(slug):
-    if not re.match(r"^[a-zA-Z0-9-_]{4,64}$", slug):
+    if not re.match(r"^[a-zA-Z0-9-_ ]{1,64}$", slug):
         raise serializers.ValidationError("The given string is not a slug")
     return slug
 
 
-def list_slug_validator(l_slug):
-    if not isinstance(l_slug, list):
+def list_id_validator(l_id):
+    if not isinstance(l_id, list):
         raise serializers.ValidationError("It has to be a list")
-    for slug in l_slug:
-        slug_validator(slug)
+    for id in l_id:
         try:
-            Problem.objects.get(title=slug)
-        except ObjectDoesNotExist:
-            raise serializers.ValidationError(f"{slug} does not exists")
+            UUID(id, version=4)
+        except ValueError:
+            raise serializers.ValidationError(f"{id} is not a valid uuid4")
+        if not Problem.objects.all().filter(id=id).exists():
+            raise serializers.ValidationError(f"{id} does not exists")
+    return l_id

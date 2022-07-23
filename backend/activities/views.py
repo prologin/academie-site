@@ -13,7 +13,7 @@ from activities.serializers import (
 
 class ActivityImageView(mixins.UpdateModelMixin, viewsets.GenericViewSet):
 
-    lookup_field = "title"
+    #lookup_field = "title"
     serializer_class = ActivityImageSerializer
     queryset = Activity.objects.all()
     permission_classes = [TeacherPermission]
@@ -44,6 +44,7 @@ class ActivityView(
     serializer_class = ActivitySerializer
     queryset = Activity.objects.all()
     filter_backends=[ActivityVisibleForUser]
+    #lookup_field = "title"
     permission_classes_by_action = {
                                     'create': [TeacherPermission],
                                     'update': [TeacherPermission],
@@ -52,25 +53,29 @@ class ActivityView(
                                     'retrieve': [CanReadActivity]
                                 }
 
-    lookup_field = "title"
-
     # list
+
 
     # delete
 
+
     # update
+
 
     # partial_update
 
+
     def create(self, request, *args, **kwargs):
-        if self.queryset.filter(title=request.data["title"]).exist():
-            return Response(status=status.HTTP_200_OK)
+        #if self.queryset.filter(title=request.data["id"]).exist():
+        #    return Response(status=status.HTTP_200_OK)
         return super().create(request, *args, **kwargs)
 
-    def retrieve(self, request, title=None):  # get with parameter
+
+    def retrieve(self, request, *args, **kwargs):
         self.serializer_class = DetailedPublishedActivitySerializer
-        return super().retrieve(request, title)
+        return super().retrieve(request, *args, **kwargs)
     
+
     def get_permissions(self):
         try:
             return [permission() for permission in self.permission_classes_by_action[self.action]]

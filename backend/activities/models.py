@@ -35,13 +35,12 @@ class Activity(models.Model):
     )
 
     title = models.CharField(
-        validators=[RegexValidator("^[a-zA-Z0-9-_]{4,64}$")],
+        validators=[RegexValidator("^[a-zA-Z0-9-_ ]{1,64}$")],
         max_length=64,
-        unique=True,
     )
 
     author = models.CharField(
-        max_length=150,
+        max_length=64,
     )
 
     description = models.TextField()

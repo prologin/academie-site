@@ -1,13 +1,11 @@
 from datetime import datetime
 
-from django.core.exceptions import ValidationError
 from rest_framework import serializers
 
 from activities import models, validators
 from activities.models import Activity
 from problems.models import Problem
 from problems.serializers import ProblemSerializer
-from problems.validators import allowed_languages_validator
 
 
 class ActivityImageSerializer(serializers.ModelSerializer):
@@ -18,28 +16,17 @@ class ActivityImageSerializer(serializers.ModelSerializer):
 
 class ActivitySerializer(serializers.ModelSerializer):
     def create(self, validated_data):
-        activity = Activity.objects.create(
-            title=validated_data["title"],
-            author=validated_data["author"],
-            description=validated_data["description"],
-            opening=validated_data["opening"],
-            closing=validated_data["closing"],
-            difficulty=validated_data["difficulty"],
-            published=validated_data['published']
-        )
 
-        new_list = []
-        for problem_slug in validated_data["problems_slug"]:
-            problem = Problem.objects.get(title=problem_slug)
-            new_list.append(problem)
-        activity.problems.set(new_list)
+        id_list = validated_data.pop('problems_id')
+        activity = super().create(validated_data)
+        activity.problems.set(list(Problem.objects.all().filter(id__in=id_list)))
         return activity
 
-    problems_slug = serializers.ListField(
+    problems_id = serializers.ListField(
         min_length=1,
         allow_null=False,
-        validators=[validators.list_slug_validator],
-        label="problems_slug",
+        validators=[validators.list_id_validator],
+        label="problems_id",
         write_only=True,
     )
 
@@ -76,7 +63,7 @@ class ActivitySerializer(serializers.ModelSerializer):
             "title",
             "opening",
             "closing",
-            "problems_slug",
+            "problems_id",
             "count",
             "languages_list",
             "description",
