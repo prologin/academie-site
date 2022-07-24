@@ -65,10 +65,7 @@ class ActivityView(
     # partial_update
 
 
-    def create(self, request, *args, **kwargs):
-        #if self.queryset.filter(title=request.data["id"]).exist():
-        #    return Response(status=status.HTTP_200_OK)
-        return super().create(request, *args, **kwargs)
+    # create
 
 
     def retrieve(self, request, *args, **kwargs):

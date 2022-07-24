@@ -1,6 +1,7 @@
 import uuid
 
 from django.contrib.auth import get_user_model
+from django.core.validators import RegexValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -23,12 +24,12 @@ class Problem(models.Model):
     )
 
     title = models.CharField(
-        unique=True,
         max_length=64,
+        validators=[RegexValidator("^[a-zA-Z0-9-_ ]{1,64}$")],
     )
 
     author = models.CharField(
-        max_length=150,
+        max_length=64,
     )
 
     managers = models.ManyToManyField(

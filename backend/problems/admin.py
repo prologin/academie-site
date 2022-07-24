@@ -24,7 +24,7 @@ class ProblemAdmin(admin.ModelAdmin):
         (None, {"fields": ("id",)}),
         (
             "Definition",
-            {"fields": ("title", "description", "subject", "difficulty", "published")},
+            {"fields": ("title", "description", "subject", "difficulty")},
         ),
         ("Submission", {"fields": ("allowed_languages", "skeletons")}),
         (

@@ -5,16 +5,19 @@ from problems import models
 
 
 class ProblemSerializer(serializers.ModelSerializer):
+    '''
     title = serializers.CharField(
         allow_null=False,
         validators=[validators.slug_validator],
         allow_blank=False,
         label="title",
     )
+    '''
 
     class Meta:
         model = models.Problem
         fields = (
+            "id",
             "title",
             "description",
             "subject",
@@ -22,9 +25,11 @@ class ProblemSerializer(serializers.ModelSerializer):
             "allowed_languages",
             "skeletons",
             "author",
-        )
-
-        write_only_fields = (
             "tests",
             "correction_templates",
         )
+
+        extra_kwargs = {
+            "tests": {"write_only": True},
+            "correction_templates": {"write_only": True},
+        }

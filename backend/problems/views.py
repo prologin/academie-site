@@ -18,24 +18,20 @@ class ProblemView(
     serializer_class = ProblemSerializer
     queryset = Problem.objects.all()
 
-    lookup_field = "title"
 
-    def create(self, request):
-        title = request.query_params.get("title")
-        if title is None:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+    # destroy
 
-        serializer = self.get_serializer(data=request.data)
-        if not serializer.is_valid():
-            return Response(
-                status=status.HTTP_400_BAD_REQUEST, data=serializer.errors
-            )
 
-        obj = tasks.create_or_update_problem(title, request.data)
-        serializer = self.get_serializer(data=obj)
-        serializer.is_valid()
+    # create
 
-        headers = self.get_success_headers(serializer.data)
-        return Response(
-            serializer.data, status=status.HTTP_201_CREATED, headers=headers
-        )
+    def perform_create(self, serializer):
+        if self.request.user.email == 'mr.prologin@prologin.org':
+            tasks.create_or_update_problem(serializer.validated_data)
+        else:
+            serializer.save()
+
+
+    # update
+
+
+    # partial update

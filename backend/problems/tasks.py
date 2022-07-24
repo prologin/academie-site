@@ -7,9 +7,12 @@ class ProblemExecption(Exception):
     pass
 
 
-def create_or_update_problem(title, body):
-    problem, is_created = Problem.objects.update_or_create(
-        title=title,
+def create_or_update_problem(body):
+    # yo
+    print("YOOOOOOOO")
+    print(body['title'])
+    problem, _ = Problem.objects.update_or_create(
+        title=body['title'],
         defaults={
             "title": body["title"],
             "author": body["author"],
@@ -22,5 +25,3 @@ def create_or_update_problem(title, body):
             "tests": body["tests"],
         },
     )
-
-    return problem

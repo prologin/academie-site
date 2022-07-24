@@ -1,3 +1,3 @@
 #!/bin/sh
 
-exec docker-compose -p template exec backend_dev ./manage.py "$@"
+exec docker exec -it docker_backend_dev_1 ./manage.py "$@"
