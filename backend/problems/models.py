@@ -63,5 +63,9 @@ class Problem(models.Model):
         validators=[validators.tests_validator],
     )
 
+    def isInPublishedActivity(self):
+        pass
+
+
     def __str__(self):
         return str(self.title)

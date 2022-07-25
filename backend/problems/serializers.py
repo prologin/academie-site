@@ -1,18 +1,21 @@
 from rest_framework import serializers
 
-from activities import validators
 from problems import models
+
+class ProblemListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Problem
+        fields = (
+            "id",
+            "title",
+            "difficulty",
+            "allowed_languages",
+            "author",
+        )
+
 
 
 class ProblemSerializer(serializers.ModelSerializer):
-    '''
-    title = serializers.CharField(
-        allow_null=False,
-        validators=[validators.slug_validator],
-        allow_blank=False,
-        label="title",
-    )
-    '''
 
     class Meta:
         model = models.Problem
