@@ -1,8 +1,9 @@
-from authentification.permissions import CanReadActivity, TeacherPermission
+from authentification.permissions import TeacherPermission
 from rest_framework import mixins, status, viewsets
 from rest_framework.response import Response
 
-from activities import paginators
+from activities.paginators import ActivityPagination
+from activities.permissions import CanReadActivity
 from activities.filters import ActivityVisibleForUser
 from activities.models import Activity
 from activities.serializers import (
@@ -40,11 +41,10 @@ class ActivityView(
     viewsets.GenericViewSet,
 ):
 
-    pagination_class = paginators.ActivityPagination
+    pagination_class = ActivityPagination
     serializer_class = ActivitySerializer
     queryset = Activity.objects.all()
     filter_backends=[ActivityVisibleForUser]
-    #lookup_field = "title"
     permission_classes_by_action = {
                                     'create': [TeacherPermission],
                                     'update': [TeacherPermission],

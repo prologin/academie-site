@@ -16,15 +16,6 @@ from submissions.tasks import run_code_submission
 
 User = get_user_model()
 
-'''
-    def create(self, request):
-        serializer = self.get_serializer(data=request.data)
-        if not serializer.is_valid():
-            return Response(
-                data=serializer.errors, status=status.HTTP_400_BAD_REQUEST
-            )
-'''
-
 class SubmissionView(
     mixins.CreateModelMixin,
     mixins.RetrieveModelMixin,
@@ -32,9 +23,9 @@ class SubmissionView(
 ):
     serializer_class = ProblemSubmissionCodeSerializer
     queryset = ProblemSubmissionCode.objects.all()
-#    lookup_field = "id"
 
-#    def retrieve(self, request, id=None):  # get with parameter
+
+    # retrieve
 
 
     def create(self, request, *args, **kwargs):
