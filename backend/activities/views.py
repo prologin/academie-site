@@ -67,6 +67,9 @@ class ActivityView(
 
     # create
 
+    def perform_create(self, serializer):
+        serializer.save().managers.add(self.request.user)
+
 
     def retrieve(self, request, *args, **kwargs):
         self.serializer_class = DetailedPublishedActivitySerializer
