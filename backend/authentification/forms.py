@@ -1,8 +1,7 @@
-from traitlets import default
-from authentification import models
 from django import forms
 from django.db import transaction
 from django.contrib.auth import get_user_model
+from rest_framework.exceptions import ValidationError
 from django.contrib.auth.forms import (
     ReadOnlyPasswordHashField,
     UserCreationForm,
@@ -71,7 +70,6 @@ class AdminProloginUserCreationForm(ProloginUserCreationForm):
             first_name=self.cleaned_data["first_name"],
             last_name=self.cleaned_data["last_name"],
             birthdate=self.cleaned_data["birthdate"],
-            accept_newsletter=self.cleaned_data["accept_newsletter"],
         )
         if commit:
             user.save()
