@@ -1,7 +1,8 @@
 import { Grid, Typography } from '@mui/material';
 import { useEffect, useRef } from 'react';
 
-import { useDispatch, useSelector, getCourses } from '../config/store';
+import { useDispatch, useSelector } from '../config/store';
+import { getCourses } from '../config/reducers/courses';
 import CoursesNode from '../components/CoursesNode';
 
 export default function Courses() {

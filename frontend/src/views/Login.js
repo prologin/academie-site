@@ -9,7 +9,8 @@ import {
 import { makeStyles } from "@mui/styles";
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import { login, useDispatch } from "../config/store";
+import { useDispatch } from "../config/store";
+import { login } from "../config/reducers/user";
 
 const useStyles = makeStyles((theme) => ({
   leftPanel: {

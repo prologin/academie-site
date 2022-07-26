@@ -11,7 +11,8 @@ import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { makeStyles } from "@mui/styles";
 import { useState } from "react";
-import { register, useDispatch } from "../config/store";
+import { useDispatch } from "../config/store";
+import { register } from "../config/reducers/user";
 
 const useStyles = makeStyles((theme) => ({
   leftPanel: {

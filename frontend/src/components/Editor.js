@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { Box, Button } from '@mui/material';
 
 import AceEditor from 'react-ace';
-import { submitCode, useDispatch } from '../config/store';
+import { useDispatch } from '../config/store';
+import { submitCode } from '../config/reducers/submission';
 
 import 'ace-builds/src-noconflict/mode-python';
 import 'ace-builds/src-noconflict/snippets/python';
