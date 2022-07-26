@@ -15,7 +15,7 @@ COPY ./package.json ./package.json
 COPY ./yarn.lock ./yarn.lock
 COPY ./ ./
 
-RUN yarn install && yarn build && rm -rf node_modules/
+RUN yarn install && yarn build
 
 WORKDIR "$WORKDIR"/build
 
