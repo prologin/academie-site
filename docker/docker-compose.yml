@@ -136,10 +136,6 @@ services:
     restart: unless-stopped
     environment:
       DEV: 1
-    volumes:
-      - type: bind
-        source: ../frontend
-        target: /app/template
 
   reverse_dev:
     image: nginx
