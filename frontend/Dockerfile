@@ -17,6 +17,4 @@ COPY ./ ./
 
 RUN yarn install && yarn build
 
-WORKDIR "$WORKDIR"/build
-
-ENTRYPOINT ["/app/template/entrypoint.sh"]
+ENTRYPOINT ["./entrypoint.sh"]
