@@ -1,7 +1,7 @@
+from asyncore import read
 from rest_framework import serializers
 
-from activities.validators import slug_validator
-from submissions.models import ProblemSubmission, ProblemSubmissionCode
+from submissions.models import ProblemSubmissionCode
 
 
 class ProblemSubmissionCodeSerializer(serializers.ModelSerializer):
@@ -24,4 +24,20 @@ class ProblemSubmissionCodeSerializer(serializers.ModelSerializer):
             "result",
         )
 
-        read_only_fields = ("result",)
+        read_only_fields = ("result", "validated", "date_submitted",)
+
+
+class ProblemSubmissionCodeListSerializer(serializers.ModelSerializer):
+    user_email = serializers.EmailField(source='submission.user.email')
+    problem_title = serializers.CharField(source='submission.problem.title')
+
+    class Meta:
+        model = ProblemSubmissionCode
+        fields = (
+            "id",
+            "user_email",
+            "language",
+            "validated",
+            "date_submitted",
+            "problem_title",
+        )

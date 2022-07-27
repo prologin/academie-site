@@ -1,5 +1,7 @@
 from activities.models import Activity
 
+from authentification.permissions import TeacherPermission
+
 from django.contrib.auth import get_user_model
 from django.core.cache import cache
 from django.core.exceptions import PermissionDenied
@@ -14,9 +16,10 @@ from rest_framework import status
 from status.models import Status
 from status.serializers import StatusSerializer
 
+from submissions.filters import SubmissionVisibleForTeacher
 from submissions.models import ProblemSubmission, ProblemSubmissionCode
-from submissions.permissions import CanSubmitCode
-from submissions.serializers import ProblemSubmissionCodeSerializer
+from submissions.permissions import CanSubmitCode, TeacherSubmissionPermission
+from submissions.serializers import ProblemSubmissionCodeSerializer, ProblemSubmissionCodeListSerializer
 from submissions.tasks import run_code_submission
 
 User = get_user_model()
@@ -29,9 +32,17 @@ class SubmissionView(
 ):
     serializer_class = ProblemSubmissionCodeSerializer
     queryset = ProblemSubmissionCode.objects.all()
+    filter_backends=[SubmissionVisibleForTeacher]
+    permission_classes_by_action = {
+                                    'retrieve': [TeacherSubmissionPermission],
+                                    'list': [TeacherPermission]
+                                }
 
 
     # list
+    def list(self, request, *args, **kwargs):
+        self.serializer_class = ProblemSubmissionCodeListSerializer
+        return super().list(request, *args, **kwargs)
 
 
     # retrieve
@@ -93,3 +104,10 @@ class SubmissionView(
 
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+
+    def get_permissions(self):
+        try:
+            return [permission() for permission in self.permission_classes_by_action[self.action]]
+        except KeyError: 
+            return [permission() for permission in self.permission_classes]
