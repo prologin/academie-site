@@ -14,7 +14,6 @@ from activities.serializers import (
 
 class ActivityImageView(mixins.UpdateModelMixin, viewsets.GenericViewSet):
 
-    #lookup_field = "title"
     serializer_class = ActivityImageSerializer
     queryset = Activity.objects.all()
     permission_classes = [TeacherPermission]

@@ -5,6 +5,9 @@ from activities import models
 
 @admin.register(models.Activity)
 class ActivityAdmin(admin.ModelAdmin):
+
+    autocomplete_fields = ["managers", "problems", "authorized_classes"]
+
     list_display = (
         "title",
         "version",
@@ -24,13 +27,5 @@ class ActivityAdmin(admin.ModelAdmin):
     fieldsets = (
         (None, {"fields": ("id", "title", "image", "version", "problems")}),
         ("PROJECT DETAILS", {"fields": ("description", "difficulty", "author", "managers")}),
-        ("DATES", {"fields": ("opening", "closing", "published")}),
+        ("DATES", {"fields": ("opening", "closing", "authorized_classes", "published")}),
     )
-
-
-"""
-    inlines = (
-#        ActivityManagerInlineAdmin,
-        ActivityProblemInlineAdmin,
-    )
-    """

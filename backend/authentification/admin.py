@@ -56,15 +56,15 @@ class TeacherAdmin(admin.ModelAdmin):
 
 @admin.register(models.Class)
 class ClassAdmin(admin.ModelAdmin):
-    list_display = ("name", "get_teachers",)
+    list_display = ("name", "get_teachers", "class_id",)
 
     search_fields = ("name",)
 
     fieldsets = (
-        (None, {"fields": ("name", "students", "get_teachers")}),
+        (None, {"fields": ("name", "class_id", "students", "get_teachers")}),
     )
 
-    readonly_fields = ("get_teachers",)
+    readonly_fields = ("class_id", "get_teachers",)
 
     @admin.display(description='teachers')
     def get_teachers(self, _class):

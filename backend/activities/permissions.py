@@ -11,14 +11,10 @@ class CanReadActivity(permissions.BasePermission):
         if not request.method in permissions.SAFE_METHODS:
             return False
 
-        if request.user.is_student and obj.published:
-            student_teachers = models.Student.objects.get(user=request.user).get_teachers()
-
-            for t in obj.managers.all():
-                if t in student_teachers:
-                    return True
-
-        elif request.user.is_teacher:
-            return request.user in obj.managers.all()
+        classes = request.user.class_set.all()
+        if request.user in obj.managers.all():
+            return True
+        elif obj.published and any(item in classes for item in obj.authorized_classes.all()):
+            return True
 
         return False

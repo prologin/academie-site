@@ -15,21 +15,6 @@ class ActivityImageSerializer(serializers.ModelSerializer):
 
 
 class ActivitySerializer(serializers.ModelSerializer):
-    def create(self, validated_data):
-
-        id_list = validated_data.pop('problems_id')
-        activity = super().create(validated_data)
-        activity.problems.set(list(Problem.objects.all().filter(id__in=id_list)))
-        return activity
-
-    problems_id = serializers.ListField(
-        min_length=1,
-        allow_null=False,
-        validators=[validators.list_id_validator],
-        label="problems_id",
-        write_only=True,
-    )
-
     title = serializers.CharField(
         allow_null=False,
         validators=[validators.slug_validator],
@@ -63,7 +48,7 @@ class ActivitySerializer(serializers.ModelSerializer):
             "title",
             "opening",
             "closing",
-            "problems_id",
+            "problems",
             "count",
             "languages_list",
             "description",
@@ -77,6 +62,7 @@ class ActivitySerializer(serializers.ModelSerializer):
             "description": {"write_only": True},
             "author": {"write_only": True},
             "version": {"write_only": True},
+            "problems": {"write_only": True},
         }
 
 

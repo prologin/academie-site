@@ -1,3 +1,5 @@
+from authentification.models import Class
+
 import uuid
 
 from django.contrib.auth import get_user_model
@@ -71,6 +73,10 @@ class Activity(models.Model):
     managers = models.ManyToManyField(
         to=get_user_model(),
         blank=True,
+    )
+
+    authorized_classes = models.ManyToManyField(
+        to=Class
     )
 
     def __str__(self):

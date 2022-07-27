@@ -1,8 +1,7 @@
+from uuid import uuid4
 from django.contrib.auth.models import AbstractUser, BaseUserManager, PermissionsMixin
-from django.contrib.auth.password_validation import validate_password
+from django.contrib.auth import get_user_model
 from django.db import models
-from rest_framework import serializers
-from rest_framework.validators import UniqueValidator
 
 app_name = "authentification"
 
@@ -65,7 +64,7 @@ class Student(models.Model):
 
     def get_teachers(self):
         teachers = set()
-        for c in self.class_set.all():
+        for c in self.user.class_set.all():
             for t in c.teacher_set.all():
                 teachers.add(t.user)
         return teachers
@@ -81,14 +80,15 @@ class Student(models.Model):
 
 
 class Class(models.Model):
-    students = models.ManyToManyField(Student)
+    class_id = models.UUIDField(default=uuid4, editable=False, unique=True)
+    students = models.ManyToManyField(to=get_user_model())
     name = models.CharField(max_length=64, default='Prologin class')
 
     def get_teachers(self):
         teachers = set()
         for t in self.teacher_set.all():
             teachers.add(t.user)
-        return teachers            
+        return teachers 
 
     def __str__(self):
         return str(self.name)
