@@ -1,28 +1,37 @@
 from activities.models import Activity
-from problems.models import Problem
 
 from django.contrib.auth import get_user_model
 from django.core.cache import cache
+from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404
+
+from problems.models import Problem
+
 from rest_framework import mixins, viewsets
 from rest_framework.response import Response
 from rest_framework import status
 
 from status.models import Status
 from status.serializers import StatusSerializer
+
 from submissions.models import ProblemSubmission, ProblemSubmissionCode
+from submissions.permissions import CanSubmitCode
 from submissions.serializers import ProblemSubmissionCodeSerializer
 from submissions.tasks import run_code_submission
 
 User = get_user_model()
 
 class SubmissionView(
-    mixins.CreateModelMixin,
+    mixins.ListModelMixin,
     mixins.RetrieveModelMixin,
+    mixins.CreateModelMixin,
     viewsets.GenericViewSet,
 ):
     serializer_class = ProblemSubmissionCodeSerializer
     queryset = ProblemSubmissionCode.objects.all()
+
+
+    # list
 
 
     # retrieve
@@ -32,13 +41,21 @@ class SubmissionView(
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
+        # retrieve activity
         activity = get_object_or_404(Activity, id=serializer.validated_data['activity_id'])
         if not activity.problems.all().filter(id__in=[serializer.validated_data['problem_id']]).exists():
             return Response(status=status.HTTP_404_NOT_FOUND, data={"Detail": "The problem is not part of the activity"})
+        
+        # retrieve problem
         problem = Problem.objects.get(id=serializer.validated_data['problem_id'])
         if not serializer.validated_data['language'] in problem.allowed_languages:
             return Response(status=status.HTTP_400_BAD_REQUEST, data={"Detail": "This language is not available for the problem"})
+
+        # check permission
+        if not CanSubmitCode(request, activity):
+            raise PermissionDenied
         
+        # create the actual submission
         problem_submission, _ = ProblemSubmission.objects.get_or_create(
             problem=problem,
             user=self.request.user,
